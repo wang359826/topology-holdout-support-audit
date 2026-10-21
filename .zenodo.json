@@ -1,0 +1,43 @@
+{
+  "title": "What topology hold-out removes—and what it does not",
+  "upload_type": "software",
+  "license": "mit",
+  "access_right": "open",
+  "version": "v1.3",
+  "creators": [
+    {
+      "name": "Wang, Tao",
+      "affiliation": "College of Chemical Engineering, Nanjing Tech University, Nanjing 211816, China"
+    }
+  ],
+  "description": "Support-audit toolkit and full analysis pipeline for \"What topology hold-out removes — and what it does not\".\n\nContents: the v6 manuscript and supplementary information (manuscript_v6/01_manuscript, 02_supplementary), the complete analysis pipeline (scripts/), derived result tables (outputs/), and publication figures (figures_pub/). The repository root also retains the original (v5) reproduction package, so that every path cited in the preceding Zenodo release remains valid in this archive.\n\nCentral results: 74.7% of coarse-grained chemical compositions in hMOF occur in a single topology (61.3% of structures); a chemistry-key hold-out produces only 21.1% of the topology hold-out's R2 decrease; on the one usable chemistry-matched pair (pcu <-> nbo) removing the partner topology raised nbo-side MAE by 70.0% while a size-matched control did not; across five independently redrawn 25,000-sample support sets the top-1% hit rate fell from 50.4% to 19.3% under topology-grouped validation.\n\nThe repository was created under an earlier working title that read the topology penalty as \"largely\" a chemistry penalty. That wording predates the findings reported here and is not the claim of the manuscript, which reports the support loss and a descriptive protocol ratio and does not attribute the topology penalty to chemistry.\n\nInput data are not redistributed: hMOF is available at https://archive.materialscloud.org/records/nsp7v-2dk91 and ARC-MOF v6 at https://doi.org/10.5281/zenodo.13891643. See DATA.md for the retrieval commands and checksums. See REPRODUCE.md for the verification commands (scripts/make_md5sums.py --check, scripts/singleton_audit.py verify).",
+  "keywords": [
+    "metal-organic frameworks",
+    "MOF",
+    "carbon capture",
+    "machine learning",
+    "cross-validation",
+    "holdout validation",
+    "data leakage",
+    "confounding",
+    "topology hold-out",
+    "reproducibility"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/wang359826/topology-holdout-support-audit",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.13891643",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://archive.materialscloud.org/records/nsp7v-2dk91",
+      "relation": "references",
+      "scheme": "url"
+    }
+  ]
+}
