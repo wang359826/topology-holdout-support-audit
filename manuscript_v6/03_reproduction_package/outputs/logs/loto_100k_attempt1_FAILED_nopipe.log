@@ -1,0 +1,56 @@
+raw: 324,426 rows x 42 cols
+
+=== seed 42 (n=100,000, 120 trees) ===
+  modelled rows: 100,000  features: 426  topologies: 11
+Traceback (most recent call last):
+  File "C:\Users\������\Desktop\MOF_topholdout_Ͷ���_v5�޶�\03_Ͷ��ר�ð�_v6ѹ��\03_reproduction_package\scripts\loto_full_metrics.py", line 245, in <module>
+    main()
+  File "C:\Users\������\Desktop\MOF_topholdout_Ͷ���_v5�޶�\03_Ͷ��ר�ð�_v6ѹ��\03_reproduction_package\scripts\loto_full_metrics.py", line 237, in main
+    recompute(args.csv, args.outdir, 100_000, 120, [42], "100k")
+  File "C:\Users\������\Desktop\MOF_topholdout_Ͷ���_v5�޶�\03_Ͷ��ר�ð�_v6ѹ��\03_reproduction_package\scripts\loto_full_metrics.py", line 152, in recompute
+    rows, pooled = loto_folds(X, y, topo, seed, n_trees)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\Desktop\MOF_topholdout_Ͷ���_v5�޶�\03_Ͷ��ר�ð�_v6ѹ��\03_reproduction_package\scripts\loto_full_metrics.py", line 108, in loto_folds
+    mdl.fit(X.iloc[tr], y.iloc[tr])
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\sklearn\base.py", line 1403, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\sklearn\ensemble\_forest.py", line 468, in fit
+    trees = Parallel(
+            ^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\sklearn\utils\parallel.py", line 91, in __call__
+    return super().__call__(iterable_with_config_and_warning_filters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\parallel.py", line 2096, in __call__
+    next(output)
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\parallel.py", line 1697, in _get_outputs
+    self._start(iterator, pre_dispatch)
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\parallel.py", line 1680, in _start
+    if self.dispatch_one_batch(iterator):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\parallel.py", line 1562, in dispatch_one_batch
+    self._dispatch(tasks)
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\parallel.py", line 1459, in _dispatch
+    job = self._backend.submit(batch, callback=batch_tracker)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\_parallel_backends.py", line 339, in submit
+    return self._get_pool().apply_async(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\site-packages\joblib\_parallel_backends.py", line 507, in _get_pool
+    self._pool = ThreadPool(self._n_jobs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\multiprocessing\pool.py", line 930, in __init__
+    Pool.__init__(self, processes, initializer, initargs)
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\multiprocessing\pool.py", line 196, in __init__
+    self._change_notifier = self._ctx.SimpleQueue()
+                            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\multiprocessing\context.py", line 113, in SimpleQueue
+    return SimpleQueue(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\multiprocessing\queues.py", line 362, in __init__
+    self._reader, self._writer = connection.Pipe(duplex=False)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\������\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\Lib\multiprocessing\connection.py", line 575, in Pipe
+    h2 = _winapi.CreateFile(
+         ^^^^^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] �ܾ����ʡ�

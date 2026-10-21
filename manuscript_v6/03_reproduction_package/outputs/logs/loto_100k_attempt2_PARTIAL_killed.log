@@ -1,0 +1,5 @@
+raw: 324,426 rows x 42 cols
+
+=== seed 42 (n=100,000, 120 trees) ===
+  modelled rows: 100,000  features: 426  topologies: 11
+     acs n_test=  4120 MAE=0.4193 RMSE=0.5633 R2=+0.2782 valid=True

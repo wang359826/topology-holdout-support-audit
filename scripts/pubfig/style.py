@@ -530,8 +530,6 @@ def save_figure(fig, stem: str, outdir: str, raster_dir: str | None = None,
     (which blocks on failure), then SVG and PDF with editable text, then 600 dpi
     TIFF and PNG previews at exactly the printed size.
     """
-    from audit_panel_alignment import require_matplotlib_panel_alignment
-
     os.makedirs(outdir, exist_ok=True)
     if raster_dir:
         os.makedirs(raster_dir, exist_ok=True)
@@ -565,36 +563,49 @@ def save_figure(fig, stem: str, outdir: str, raster_dir: str | None = None,
     # condition instead of an exception: a panel that needs a different width on
     # purpose cannot be compared to its sibling, and the rendered collision audit
     # is then the binding gate.  Definite misalignment (exit 1) always blocks.
-    from audit_panel_alignment import (
-        audit_layout_manifest, exit_code, matplotlib_layout_manifest,
-        render_text, write_json_report, write_overlay_svg)
+    #
+    # The gate uses the external `audit_panel_alignment` module, which is NOT shipped
+    # with this package (see FIGURE_QA_PUBLICATION.md for how it was obtained). When it
+    # is absent the figure is still exported and the gate is recorded as SKIPPED, so the
+    # render remains reproducible without the module; install it to re-enable the gate.
+    try:
+        from audit_panel_alignment import (
+            audit_layout_manifest, exit_code, matplotlib_layout_manifest,
+            render_text, write_json_report, write_overlay_svg)
+        _HAS_ALIGNMENT = True
+    except ImportError:
+        _HAS_ALIGNMENT = False
 
-    manifest = matplotlib_layout_manifest(
-        fig,
-        exemptions=tuple(exemptions or ()),
-        exclude_axes=tuple(exclude_axes or ()),
-        row_groups=row_groups,
-        column_groups=column_groups,
-    )
-    report = audit_layout_manifest(
-        manifest,
-        tolerance_pt=alignment_tolerance_pt,
-        gutter_tolerance_pt=alignment_tolerance_pt,
-        require_panel_labels=require_panel_labels,
-    )
-    write_json_report(report, os.path.join(outdir, f"{stem}.alignment.json"))
-    if report.get("layout"):
-        write_overlay_svg(report, os.path.join(outdir, f"{stem}.alignment.svg"))
-    code = exit_code(report, strict=True)
-    if code == 1:
-        raise RuntimeError(f"{stem}: panel alignment FIX BEFORE DELIVERY\n"
-                           + render_text(report, strict=True))
-    if code == 2:
-        report["recorded_condition"] = (
-            "NOT AUDITABLE: panels have intentionally different grid spans, so no "
-            "comparable row/column groups could be inferred. Alignment is not "
-            "claimed; the rendered collision audit and the final-size panel "
-            "inspection are the binding checks for this figure.")
+    report = {"recorded_condition": (
+        "audit_panel_alignment module not available: alignment gate SKIPPED; "
+        "only the rendered collision audit and the final-size panel inspection apply")}
+    if _HAS_ALIGNMENT:
+        manifest = matplotlib_layout_manifest(
+            fig,
+            exemptions=tuple(exemptions or ()),
+            exclude_axes=tuple(exclude_axes or ()),
+            row_groups=row_groups,
+            column_groups=column_groups,
+        )
+        report = audit_layout_manifest(
+            manifest,
+            tolerance_pt=alignment_tolerance_pt,
+            gutter_tolerance_pt=alignment_tolerance_pt,
+            require_panel_labels=require_panel_labels,
+        )
+        write_json_report(report, os.path.join(outdir, f"{stem}.alignment.json"))
+        if report.get("layout"):
+            write_overlay_svg(report, os.path.join(outdir, f"{stem}.alignment.svg"))
+        code = exit_code(report, strict=True)
+        if code == 1:
+            raise RuntimeError(f"{stem}: panel alignment FIX BEFORE DELIVERY\n"
+                               + render_text(report, strict=True))
+        if code == 2:
+            report["recorded_condition"] = (
+                "NOT AUDITABLE: panels have intentionally different grid spans, so no "
+                "comparable row/column groups could be inferred. Alignment is not "
+                "claimed; the rendered collision audit and the final-size panel "
+                "inspection are the binding checks for this figure.")
 
     paths = {"svg": os.path.join(outdir, f"{stem}.svg"),
              "pdf": os.path.join(outdir, f"{stem}.pdf")}
@@ -628,7 +639,8 @@ def report_printed(records: dict) -> None:
         verdict = rec["alignment"]
         if isinstance(verdict, dict):
             verdict = (verdict.get("verdict") or verdict.get("result")
-                       or verdict.get("status") or "?")
+                       or verdict.get("status")
+                       or verdict.get("recorded_condition") or "?")
         print(f"{name:<32}{p['width_pt']:>8.1f}{p['height_pt']:>8.1f}"
               f"{p['width_pt']/p['height_pt']:>8.3f}"
               f"{p['effective_pt']:>9.2f}  {verdict}")

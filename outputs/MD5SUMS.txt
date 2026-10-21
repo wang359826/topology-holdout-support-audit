@@ -41,8 +41,8 @@ e84d0d82a56740ae3a50845229d53b0d  427018  fig5_pred_vs_actual_final.png
 c5136fd7df94abbfd6e8a4d62841df5b  135825  figS1_shap_family_final.png
 fbaf610fc8ad9d5021b778c011628e9a  307018  figS2_shap_dependence_final.png
 c6554bab75a1239c9e4e0ca95fedd5a8  96313  figS3_within_vs_cross.png
-e74f1a82fbe1ab5182010caef640e108  196391  figS6_source_confound.png
-4fb68c77e6b16230290a3ed7b08c8583  224865  figS7_sg_curve.png
+3e7c76dd50c68555d4aeeef54ca1fac9  323975  figS6_source_confound.png
+02cf0ca23b4ba1a7df3ce07a0af60701  335170  figS7_sg_curve.png
 0cb01aab7d7deeb2b6941f6838ff5ece  261  group_stats_chemistry.csv
 a2d8b345569339a23bb81d9f12fd92e8  222  group_stats_final.csv
 a2d8b345569339a23bb81d9f12fd92e8  222  group_stats_gb100k.csv
@@ -98,7 +98,7 @@ f7ea7ae4c8dae25f89ccfcef25b91f09  215  loto_per_metal_chemistry.csv
 2ea6f2048ba908e8f52addc7c8c2ad24  55876  loto_per_topology_chemistry.png
 f2f02962172f45ee4f305ea95b69d31f  340  loto_per_topology_final.csv
 2bfed0ed62ed5ba8d021586ecbebcc5c  199  loto_results_chemistry.csv
-10033eb4d8f806aceb19c88fb03ab642  1138  metrics_audit.csv
+a054684a6898a21d525f2abbb2e1aaa9  1142  metrics_audit.csv
 71451eb43a07d545d0f6a7c42bd4e84c  422  mitigation_results_mit25k.csv
 60756d950c3e1d634084c7ad3bd56a28  784  multi_seed_uptake25k_fix.csv
 ed29439b1cea782ae29057b71baf2189  4209  multitarget_confound.csv

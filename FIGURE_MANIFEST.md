@@ -3,6 +3,10 @@
 > 本文件是**图号 ↔ PNG 文件**的权威对照表，供 `build_pdf.py` 嵌图使用
 > （正文用 `FIG_MAP`，SI 用 `FIG_MAP_SI`），也是投稿时"图与图注是否相符"的自检表。
 >
+> **职责边界（2026-10-18 起）**：本文件只负责「图号 ↔ 文件名」的对应，以及「哪些图
+> 不得嵌入 PDF」的剔除清单。**每张图由哪个脚本、什么命令、什么种子、什么验证状态产出**
+> 的权威映射在 **`REPRODUCE.md` §4**（唯一权威版本），不要在两处重复维护生产路径。
+>
 > ✅ **2026-10-11 第三档后：正文 8 张图（Figure 1–8）+ SI 7 张图（Figure S1–S7）。**
 > 正文首次引用顺序仍为 1 → 8 严格递增；SI 图号按 SI 正文首次引用顺序排列。
 >
@@ -42,23 +46,24 @@
 | 图号 | 图注主题 | PNG 文件 | 所在 SI 节 |
 |---|---|---|---|
 | Figure S1 | SHAP 特征族归因 | `figS1_shap_family.png` | §S1 |
-| Figure S2 | SHAP 依赖图 | `figS2_shap_dependence.png` | §S1 |
+| Figure S2 | 中心化偏依赖（PDP，已替代逐样本 SHAP 依赖图；数据由 `prepare_figS2_pdp_data.py` 生成，见 SI §S15 图注） | `figS2_shap_dependence.png` | §S1 |
 | Figure S3 | 拓扑内 vs 跨拓扑 R² | `figS3_within_vs_cross.png` | §S5 |
 | Figure S4 | 口径稳定性（3 规则 × 5 种子） | `figS4_aggregation_stability.png` | §S7 |
 | Figure S5 | 留出拓扑 R² × 四口径聚合规则 | `figS5_aggregation_rules.png` | §S8 |
 | Figure S6 | ARC-MOF 来源子库离散度（2 面板） | `figS6_source_confound.png` | §S9 |
 | Figure S7 | S_g 曲线：未见化学率是否排序留出代价 | `figS7_sg_curve.png` | §S14 |
 
-**小计：正文 8 张 + SI 7 张，全部齐备，两份 PDF 内均无占位框。15 张图全部可由
-`run_all.py` 的 level 1–5 产出**（2026-10-13 起）：Figure 1 由
-`scripts/plot_main_figure.py`（level 2）生成、再由 `scripts/fig3_fig4_missing.py`
-重绘为提交的最终版（只绘图、不重算），Figure S5 同由 `fig3_fig4_missing.py` 产出；
-Figure S4 ← `outputs/multi_seed_uptake25k_fix.csv`（level 2 的 CSV，图由 level 4 的
-`fig_cross_database.py` 绘制）；Figure S7 ← `outputs/s_g_curve.csv`，由 level 2 末步
-`fig_sg_curve.py` 绘制。
-**唯一不在任何 level 内的是 `s_g_curve.py`**（Figure S7 / SI Table S9 的**数据**步）：
-它要从 148 MB 原始 hMOF 重跑一次 100,000 抽样，成本约等于 level 2 第一步，而其产出的
-数值已随包存档，出图并不需要它。
+**小计：正文 8 张 + SI 7 张，全部齐备，两份 PDF 内均无占位框。** 生产路径分两层：
+（1）**数据步**（CSV）由 `run_all.py` level 1–5 及若干独立脚本产出；（2）**最终投稿图**
+（600 dpi 栅格 + `figures_pub/*.pdf|svg`）由 `scripts/pubfig/` 的 `build_main_1_4.py`
+（Figure 1–4）、`build_main_5_8.py`（Figure 5–8）、`build_si_S1_S7.py`（Figure S1–S7）
+从存档 CSV 绘制——**pubfig 构建器不在任何 level 内**，`run_all.py` 的旧绘图脚本
+（`fig_*.py` / `plot_*.py`）只产数据与中间图版本。逐图「数据步 → 出图步 → 验证状态」的
+权威映射见 **`REPRODUCE.md` §4.1**。
+**独立于任何 level 的还有**：`s_g_curve.py`（Figure S7 / SI Table S9 的**数据**步）、
+`prepare_figS2_pdp_data.py`（Figure S2 的 PDP **数据**步）、`prep_arcmof.py` 与
+`chemistry_seen.py --csv data/arcmof/…`（ARC 输入组装与分解）、
+`null_model_controls.py`（零模型）——这些的存档值随包，出图/引用并不需要重跑。
 
 > 🔄 **2026-10-13 重出 6 张图**：上述 2026-10-11 的四轮修订只改了文件名，PNG 内嵌的
 > 标题图号仍是旧号（如 `fig2_confound_structure.png` 内写 "Figure 1."）。已修正

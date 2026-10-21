@@ -168,8 +168,11 @@ def build_features(df, target=TARGET, encoding="onehot"):
       onehot  几何 + 类别 one-hot（基线，多数文献的做法）
       geo     只用几何描述符（缓解手段 A：彻底去掉构筑单元身份）
       hash    几何 + 哈希编码（缓解手段 B：低维随机投影）
-      target  几何 + 目标编码（缓解手段 C：数值代替高维 one-hot，
-              必须用折内 out-of-fold 计算，否则本身又是一个泄漏源）
+      target  几何 + 目标编码（缓解手段 C：数值代替高维 one-hot。
+               注意：本代码用整个外层训练折的类别目标均值编码该训练折自身，
+               没有内层 cross-fitting，即训练行参与了自身编码；外层测试目标
+               从未进入编码器，因此这不是测试标签泄漏，而是训练行参与自身
+               编码带来的过拟合风险。）
 
     返回 X, y, groups, cats, df_clean
     """
@@ -239,7 +242,9 @@ def apply_log10(X, y, groups):
 # 交叉验证评估
 # --------------------------------------------------------------------------
 def _fold_target_encoding(Xtr, Xte, ytr, raw_tr, raw_te, cats, prior_weight=10.0):
-    """折内目标编码：只用训练折的标签算类别均值。"""
+    """目标编码：用整个外层训练折的类别目标均值（平滑先验）编码训练折与测试折。
+    注意：训练行参与了自身编码（没有内层 cross-fitting），所以这不是规范的
+    out-of-fold 编码；外层测试标签从不进入编码器。"""
     global_mean = float(ytr.mean())
     for c in cats:
         col = f"te_{c}"

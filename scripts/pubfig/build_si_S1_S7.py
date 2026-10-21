@@ -181,7 +181,7 @@ def figS2():
              f"{int(float(meta.get('n_rows_modelled', 0))):,} rows. This replaces "
              f"the per-sample SHAP view; the estimand differs.",
              fontsize=PT["foot"], color=C["mid"], ha="left", va="bottom")
-    return finish(fig, "figS2_shap_dependence",
+    return finish(fig, "figS2_pdp_geometry",
                   exemptions=[{"panels": ["a", "b", "c", "d"],
                                "checks": ["panel-width"],
                                "reason": "four small multiples share one grid and "
@@ -194,6 +194,9 @@ def figS2():
 # Figure S3 - within-topology against cross-topology R2
 # ==========================================================================
 def figS3():
+    raise RuntimeError(
+        "Figure S3 is built by scripts/build_main_v6.py; this legacy producer is "
+        "disabled because its annotations are superseded (see REPRODUCE.md).")
     d = pd.read_csv(os.path.join(OUTDIR, "within_vs_cross_final.csv"))
     d = d.sort_values("n", ascending=True).reset_index(drop=True)
     y = np.arange(len(d))
@@ -240,6 +243,10 @@ def figS3():
 # Figure S4 - multi-seed stability of the aggregation rule
 # ==========================================================================
 def figS4():
+    raise RuntimeError(
+        "Figure S4 is built by scripts/build_main_v6.py; this legacy producer is "
+        "disabled because it still carries the withdrawn 'artefact' interpretation "
+        "(see REPRODUCE.md).")
     d = pd.read_csv(os.path.join(OUTDIR, "multi_seed_uptake25k_fix.csv"))
     fig = plt.figure(figsize=S.fig_size(74))
     gs = fig.add_gridspec(1, 2, wspace=0.30, left=0.088, right=0.985,
@@ -383,7 +390,7 @@ def figS5():
 # ==========================================================================
 def figS6():
     src = pd.read_csv(os.path.join(OUTDIR, "source_confound_granularity.csv"))
-    nd = pd.read_csv(os.path.join(OUTDIR, "null_topology_cardinality.csv"))
+    nd = pd.read_csv(os.path.join(OUTDIR, "common_support", "null_topology_cardinality.csv"))
     d = src.merge(nd[["source", "observed", "null_mean", "b"]], on="source",
                   how="left", validate="one_to_one")
     d["excess_pp"] = (d["observed"] - d["null_mean"]) * 100.0
@@ -397,13 +404,13 @@ def figS6():
     s = d.sort_values("fine_frac_single").reset_index(drop=True)
     x = np.arange(len(s))
     w = 0.36
-    ax.bar(x - w / 2, s["coarse_frac_single"] * 100, S.widths(x, w), color=C["coarse"],
+    ax.bar(x - w / 2, s["coarse_frac_single"], S.widths(x, w), color=C["coarse"],
            edgecolor="white", linewidth=0.4, label="coarse key")
-    ax.bar(x + w / 2, s["fine_frac_single"] * 100, S.widths(x, w), color=C["fine"],
+    ax.bar(x + w / 2, s["fine_frac_single"], S.widths(x, w), color=C["fine"],
            edgecolor="white", linewidth=0.4, label="fine key")
-    S.whiskers_v(ax, (x + w / 2), s["fine_frac_single"] * 100,
-                 s["boot_sd"] * 100, w=w)
-    ax.axhline(100.0, color=C["ref"], lw=0.7, ls=(0, (1.5, 1.5)))
+    S.whiskers_v(ax, (x + w / 2), s["fine_frac_single"],
+                 s["boot_sd"], w=w)
+    ax.axhline(1.0, color=C["ref"], lw=0.7, ls=(0, (1.5, 1.5)))
     ax.set_xticks(x)
     ax.set_xticklabels([f"{r.source}\nn = {int(r.n_samples):,}"
                         for r in s.itertuples()], fontsize=5.0)
@@ -471,6 +478,10 @@ def figS6():
 # Figure S7 - does the unseen-chemistry rate order the hold-out cost?
 # ==========================================================================
 def figS7():
+    raise RuntimeError(
+        "Figure S7 is built by scripts/build_main_v6.py; this legacy producer is "
+        "disabled because it still carries the withdrawn 'pcu largest variance' "
+        "annotation (see REPRODUCE.md).")
     d = pd.read_csv(os.path.join(OUTDIR, "s_g_curve.csv"))
     keep = d[d.n_test >= 100].copy()
     fig = plt.figure(figsize=S.fig_size(76))
@@ -549,12 +560,22 @@ def figS7():
 
 
 def main():
-    only = sys.argv[1:] or ["S1", "S2", "S3", "S4", "S5", "S6", "S7"]
+    # The final submission versions of S3, S4 and S7 are built by
+    # scripts/build_main_v6.py; the legacy producers here carry superseded
+    # annotations (S4 "artefact", S7 "pcu largest variance"). They are kept
+    # only so the historical outputs remain reproducible, and are skipped here.
+    LEGACY = {"S3", "S4", "S7"}
+    only = sys.argv[1:] or ["S1", "S2", "S5", "S6"]
     fns = {"S1": figS1, "S2": figS2, "S3": figS3, "S4": figS4,
            "S5": figS5, "S6": figS6, "S7": figS7}
     os.makedirs(DEST, exist_ok=True)
     os.makedirs(RASTER, exist_ok=True)
     for k in only:
+        if k in LEGACY:
+            print(f"--- Figure {k} --- SKIPPED: the final version is built by "
+                  f"scripts/build_main_v6.py (see REPRODUCE.md). Running the "
+                  f"legacy producer here would emit superseded annotations.")
+            continue
         print(f"--- Figure {k} ---")
         fns[k]()
     S.report_printed(RECORDS)

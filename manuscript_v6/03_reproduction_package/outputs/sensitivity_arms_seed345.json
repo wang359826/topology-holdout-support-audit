@@ -1,0 +1,18 @@
+{
+  "generated_utc": "2026-10-21T06:29:42Z",
+  "input_csv": "all_MOFs_screening_data.csv",
+  "input_md5": "81e9c75fcbf17368bce957ea06e7a79f",
+  "mode": "arms",
+  "n_metric_records": 96,
+  "n_prediction_records": 236124,
+  "n_rows_in_input": 324426,
+  "n_rows_sampled": 50000,
+  "n_unique_scored_rows": 39354,
+  "numpy": "2.5.4",
+  "pandas": "3.0.6",
+  "python": "3.12.15",
+  "script_sha256": "15a725965928147a06b2cc38fe9427b73230fdf7432e3915b4a085c9a47fb3a6",
+  "script_sha256_note": "hash of the script that produced this file at archive time; reruns with the current script are expected to reproduce the fitted values",
+  "seed": 345,
+  "sklearn": "1.9.1"
+}

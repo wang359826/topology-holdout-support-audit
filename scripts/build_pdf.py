@@ -280,8 +280,41 @@ def md_to_html(md: str) -> str:
                 q = lines[i].strip()[1:].strip()
                 qs.append(q)
                 i += 1
-            content = "<br>".join(inline(x) for x in qs)
-            out.append("<blockquote><p>" + content + "</p></blockquote>")
+            out.append("<blockquote>")
+            j = 0
+            while j < len(qs):
+                line = qs[j]
+                # A markdown table may sit inside the blockquote (header row +
+                # separator row + body rows, all written as `> | ... |` lines).
+                if (line.startswith("|") and j + 1 < len(qs)
+                        and is_sep_row(qs[j + 1])):
+                    header = split_row(line)
+                    j += 2
+                    rows = []
+                    while j < len(qs) and qs[j].startswith("|") and qs[j].endswith("|"):
+                        rows.append(split_row(qs[j]))
+                        j += 1
+                    t = ["<table><thead><tr>"]
+                    t += ["<th>" + inline(h) + "</th>" for h in header]
+                    t.append("</tr></thead><tbody>")
+                    for r in rows:
+                        r = (r + [""] * len(header))[: len(header)]
+                        t.append("<tr>" + "".join("<td>" + inline(c) + "</td>" for c in r) + "</tr>")
+                    t.append("</tbody></table>")
+                    out.append("".join(t))
+                else:
+                    # Paragraph lines: join with a space so that bold/italic spanning
+                    # line breaks inside the quote is still parsed, rather than left
+                    # as literal ** / * markers.
+                    buf = [line]
+                    j += 1
+                    while (j < len(qs)
+                           and not (qs[j].startswith("|") and j + 1 < len(qs)
+                                   and is_sep_row(qs[j + 1]))):
+                        buf.append(qs[j])
+                        j += 1
+                    out.append("<p>" + inline(" ".join(buf)) + "</p>")
+            out.append("</blockquote>")
             continue
 
         m = re.match(r"^[-*]\s+(.*)$", s)

@@ -1,0 +1,19 @@
+{
+  "generated_utc": "2026-10-20T15:34:33Z",
+  "input_csv": "all_MOFs_screening_data.csv",
+  "input_md5": "81e9c75fcbf17368bce957ea06e7a79f",
+  "mode": "arms",
+  "n_metric_records": 96,
+  "n_prediction_records": 236118,
+  "n_rows_in_input": 324426,
+  "n_rows_sampled": 50000,
+  "n_scored_materials_note": "distinct raw_row_index in the predictions table; for the arms design only the nbo and pcu test rows are scored, so this is smaller than n_rows_sampled",
+  "n_unique_scored_rows": 39353,
+  "numpy": "2.3.5",
+  "pandas": "3.0.1",
+  "python": "3.12.15",
+  "script_sha256": "5e756ea0b7b8f1082c1c7ddc97f936c8eec95f46630d78b25c8705864ccf77b0",
+  "script_sha256_note": "SHA256 of the script snapshot archived at generated_utc (2026-10-20T15:34:33Z); it is not the hash of the earlier fitting script (not recorded) and not the hash of the current 2026-10-21 script (15a725965928147a06b2cc38fe9427b73230fdf7432e3915b4a085c9a47fb3a6; see REPRODUCE.md). Per-fold sizes and counts were reconstructed from the archived fold/legal columns without refitting",
+  "seed": 42,
+  "sklearn": "1.9.1"
+}

@@ -1,0 +1,4 @@
+cluster_family,N_structures,distinct_ids,ids_in_multiple_topologies,fraction
+metal cluster (metal_linker),264225,2450,495,0.20204081632653062
+linker (organic_linker1),264225,125230,16866,0.13468018845324603
+functional group (functional_groups),264225,43745,7272,0.16623614127328837

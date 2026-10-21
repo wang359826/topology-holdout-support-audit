@@ -27,6 +27,11 @@ Manuscript claim
 Levels (timings: L1/L4 measured 2026-10-10 on a laptop CPU, 8 GB RAM;
 L2/L3 measured 2026-10-13 on a 20-core desktop, 16 GB RAM; both Windows 11)
 ---------------------------------------------------------------------------
+    Current step counts per level: L1 = 7, L2 = 10, L3 = 12, L4 = 8, L5 = 7.
+    The L1 and L4 wall-clock timings below were taken on EARLIER step lists; every
+    step added to those two levels since has been re-run separately with
+    byte-identical outputs (see the manuscript sec. 9 / SI sec. S10). Do not quote
+    the historical L1/L4 timings as measurements of the current 7- and 8-step lists.
     python run_all.py --level 1            # 7.3 min   core confound evidence (Tables 8-11, 17; Figures 2-3)
     python run_all.py --level 2            # 65.4 min  main results, aggregation audit, seeds (Tables 7, 12-14, S3; Figures 1, S5, S7)
     python run_all.py --level 3            # 78.5 min  practical consequences & 10 targets (Tables 16, 18, 19, 25, 26; Figures 6-7)
@@ -99,6 +104,22 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, os.pardir))
 OUTDIR = os.path.join(HERE, "..", "outputs")
 LOGDIR = os.path.join(OUTDIR, "logs")
+
+# Scripts that do NOT accept an --outdir switch (they write to a fixed path or use
+# --out / --out-tag). `--outdir` is appended to every other substep so a user-specified
+# --outdir actually isolates the output rather than only being echoed back.
+NO_OUTDIR_SCRIPTS = {
+    "elite_subset_confound.py",
+    "fig_confound_and_control.py",
+    "fig_sg_curve.py",
+    "fig_multitarget.py",
+    "arcmof_confound.py",
+    "exclusivity_across_databases.py",
+    "source_confound_granularity.py",
+    "fig_cross_database.py",
+    "fig_source_confound.py",
+    "plot_shap_family.py",
+}
 
 PY = sys.executable
 
@@ -450,7 +471,8 @@ NOTE = {
 }
 
 
-def run_one(desc: str, args: list[str], dry: bool, idx: int, total: int):
+def run_one(desc: str, args: list[str], dry: bool, idx: int, total: int,
+            outdir: str, logdir: str):
     """Run one step, stream it to a log file, and report success + wall time."""
     # 2026-10-14 修（第二处）：步骤表里写的是**裸脚本名**（"leakage_mechanism.py"），
     # 这只有 cwd = scripts/ 时才解析得到。既然子进程的 cwd 必须是包根（见 ROOT 注释），
@@ -459,6 +481,9 @@ def run_one(desc: str, args: list[str], dry: bool, idx: int, total: int):
     # 这样两条约定才同时成立：脚本文件按 HERE 定位，脚本内部的相对路径按包根定位。
     script = args[0] if os.path.isabs(args[0]) else os.path.join(HERE, args[0])
     cmd = [PY, script] + list(args[1:])
+    base = os.path.basename(args[0])
+    if base not in NO_OUTDIR_SCRIPTS:
+        cmd += ["--outdir", outdir]
     tag = f"L{idx:02d}"
     print(f"\n{'=' * 74}")
     print(f"[{idx}/{total}] {desc}")
@@ -468,8 +493,8 @@ def run_one(desc: str, args: list[str], dry: bool, idx: int, total: int):
         return 0.0, True
 
     t0 = time.time()
-    os.makedirs(LOGDIR, exist_ok=True)
-    log = os.path.join(LOGDIR, f"{tag}_{args[0].replace('.py', '')}.log")
+    os.makedirs(logdir, exist_ok=True)
+    log = os.path.join(logdir, f"{tag}_{args[0].replace('.py', '')}.log")
     with open(log, "w", encoding="utf-8") as fh:
         proc = subprocess.run(cmd, cwd=ROOT, stdout=fh,
                               stderr=subprocess.STDOUT)
@@ -491,19 +516,23 @@ def main():
     ap.add_argument("--outdir", default=OUTDIR)
     args = ap.parse_args()
 
-    os.makedirs(args.outdir, exist_ok=True)
+    outdir = os.path.abspath(args.outdir)
+    logdir = os.path.join(outdir, "logs")
+    os.makedirs(outdir, exist_ok=True)
     tasks = LEVELS[args.level]
 
     print("=" * 74)
     print(f"Reproduction pipeline — level {args.level} ({len(tasks)} steps)")
     print(f"interpreter: {PY}")
+    print(f"output root: {outdir}")
     if args.level in NOTE:
         print("note: " + NOTE[args.level])
     print("=" * 74)
 
     total_t, all_ok = 0.0, True
     for i, (desc, cmd_args) in enumerate(tasks, 1):
-        dt, ok = run_one(desc, cmd_args, args.dry_run, i, len(tasks))
+        dt, ok = run_one(desc, cmd_args, args.dry_run, i, len(tasks),
+                         outdir, logdir)
         total_t += dt
         all_ok &= ok
         if not ok:
@@ -515,17 +544,27 @@ def main():
     if args.dry_run:
         print("dry run finished (nothing was executed)")
     else:
-        # Regenerate the checksum manifest from what was actually written, so that
-        # outputs/MD5SUMS.txt is a function of the archive rather than a claim about it
-        # (added 2026-10-14: the hand-maintained manifest had drifted to covering 65 of
-        # the 78 files, and one listed entry carried a stale hash).
-        print("\n[manifest] regenerating outputs/MD5SUMS.txt from the archive")
-        subprocess.run([PY, os.path.join(HERE, "make_md5sums.py")], cwd=ROOT)
+        # Regenerate the checksum manifest ONLY when every step succeeded, so that a
+        # failed (partial) run cannot overwrite the published manifest with an
+        # incomplete list. If the manifest step itself fails, propagate that failure
+        # instead of exiting 0.
+        if all_ok:
+            print("\n[manifest] regenerating MD5SUMS.txt from the archive")
+            m = subprocess.run(
+                [PY, os.path.join(HERE, "make_md5sums.py"), "--outdir", outdir],
+                cwd=ROOT)
+            if m.returncode != 0:
+                print("[manifest] FAILED — leaving the previous manifest untouched")
+                all_ok = False
+        else:
+            print("[manifest] skipped — failures present, leaving the previous "
+                  "manifest untouched")
         print(f"finished: {'all steps OK' if all_ok else 'FAILURES present'}"
               f", total {total_t / 60:.1f} min")
-        print(f"outputs in: {os.path.abspath(args.outdir)}")
+        print(f"outputs in: {outdir}")
     print("=" * 74)
+    return 0 if all_ok else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

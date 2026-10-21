@@ -4,17 +4,16 @@
 > topology / scaffold / metal-cluster / linker hold-out result in MOF or porous-material
 > machine learning.
 >
-> **The one-line reason this exists:** a grouped split is only a test of transferability
-> *across the grouping variable* if that variable is separable from chemical composition.
-> In enumerated MOF databases it largely is not. So a topology hold-out can be,
-> in the majority, a chemistry hold-out wearing a different label — **in what it removes.
+> **The one-line reason this exists:** a grouped split withholds the grouping variable
+> together with whatever covariate is entangled with it. In enumerated MOF databases a
+> topology hold-out removes a large share of chemical composition — **in what it removes.
 > Whether the resulting penalty is a chemistry penalty is a separate question that the
-> counts cannot answer**, and in the companion study the controlled contrast prices the
-> chemistry-attributable share at 34.9% of one measured degradation (§3.4), while the
-> coarse composition-key split on a shared support set accounts for only 21.1% of the
-> topology penalty (§3.1). Report the identity of what a split removes as a structural
-> fact; report what the penalty is made of only from a controlled contrast, and say which
-> one you have (rule B2).
+> counts cannot answer**, and in the companion study the controlled contrast prices 34.9%
+> of one measured degradation (§3.4), while the coarse composition-key split's R² decrease
+> on a shared support set is 21.1% of the topology hold-out's decrease (§3.1), a descriptive
+> ratio between protocols rather than an attribution of error. Report the identity of what a
+> split removes as a structural fact; report what the penalty is made of only from a
+> controlled contrast, and say which one you have (rule B2).
 
 ---
 
@@ -27,22 +26,22 @@ evidence attached; print this page and paste the disclosure block at the end.
 |---|---|---|
 | **A1** | State n beside every exclusivity / entropy figure | both are sample-size dependent: 98.9% at n = 25,000 vs 93.2% at n = 324,426, same data |
 | **A2** | State the granularity at which "chemistry" is defined | 74.7% (metal + 2 linkers) vs 93.2% (+ functional groups) |
-| **A3** | Report pooled / weighted / macro / median; headline on macro or median | pooled alone reads +0.381 where macro reads −0.541 |
+| **A3** | Report pooled / weighted / macro / median; choose the headline by the intended deployment population | pooled alone reads +0.381 where macro reads −0.541 |
 | **A4** | Check target variance on both sides before subtracting R² across splits | a 7.7× variance gap reversed the direction of the claim |
-| **A5** | Log-transform ratio targets before modelling | selectivity R² swings +0.42 … −0.06 without it |
+| **A5** | State why, and whether, a ratio target is log-transformed, including zero handling | selectivity R² swings +0.42 … −0.06 without it |
 | **A6** | Report the number of *valid* folds | a zero-variance fold silently turns `macro` into NaN (10–11 folds here, not 11) |
 | **B1** | Disclose the three diagnostic numbers in the paper, not only in the SI | single-group fraction, conditional-entropy ratio, count of pairs sharing chemistry |
-| **B2** | Do not call a grouped split "a test of transfer across the group" unless separable | call it what it is: a test of transfer to unseen chemistry |
-| **B3** | Report a ranking metric on a *shared support set* | top-1% hit rate fell 50.8% → 13.2% while R² fell 0.7066 → 0.3660 on the same 25,000-sample support set |
-| **B4** | Never align two databases by random compression to a common granularity | compression only coarsens, so it manufactures the difference it claims to remove |
-| **B5** | Align cross-database comparisons on r = n/M, not on raw n | two libraries can differ 100× in M at similar n; matching n matches nothing |
-| **B6** | Compare groupwise metrics only at a shared support set | a different support set is a different denominator, and those cannot be subtracted |
+| **B2** | Describe a grouped split by its held-out groups and the covariate shifts that accompany them; reserve claims about an isolated group effect for designs that identify that effect | predicting for an unseen topology is a legitimate deployment task; it is the *isolated group effect* that needs an identifying design |
+| **B3** | Report a ranking metric on a *shared support set* where a screening decision is the use case | top-1% hit rate fell 50.4% → 19.3% (five seeds) across the split, on the same 25,000-sample support set |
+| **B4** | Do not use random compression as a chemical-comparability correction (it may still serve as a null model or sensitivity analysis) | compression only coarsens, so it manufactures the difference it claims to remove |
+| **B5** | Report n, M and the composition frequency distribution; r = n/M alone does not make libraries comparable | two libraries can differ 100× in M at similar n; matching n matches nothing |
+| **B6** | Compare groupwise metrics at a common support set, or state the coverage and distribution of each population | a different support set is a different denominator, and those cannot be subtracted |
 | **B7** | Stratify the diagnostic by source sub-library | needs no cross-database comparison; range here 86.1% – 100.0% |
-| **C1** | Fix the test set and change only the training set before any causal claim | the only design in this study that supports a causal reading |
-| **C2** | Add a training-size-matched arm | separates *which* samples went from *how many*: 0.103 vs 0.107 vs 0.181 |
+| **C1** | Fix the test set and change only the training set for a training-intervention effect (this does not by itself isolate jointly-changing chemistry and geometry) | supports a training-intervention reading, not an automatic isolation of the chemical factor |
+| **C2** | Add a training-size-matched arm | separates *which* samples went from *how many* |
 | **C3** | State how many independent contrasts you actually have | one pair is not a population |
-| **C4** | A pair sharing zero chemistry is not a chemistry intervention | it reduces sample count and nothing else |
-| **D1** | Never `head()` a sorted CSV | enumerated files are sorted by topology, so the first N rows are a handful of topologies |
+| **C4** | Removing a topology with no shared chemical keys does not directly remove matched chemical examples, but it can still change training size, descriptor coverage, and the target distribution | it is not a chemistry intervention, and it is not a pure sample-count intervention either |
+| **D1** | Do not treat an ordered top-N slice as a random sample; state the sampling rule | enumerated files are sorted by topology, so the first N rows are a handful of topologies |
 | **D2** | Do not feed bootstrap replicates of one sample to a between-group test | resamples are not independent observations; the p-value is pseudo-replicated |
 | **D3** | Distinguish "not detected" from "zero" | median −0.011 at p = 0.28 is not proof of absence |
 | **D4** | Assert on row counts and column matches before computing | an empty frame once skipped a whole check silently |
@@ -83,13 +82,16 @@ checklist is mandatory or merely good practice.
       Report the definition, or report both.
 
 - [ ] **A3. Report all four aggregation rules** — pooled, weighted, macro, median —
-      and use **macro or median** for the headline. `pooled` concatenates every
-      fold's predictions and is dominated by the largest group: with the largest
-      group at 63% of the data, pooled = **+0.381** while macro = **−0.541**, and
-      dropping that one group moves the remaining folds to **−0.678**. The sign
-      reverses.
-      *Why this is not pedantry: reporting pooled alone turns a negative result
-      into a stably positive one.*
+      and choose the headline by the intended deployment population (macro or median for
+      per-group performance, pooled for whole-database deployment). `pooled` concatenates
+      every fold's predictions and is dominated by the largest group: with the largest
+      group at 63% of the data, pooled = **+0.381** while macro = **−0.541**; per-group
+      aggregates excluding that group give weighted **−0.678** and macro **−0.625**, while
+      pooled recomputed without that scoring fold is **+0.4629** (§3.5). The summaries use
+      different denominators, so their disagreement does not mean pooled's sign is produced
+      by the largest fold.
+      *Why this matters: a single pooled number does not disclose the sign and volatility
+      of the per-group view.*
 
 - [ ] **A4. Check target variance on each side before comparing R² across splits.**
       R² normalises by the test set's own variance, so it is not comparable between
@@ -99,9 +101,11 @@ checklist is mandatory or merely good practice.
       0.396) — the direction of the claim was reversed. Prefer MAE ÷ sd(y_test) when
       variances differ.
 
-- [ ] **A5. Log-transform ratio targets before modelling.** CO₂/N₂ selectivity has a
+- [ ] **A5. State why, and whether, a ratio target is log-transformed.** CO₂/N₂ selectivity has a
       median of ~8 and a maximum of ~31,600; without the log transform R² swings
-      between +0.42 and −0.06 depending on the random draw.
+      between +0.42 and −0.06 depending on the random draw. Logging is often sensible
+      but not automatic: document the zero handling and the error scale the application
+      actually cares about.
 
 - [ ] **A6. Report the number of *valid* folds.** When a test fold has zero target
       variance R² is undefined. Silently keeping NaN turns `macro` into NaN; silently
@@ -115,30 +119,36 @@ checklist is mandatory or merely good practice.
       and the number of group pairs sharing any chemistry. Without them a
       "leakage magnitude" figure cannot be compared across studies or databases.
 
-- [ ] **B2. Do not describe a grouped split as an isolated test of transferability across the
-      grouping variable** unless the diagnostic shows the variable is separable.
-      If chemistry is mixed into the split, describe the result as a mixed stress test and
-      quantify any controlled chemistry contribution separately; do not claim that the
-      protocol measures chemistry extrapolation alone.
+- [ ] **B2. Describe a grouped split by its held-out groups and the covariate shifts that
+      accompany them, and reserve claims about an isolated group effect for designs that
+      identify that effect.**
+      Predicting for an unseen topology is a legitimate deployment task; it is the
+      *isolated group effect* that needs an identifying design. If chemistry is mixed
+      into the split, describe the result as a mixed stress test and quantify any
+      controlled chemistry contribution separately; do not claim that the protocol
+      measures chemistry extrapolation alone.
 
-- [ ] **B3. Report a ranking metric that assumes nothing about target variance**,
-      on a *shared support set*: overlap@k, regret@k, or mean true value of the
-      selected top-k. In the companion study, switching to these metrics turned a
-      comfortable R² story into a top-1% hit rate falling **50.8% → 13.2%** and
-      regret growing **18.5% → 52.2%**. Same model, same data, same split — only
-      the currency changed.
+- [ ] **B3. Where a screening decision is the use case, report a ranking metric that
+      assumes nothing about target variance**, on a *shared support set*: overlap@k,
+      regret@k, or mean true value of the selected top-k. In the companion study the
+      top-1% hit rate falls **50.4% → 19.3%** (five seeds) on the same 25,000-sample
+      support set. Ranking metrics answer a different question from R² and should not be
+      read as a larger movement in the same unit.
 
-- [ ] **B4. Never align two datasets by randomly compressing chemistry to a common
-      granularity.** Random compression can only make a definition *coarser*, never
+- [ ] **B4. Do not use random compression as a chemical-comparability correction.**
+      Random compression can only make a definition *coarser*, never
       finer, so the larger library is distorted harder and the apparent difference
-      is manufactured rather than removed (we measured 406% inflation). Use two
+      is manufactured rather than removed (we measured 406% inflation). It may still
+      serve as an explicit null model or sensitivity analysis. For comparability, use two
       *real* definitions and check whether the conclusion survives both.
 
-- [ ] **B5. Align cross-database comparisons on r = n/M (samples per distinct
-      composition), not on raw n.** Two databases can differ by two orders of
-      magnitude in M while having similar n; matching on n matches nothing.
+- [ ] **B5. Report n, M, and the composition frequency distribution when comparing
+      databases.** Two databases can differ by two orders of magnitude in M while having
+      similar n; matching on n matches nothing, and matching on r = n/M alone does not make
+      the libraries comparable — report the full distribution.
 
-- [ ] **B6. Compare groupwise metrics at a shared support set, and say so.**
+- [ ] **B6. Compare groupwise metrics at a common support set, or state the coverage and
+      distribution of each population.**
       Changing the support set changes the denominator, and metrics on different
       subsets cannot be subtracted.
 
@@ -154,8 +164,9 @@ checklist is mandatory or merely good practice.
 
 - [ ] **C1. Build a controlled contrast: hold the test set fixed and change only
       the training set.** Remove the chemically matched group from training and
-      compare. This is the only design in the companion study that supports a causal
-      reading, and it is available only where two groups actually share chemistry.
+      compare. This supports a training-intervention effect; it does not by itself
+      isolate jointly-changing chemistry and geometry factors, and it is available
+      only where two groups actually share chemistry.
 
 - [ ] **C2. Add a training-size-matched arm.** Removing a group also removes its
       samples, so a naive before/after cannot separate *which* samples went from
@@ -172,15 +183,17 @@ checklist is mandatory or merely good practice.
       (rht ↔ tbo, 2 shared compositions) is too thin to train and evaluate on. One
       pair is not a population. Say so rather than implying generality.
 
-- [ ] **C4. If a group pair shares *zero* chemistry, removing it is not a chemistry
-      intervention.** It reduces sample count and nothing else; do not read a
-      degradation there as a chemical effect.
+- [ ] **C4. Removing a topology with no shared chemical keys does not directly remove
+      matched chemical examples, but it can still change training size, descriptor coverage,
+      and the target distribution.**
+      It is not a chemistry intervention, and it is not a pure sample-count intervention
+      either.
 
 ### D. Statistics that are easy to get wrong
 
-- [ ] **D1. Never `head()` a sorted file.** Enumerated MOF CSVs are sorted by
+- [ ] **D1. Do not treat an ordered top-N slice as a random sample.** Enumerated MOF CSVs are sorted by
       topology, so the first N rows contain a handful of topologies and every
-      statistic is wrong. Use a seeded random sample.
+      statistic is wrong. Use a seeded random sample and state the sampling rule.
 
 - [ ] **D2. Do not feed bootstrap replicates of one sample into a between-group
       test.** Resamples of the same rows are not independent observations; a

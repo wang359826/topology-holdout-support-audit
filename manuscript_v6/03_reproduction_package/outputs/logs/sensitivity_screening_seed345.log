@@ -1,0 +1,7 @@
+[screening seed=345] n=25000, non-physical rows=10
+  random/historical: mean_n_train=20000
+  random/cleaned: mean_n_train=19992
+  topology/historical: mean_n_train=20000
+  topology/cleaned: mean_n_train=19992
+wrote sensitivity_screening_seed345.csv (32 rows), predictions_screening_seed345.csv (100000 predictions) and sensitivity_screening_seed345.json
+gate: VERIFIED - variant A reproduces the archived reference

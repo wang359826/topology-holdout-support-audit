@@ -1,0 +1,10 @@
+=== LOTO verifier regression (scratch copies) ===
+
+PASS        archived data (unchanged)  rc=0  expected 0
+PASS        100k MAE -> 999            rc=1  expected non-zero
+PASS        100k R2 -> 999             rc=1  expected non-zero
+PASS        25k weighted -> 999        rc=1  expected non-zero
+PASS        100k valid_R2 -> False     rc=1  expected non-zero
+PASS        100k MAE -> -1             rc=1  expected non-zero
+
+REGRESSION: ALL AS EXPECTED

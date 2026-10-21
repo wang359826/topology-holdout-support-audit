@@ -1,0 +1,28 @@
+﻿key,value
+target,CO2_uptake_P0.15bar_T298K [mmol/g]
+raw_table,all_MOFs_screening_data.csv
+max_rows,25000
+random_state,42
+n_rows_sampled,25000
+n_rows_usable,25000
+n_rows_modelled,24985
+n_rows_dropped_nonphysical,15
+validity_rule,a negative value in any of the eight numeric descriptors is treated as a non-physical input for this figure
+model_fit_population,"full analysis sample (not a training fold), refitted after the validity rule"
+n_features,426
+n_estimators,120
+method,centred partial dependence (marginal expectation over the empirical background); NOT per-sample SHAP
+n_bins,24
+background_n,4000
+in_sample_r2,0.960581
+offset_definition,"mean of the per-tree root values (mean of tree means), not an explicit mean[f(background)] over the 4,000 background rows"
+baseline_mean_of_tree_means,0.519784
+top4_by_pdp_range,void_fraction; largest_included_sphere_diameter [A]; void_volume [cm^3/g]; volume [A^3]
+pdp_range_top4,0.7870; 0.3297; 0.2247; 0.2203
+python,3.12.15
+numpy,2.5.4
+pandas,3.0.6
+sklearn,1.9.1
+input_md5,81e9c75fcbf17368bce957ea06e7a79f
+script_sha256,fae0061f3c52c00c86d6a488021a6033d75240d1e2bc9d14c261b50ff09e8706
+generated_utc,2026-10-20T13:19:05Z

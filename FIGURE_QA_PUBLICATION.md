@@ -235,8 +235,10 @@ Figure S2，族级 SHAP 数字仍全部来自未改动的 `fig5_shap_family_fina
 
 1. **备份**：原 15 张 PNG 与两份 PDF →
    `03_reproduction_package/_backup_figures_20261015_figure_rebuild/`。
-2. **装入新图**：`figures_pub/_raster/*.png` → `01_manuscript/figures/`（15/15）。
-   文件名与 `build_pdf.py` 的 `FIG_MAP` 一一对应，无需改脚本。
+2. **装入新图**：`scripts/pubfig/_raster/*.png` → `01_manuscript/figures/`（15/15）。
+   这一步现在由 `scripts/export_final_figures.py` 一键完成（`--check` 逐字节核对），
+   避免「重出图后 PDF 仍嵌旧图」。文件名与 `build_pdf.py` 的 `FIG_MAP` 一一对应，
+   无需改脚本。
 3. **重建 PDF**：`build_pdf.py` 与 `build_pdf.py --si`。
    Edge headless 打印需要进程间管道，被本会话的文件访问策略拒绝
    （`mojo platform_channel: 拒绝访问`，exit 21），因此这两条命令以更宽的
@@ -248,6 +250,14 @@ Figure S2，族级 SHAP 数字仍全部来自未改动的 `fig5_shap_family_fina
    图内 7 pt 字到纸面就是 7 pt（旧图此处是 2.2–4.2 pt）。
 5. **图注同步**：`Manuscript.md` §6（Fig 1–8）与 `SI.md` §S15（Fig S1–S7），
    并修正 §S1 里对 Figure S2 的引用。
+
+> **关于 `audit_panel_alignment`（2026-10-18 起）**：这是重建时使用的自定义
+> `nature-figure` QA 技能模块，**不随本包分发**，也没有公开的 pip 安装源。为了让
+> `scripts/pubfig/build_*.py` 在没有它时仍可运行，`pubfig/style.py` 已把它的导入改为
+> **可选**：模块缺失时，多面板对齐门记为 `SKIPPED`（`recorded_condition`），渲染期的
+> 文本碰撞/压线检查（`audit_text_collisions`）照常执行，图照常导出。若要复现当时的
+> 对齐门结论，需自备该模块；本包的最终 600-dpi 图已随包，正常重建不需要它。
+> 这一段替代此前「强制依赖、无获取方法」的缺口。
 
 ## 8. 成品 PDF 两道审计的逐条判定
 

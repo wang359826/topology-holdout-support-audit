@@ -1,0 +1,31 @@
+100k per-fold table: 11 rows, duplicate group keys = 0
+100k folds: max |sqrt(SSE/n) - RMSE| = 1.11e-16
+100k folds: valid_R2 matches n_test/SST definition = True
+100k folds: max |1 - SSE/SST - R2| over valid folds = 8.88e-16
+100k folds: MAE <= RMSE on every fold = True
+100k folds: error metrics and sums of squares nonnegative = True
+100k folds: n_test and n_train positive = True
+100k weighted rebuilt from per-fold table: True
+100k macro rebuilt from per-fold table: True
+100k median rebuilt from per-fold table: True
+100k n_valid_folds rebuilt from per-fold table: True
+100k n_covered rebuilt from per-fold table: True
+per-fold R2 matches archived loto_per_topology_final.csv: True
+per-fold n_test matches: True
+aggregate pooled: recomputed=+0.381368 archived=+0.381368 match=True
+aggregate weighted: recomputed=-0.058919 archived=-0.058919 match=True
+aggregate macro: recomputed=-0.541415 archived=-0.541415 match=True
+aggregate median: recomputed=+0.278195 archived=+0.278195 match=True
+25k per-fold table: 55 rows, duplicate (seed, group) keys = 0
+25k folds: max |sqrt(SSE/n) - RMSE| = 6.52e-16
+25k folds: valid_R2 matches n_test/SST definition = True
+25k folds: max |1 - SSE/SST - R2| over valid folds = 1.74e-13
+25k folds: MAE <= RMSE on every fold = True
+25k folds: error metrics and sums of squares nonnegative = True
+25k folds: n_test and n_train positive = True
+25k weighted/macro/median rebuilt from per-fold table: True
+25k valid-fold count and covered rows rebuilt: True
+25k seeds matched: 5/5
+25k pooled match=True macro match=True median match=True validfold match=True
+
+verify: OK

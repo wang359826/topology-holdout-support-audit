@@ -1,0 +1,9 @@
+descriptor,grid_min,grid_max,n_valid,n_invalid
+volume [A^3],869.6852119999999,86677.026591,24985,0
+weight [u],535.14034,19374.778159999998,24985,0
+surface_area [m^2/g],328.41,6468.549999999999,24985,15
+void_fraction,0.03276,0.8144099999999999,24985,15
+void_volume [cm^3/g],0.02195,5.370949999999998,24985,0
+largest_free_sphere_diameter [A],3.0524750000000003,30.062639999999995,24985,14
+largest_included_sphere_along_free_sphere_path_diameter [A],1.48574,19.780234999999998,24985,14
+largest_included_sphere_diameter [A],2.811025,30.028075,24985,14

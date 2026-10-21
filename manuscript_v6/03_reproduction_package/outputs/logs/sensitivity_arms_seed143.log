@@ -1,0 +1,16 @@
+[arms seed=143] n=50000, non-physical rows=30
+  arm nbo/a/historical: n_train=42323
+  arm nbo/a/cleaned: n_train=42300
+  arm nbo/b/historical: n_train=10566
+  arm nbo/b/cleaned: n_train=10543
+  arm nbo/e/historical: n_train=30041
+  arm nbo/e/cleaned: n_train=30018
+  arm pcu/a/historical: n_train=18243
+  arm pcu/a/cleaned: n_train=18213
+  arm pcu/b/historical: n_train=10566
+  arm pcu/b/cleaned: n_train=10543
+  arm pcu/e/historical: n_train=11523
+  arm pcu/e/cleaned: n_train=11500
+wrote sensitivity_arms_seed143.csv (96 rows), predictions_arms_seed143.csv (236604 predictions) and sensitivity_arms_seed143.json
+  arms checked: a, b, e
+gate: VERIFIED - variant A reproduces the archived reference

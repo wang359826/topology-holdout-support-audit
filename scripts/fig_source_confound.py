@@ -57,7 +57,8 @@ def main():
     # ---- 面板 (b) 所需的零模型（source 内部逐样本置换，coarse，common support）----
     null_p = os.path.join(OUT, "common_support", "null_topology_cardinality.csv")
     if not os.path.exists(null_p):
-        null_p = os.path.join(OUT, "null_topology_cardinality.csv")
+        raise SystemExit("✗ 缺少 common_support/null_topology_cardinality.csv——"
+                         "请先用 common support 重跑 null_model_controls.py")
     nd = pd.read_csv(null_p)[["source", "observed", "null_mean", "b"]]
     d = d.merge(nd, on="source", how="left", validate="one_to_one")
     d["excess_pp"] = (d["observed"] - d["null_mean"]) * 100.0

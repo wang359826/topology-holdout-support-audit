@@ -1,0 +1,3 @@
+topo_col,key_definition,population,N,M,non_singleton_count,single_topology_non_singleton_count,fraction
+Crystalnet,metal_linker+organic_linker1,valid_rows,256351,180989,49869,48527,0.9730894945
+Crystalnet,metal_linker+organic_linker1+functional_groups,valid_rows,214543,177971,26380,25913,0.9822971948

@@ -1,0 +1,94 @@
+check,field,scope,metric,value
+field_validity,volume [A^3],full_database,n,324426.0
+field_validity,volume [A^3],full_database,n_missing,0.0
+field_validity,volume [A^3],full_database,n_negative,2.0
+field_validity,volume [A^3],full_database,n_zero,0.0
+field_validity,volume [A^3],full_database,min,-1.0
+field_validity,volume [A^3],full_database,max,223964.854408
+field_validity,weight [u],full_database,n,324426.0
+field_validity,weight [u],full_database,n_missing,0.0
+field_validity,weight [u],full_database,n_negative,2.0
+field_validity,weight [u],full_database,n_zero,0.0
+field_validity,weight [u],full_database,min,-1.0
+field_validity,weight [u],full_database,max,42873.3936
+field_validity,surface_area [m^2/g],full_database,n,324426.0
+field_validity,surface_area [m^2/g],full_database,n_missing,0.0
+field_validity,surface_area [m^2/g],full_database,n_negative,169.0
+field_validity,surface_area [m^2/g],full_database,n_zero,28528.0
+field_validity,surface_area [m^2/g],full_database,min,-1.0
+field_validity,surface_area [m^2/g],full_database,max,8085.62
+field_validity,void_fraction,full_database,n,324426.0
+field_validity,void_fraction,full_database,n_missing,0.0
+field_validity,void_fraction,full_database,n_negative,169.0
+field_validity,void_fraction,full_database,n_zero,5420.0
+field_validity,void_fraction,full_database,min,-1.0
+field_validity,void_fraction,full_database,max,0.91134
+field_validity,void_volume [cm^3/g],full_database,n,324426.0
+field_validity,void_volume [cm^3/g],full_database,n_missing,0.0
+field_validity,void_volume [cm^3/g],full_database,n_negative,0.0
+field_validity,void_volume [cm^3/g],full_database,n_zero,6467.0
+field_validity,void_volume [cm^3/g],full_database,min,0.0
+field_validity,void_volume [cm^3/g],full_database,max,9.6516
+field_validity,largest_free_sphere_diameter [A],full_database,n,324426.0
+field_validity,largest_free_sphere_diameter [A],full_database,n_missing,0.0
+field_validity,largest_free_sphere_diameter [A],full_database,n_negative,138.0
+field_validity,largest_free_sphere_diameter [A],full_database,n_zero,0.0
+field_validity,largest_free_sphere_diameter [A],full_database,min,-1.0
+field_validity,largest_free_sphere_diameter [A],full_database,max,51.24884
+field_validity,largest_included_sphere_along_free_sphere_path_diameter [A],full_database,n,324426.0
+field_validity,largest_included_sphere_along_free_sphere_path_diameter [A],full_database,n_missing,0.0
+field_validity,largest_included_sphere_along_free_sphere_path_diameter [A],full_database,n_negative,138.0
+field_validity,largest_included_sphere_along_free_sphere_path_diameter [A],full_database,n_zero,0.0
+field_validity,largest_included_sphere_along_free_sphere_path_diameter [A],full_database,min,-1.0
+field_validity,largest_included_sphere_along_free_sphere_path_diameter [A],full_database,max,29.26411
+field_validity,largest_included_sphere_diameter [A],full_database,n,324426.0
+field_validity,largest_included_sphere_diameter [A],full_database,n_missing,0.0
+field_validity,largest_included_sphere_diameter [A],full_database,n_negative,138.0
+field_validity,largest_included_sphere_diameter [A],full_database,n_zero,0.0
+field_validity,largest_included_sphere_diameter [A],full_database,min,-1.0
+field_validity,largest_included_sphere_diameter [A],full_database,max,51.24884
+field_validity,CO2_uptake_P0.15bar_T298K [mmol/g],full_database,n,324426.0
+field_validity,CO2_uptake_P0.15bar_T298K [mmol/g],full_database,n_missing,0.0
+field_validity,CO2_uptake_P0.15bar_T298K [mmol/g],full_database,n_negative,0.0
+field_validity,CO2_uptake_P0.15bar_T298K [mmol/g],full_database,n_zero,1901.0
+field_validity,CO2_uptake_P0.15bar_T298K [mmol/g],full_database,min,0.0
+field_validity,CO2_uptake_P0.15bar_T298K [mmol/g],full_database,max,5.955197
+union_mask,volume [A^3]|weight [u]|surface_area [m^2/g]|void_fraction|void_volume [cm^3/g]|largest_free_sphere_diameter [A]|largest_included_sphere_along_free_sphere_path_diameter [A]|largest_included_sphere_diameter [A],full_database,n_negative_union,169.0
+union_mask,volume [A^3]|weight [u]|surface_area [m^2/g]|void_fraction|void_volume [cm^3/g]|largest_free_sphere_diameter [A]|largest_included_sphere_along_free_sphere_path_diameter [A]|largest_included_sphere_diameter [A],full_database,share_of_rows,0.0521
+union_mask_by_topology,acs,full_database,n_negative,114.0
+union_mask_by_topology,nbo,full_database,n_negative,38.0
+union_mask_by_topology,pcu,full_database,n_negative,10.0
+union_mask_by_topology,tbo,full_database,n_negative,4.0
+union_mask_by_topology,sra,full_database,n_negative,2.0
+union_mask_by_topology,the,full_database,n_negative,1.0
+sample_incidence,n25000_seed42,analysis_sample,n_rows,25000.0
+sample_incidence,n25000_seed42,analysis_sample,n_negative,15.0
+sample_incidence,n25000_seed42,analysis_sample,share_of_rows,0.06
+sample_incidence,n25000_seed143,analysis_sample,n_rows,25000.0
+sample_incidence,n25000_seed143,analysis_sample,n_negative,18.0
+sample_incidence,n25000_seed143,analysis_sample,share_of_rows,0.072
+sample_incidence,n25000_seed244,analysis_sample,n_rows,25000.0
+sample_incidence,n25000_seed244,analysis_sample,n_negative,17.0
+sample_incidence,n25000_seed244,analysis_sample,share_of_rows,0.068
+sample_incidence,n25000_seed345,analysis_sample,n_rows,25000.0
+sample_incidence,n25000_seed345,analysis_sample,n_negative,10.0
+sample_incidence,n25000_seed345,analysis_sample,share_of_rows,0.04
+sample_incidence,n25000_seed446,analysis_sample,n_rows,25000.0
+sample_incidence,n25000_seed446,analysis_sample,n_negative,10.0
+sample_incidence,n25000_seed446,analysis_sample,share_of_rows,0.04
+sample_incidence,n50000_seed42,analysis_sample,n_rows,50000.0
+sample_incidence,n50000_seed42,analysis_sample,n_negative,29.0
+sample_incidence,n50000_seed42,analysis_sample,share_of_rows,0.058
+sample_incidence,n100000_seed42,analysis_sample,n_rows,100000.0
+sample_incidence,n100000_seed42,analysis_sample,n_negative,55.0
+sample_incidence,n100000_seed42,analysis_sample,share_of_rows,0.055
+support_audit_sensitivity,all_rows,full_database,n_rows,324426.0
+support_audit_sensitivity,all_rows,full_database,n_compositions,1622.0
+support_audit_sensitivity,all_rows,full_database,single_topology_by_composition,74.722565
+support_audit_sensitivity,all_rows,full_database,single_topology_by_structure,61.343419
+support_audit_sensitivity,all_rows,full_database,H_T_given_C_over_H_T,0.179942
+support_audit_sensitivity,excluding_negative_descriptors,full_database,n_rows,324257.0
+support_audit_sensitivity,excluding_negative_descriptors,full_database,n_compositions,1622.0
+support_audit_sensitivity,excluding_negative_descriptors,full_database,single_topology_by_composition,74.722565
+support_audit_sensitivity,excluding_negative_descriptors,full_database,single_topology_by_structure,61.33499
+support_audit_sensitivity,excluding_negative_descriptors,full_database,H_T_given_C_over_H_T,0.18003

@@ -183,6 +183,10 @@ def main():
                          "使 coarse/fine 共享同一支撑集（与主稿 §3.15 来源表口径一致："
                          "该表的 coarse 列也是在 mc/flig/func 三列齐全的行上算的）。"
                          "例如 --require-cols mc,flig,func")
+    ap.add_argument("--level", choices=["row", "composition"], default="row",
+                    help="对照 ① 的置换单位：row=逐行重排拓扑标签（正文所用单位）；"
+                         "composition=组成级（仅作可审计的否定对照，置换下恒等于观测值）。"
+                         "输出文件名随 level 变为 null_elite_permutation_{row,composition}.csv。")
     args = ap.parse_args()
 
     elite_path = os.path.join(args.data_dir, "top_MOFs_screening_data.csv")
@@ -195,12 +199,15 @@ def main():
     df_elite = pd.read_csv(elite_path, low_memory=False)
 
     os.makedirs(args.outdir, exist_ok=True)
-    res1 = control_1_elite_permutation(df_elite, comp_cols, b=args.b)
-    print("对照 ① 精英子集置换零模型（{} 粒度）:".format(args.granularity))
+    res1 = control_1_elite_permutation(df_elite, comp_cols, b=args.b,
+                                       level=args.level)
+    print("对照 ① 精英子集置换零模型（{} 粒度，level={}）:".format(
+        args.granularity, args.level))
     for k, v in res1.items():
         print(f"  {k}: {v}")
-    pd.DataFrame([res1]).to_csv(
-        os.path.join(args.outdir, "null_elite_permutation.csv"), index=False)
+    out1 = os.path.join(args.outdir, f"null_elite_permutation_{args.level}.csv")
+    pd.DataFrame([res1]).to_csv(out1, index=False)
+    print(f"已保存: {out1}")
 
     # 对照 ② 需要 ARC-MOF 元数据（四个文件，MD5 见 DATA.md）
     arcmof_top = os.path.join(args.data_dir, "arcmof", "all_topology_lists.csv")

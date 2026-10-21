@@ -4,10 +4,26 @@
 
 Reproduction package for the manuscript
 
+> **Version pointer (2026-10-21).** The current manuscript is the **v6 compressed
+> submission package** (4 main figures, 18 SI tables), *"What topology hold-out
+> removes — and what it does not"*. In the working tree it is the sibling package
+> `03_投稿专用包_v6压缩/`; in the v1.3 release it ships inside this archive as
+> `manuscript_v6/` (manuscript, SI, figures, cover letter and its own reproduction
+> supplement). The analysis record in this file is the v5 full-pipeline record.
+> Where the two differ — five-seed headline values replace seed-42 values, and the
+> ARC-MOF headline is the coarse 99.3% — **the v6 manuscript is authoritative**.
+
 > **Topology hold-out in the two enumerated MOF databases studied here is largely
 > chemistry hold-out: the two variables are structurally entangled, and the field's
 > gold-standard protocol therefore does not measure what it is usually read to
 > measure**
+>
+> **Superseded by the v6 manuscript** (see the version pointer above), which reports
+> the support loss (74.7% of coarse compositions are single-topology) and a
+> descriptive protocol ratio (the chemistry-key hold-out costs 21.1% of the topology
+> hold-out's R² decrease), and does **not** attribute the topology penalty to
+> chemistry. This boxed summary and the repository name are retained as a historical
+> working title, not as the claim of the current manuscript.
 
 Everything here is written for a reader who wants to check the claims, not take
 them on trust: one command per level regenerates the results assigned to that level.
@@ -17,9 +33,10 @@ archived for every step in `outputs/logs/`.
 | Document | Purpose |
 |---|---|
 | `README.md` | this file — claims, layout, quick start, honest limits |
-| `REPRODUCE.md` | detailed reproduction manual: levels, item→file mapping, known pitfalls |
+| `REPRODUCE.md` | detailed reproduction manual: levels, **the single authoritative claim/figure/table → producer → verification mapping (§4)**, known pitfalls |
 | `REPORTING_CHECKLIST.md` | **portable deliverable** — a 22-rule reporting checklist for anyone publishing a grouped-split result, derived from this study's own mistakes (one-page summary table first, evidence below) |
 | `DATA.md` | datasets, MD5 checksums, download commands, two data traps, citations |
+| `FIGURE_MANIFEST.md` | figure-number ↔ PNG-filename correspondence only (and the exclusion list of figures that must not be embedded); production/verification is in `REPRODUCE.md` §4 |
 
 The two new files under `scripts/` and the root are **not** part of the fixed
 L1–L5 pipeline: `confound_diagnostic.py` is a standalone tool you can point at
@@ -54,16 +71,26 @@ claim 2 exploits.
 
 ## Claims, and exactly where each one comes from
 
+> This is a **high-level** claim → section → script overview. The **authoritative**
+> claim/figure/table → full command → output → verification mapping (including seeds,
+> standalone steps, and the "verified / historical re-run / archive-only / not-verified"
+> status of every step) is maintained in **`REPRODUCE.md` §4** — do not edit one without
+> the other.
+>
+> Section numbers in the third column refer to the **v5** manuscript. The v6
+> manuscript reorganises the results: support audit §3.1, protocol contrasts §3.2,
+> interventions §3.3, screening §3.4, ARC-MOF §3.5.
+
 | # | Claim | Section | Script(s) |
 |---|---|---|---|
-| 1 | On the **full** hMOF database (324,426 structures) at **coarse** granularity — the granularity §3.2 selects for the headline — **74.7%** of chemical compositions occur in a single topology and H(topology \| chemistry) / H(topology) = **18.0%**; only **2 of 55** topology pairs share any chemistry (pcu ↔ nbo, rht ↔ tbo; every other pair has Jaccard = 0.000). The **fine**-granularity values (**93.2%**, **7.8%**) are **robustness checks, not the headline**: they are inflated by singleton compositions (at least 39.8% of fine compositions occur exactly once, and a singleton is single-topology by construction) and carry a Miller–Madow bias of ≈0.021 bit, i.e. 15% of the estimate. The statistic is **sample-size dependent** — 98.9% at n = 25,000 — so it is always reported with n. At coarse granularity the observed singleton count is 21 of 1,622 (1.3%), and the single-topology fraction among the remaining 1,601 is 74.4%, so the headline is not a singleton artefact | §3.2 | `full_db_confound.py` |
+| 1 | On the **full** hMOF database (324,426 structures) at **coarse** granularity — the granularity §3.2 selects for the headline — **74.7%** of chemical compositions occur in a single topology and H(topology \| chemistry) / H(topology) = **18.0%**; only **2 of 55** topology pairs share any chemistry (pcu ↔ nbo, rht ↔ tbo; every other pair has Jaccard = 0.000). The **fine**-granularity values (**93.2%**, **7.8%**) are **robustness checks, not the headline**: they are inflated by singleton compositions (at least 39.8% of fine compositions occur exactly once, and a singleton is single-topology by construction) and carry a Miller–Madow correction of ≈0.0307 bit, i.e. 22% of the estimate. The statistic is **sample-size dependent** — 98.9% at n = 25,000 — so it is always reported with n. At coarse granularity the observed singleton count is 21 of 1,622 (1.3%), and the single-topology fraction among the remaining 1,601 is 74.4%, so the headline is not a singleton artefact | §3.2 | `full_db_confound.py` |
 | 1b | **What a topology hold-out actually removes.** Three nested levels: **74.7%** of *compositions*, **61.3%** of *structures* and **44.2%** of *composition–topology memberships* are single-topology. Decomposed per held-out topology, **7 of the 11 topologies are pure chemistry hold-outs** (sra, etb, acs, bcu, pts, fof, the: 69,224 structures, 21.3% of the database, **100.0% unseen**), against 60.1% (pcu), 12.3% (nbo) and 0.0% (rht, on 14 structures). No composition spans more than two topologies, so the pairwise view is exact | §3.2 (Table 9) | `chemistry_seen.py` |
-| 2 | A **controlled isoreticular contrast** (same test set, only the training set changes; pcu ↔ nbo; 5 seeds): removing the matched topology raises nbo-side **MAE +70.0%** and **RMSE +77.9%**, far beyond seed noise; the pcu side does not move (−1.2%). A **size-matched arm** (nbo side: 10,647 training samples drawn from the 42,329-sample pool, 5 draws) gives **MAE 0.1030 ± 0.0031** against 0.1065 ± 0.0032 for the full pool and 0.1811 ± 0.0136 with pcu removed, so it is the *identity* of the removed samples, not their number. A **composition-matched arm (d)** draws the same number of samples stratified by topology so that its composition profile matches (b)'s exactly (496 compositions, 374 linker pairs); it reproduces (b)'s error to four decimals (0.1811 against 0.1811), which the manuscript reports as an internal-consistency check expected by construction rather than independent corroboration (§3.4, §4.5). **Arm (e)** goes further and separates the two explanations partially: it removes *only* the partner-topology rows whose composition occurs in the test set, driving matched-partner coverage to zero while keeping 1,144 of 1,532 compositions — this accounts for **34.9%** of the nbo degradation (MAE 0.1326 ± 0.0082 against 0.1065 ± 0.0032 and 0.1811 ± 0.0136), and it **reverses the sign on the pcu side** (0.2293 ± 0.0020 against arm (a)'s 0.2424 ± 0.0038, 3.4× the seed sd), so coverage of the test population's chemistry is not unconditionally beneficial | §3.4, §4.5 | `confound_diagnosis.py --size-match`, `diversity_control.py`, `partner_coverage_arm_e.py` |
-| 3 | Reporting discipline: the same leave-one-topology-out predictions give pooled R² = **+0.381**, weighted **−0.059**, macro **−0.541** and median **+0.278**; excluding pcu (63% of the data) the remaining 10 folds give weighted **−0.678** and macro **−0.625**. Read alone, pooled **reverses the sign** of the conclusion | §3.5 | `metrics_audit.py` |
-| 4 | In the currency practitioners care about — one shared support set, ranking metrics that assume nothing about target variance — the top-1% hit rate falls **50.8% → 13.2%**, the mean true uptake of the selected materials falls **2.706 → 1.587 mmol/g**, and regret against the oracle grows **18.5% → 52.2%** | §3.11 | `screening_utility.py` |
+| 2 | A **controlled isoreticular contrast** (same test set, only the training set changes; pcu ↔ nbo; five outer seeds 42/143/244/345/446; five-seed mean ± SD): removing the matched topology raises nbo-side **MAE +70.0%** (0.1065 ± 0.0032 → 0.1811 ± 0.0136 mmol/g; paired difference +0.0746, 95% t-interval +0.0592 to +0.0900) and RMSE +77.9%, far beyond seed noise; the pcu side does not move (−1.2%). A **size-matched arm (c)** that draws the same number of training rows at random from the full pool (n_train 10,656 against 42,381) leaves MAE essentially unchanged (0.1071 ± 0.0048; five outer seeds × five size-matched draws, averaged within seed before the seed-level SD — the seed-42 repeated-draw auxiliary c gives 0.1030 ± 0.0031, a distinct replication design kept in SI-C), so the degradation tracks **which rows** were removed, not how many. **Arm (d)**, the composition-profile-matched draw, is confined to (b)'s own row set (five-seed means: 42,381 − 31,725 = 10,656; seed 42: 42,329 − 31,682 = 10,647) and its aggregated MAE equals (b)'s by construction (nbo 0.1811 ± 0.0136; pcu 0.2396 ± 0.0010) — a construction-consistency check expected by construction, not independent corroboration. **Arm (e)** removes *only* the partner rows whose composition also occurs in the test set (12,342 rows carrying the 388 shared compositions, 387 at the seed-42 baseline), leaving 1,144 of 1,532 compositions and 30,039 of 42,381 rows: nbo-side MAE 0.1326 ± 0.0082 — more than the full pool but far less than removing the whole partner — while its size-matched draw (f) gives 0.1250 ± 0.0073, essentially unchanged from (e) and still far better than (b). The 34.9% / 65.1% split of the (a)→(b) degradation is an **ordering of magnitudes inside one contrast**, not a decomposition into two independent causal factors. The effect is **direction-dependent**: on the pcu test set arm (e) *improves* MAE to 0.2293 against arm (a)'s 0.2424 (paired (e)−(a) = −0.0131, 95% CI −0.0167 to −0.0096; (f)−(b) = −0.0092, −0.0144 to −0.0040), so the improvement is not a seed artefact. Post hoc, **arm (g)** removes the same number of partner rows at random without conditioning on shared composition and lies between (a) and (e) on both sides (pcu 0.2341; nbo 0.1189), so shared composition is a consistent increment on top of a generic partner-removal effect (SI-C.4). Partner coverage is therefore not uniformly beneficial | v5 §3.4/§4.5; v6 §3.3 | `confound_diagnosis.py --size-match`, `diversity_control.py`, `partner_coverage_arm_e.py`, `partner_random_g.py` |
+| 3 | Reporting discipline: the same leave-one-topology-out predictions give pooled R² = **+0.381**, weighted **−0.059**, macro **−0.541** and median **+0.278**. The summaries use different denominators: recomputing pooled while dropping only the pcu **scoring fold** gives +0.4629 (still positive and higher), while the per-group aggregates excluding pcu give weighted **−0.678** and macro **−0.625**. A single pooled number does not disclose the sign and volatility of the per-group view | §3.5 | `metrics_audit.py` |
+| 4 | In the currency practitioners care about — one shared support set, ranking metrics that assume nothing about target variance — across **five independently redrawn 25,000-sample support sets** (seeds 42, 143, 244, 345, 446) random-split validation recovered **50.4 ± 2.5%** of the true top 1% and topology-grouped validation **19.3 ± 7.1%** (mean ± SD), a fall of **31.1 percentage points**; the seed-42 baseline gives 50.8% → 13.2%. The intermediate strategies fill the ordering: chemistry key 44.0 ± 2.8%, linker pair 41.1 ± 4.1%, metal 29.2 ± 4.8%. Materials selected under topology-grouped validation averaged 1.742 ± 0.158 mmol/g, **46.3% below** the mean oracle uptake (seed-42: 1.587 against an oracle 3.319). Widening the budget to k = 5% and 10% attenuates but does not erase the gap, and the budget trend is **non-monotonic** (31.1 / 23.5 / 26.6 pp). Recovery stays far above the 1% chance level in every scheme — even the worst strategy selects ~19× the random expectation — but the gap between the best and the worst protocol is the point, not the absolute level. Random performed best and topology worst in all five seeds; the complete five-strategy ordering held in four of five, so the two endpoint rankings are robust while the middle ordering is seed-sensitive | v5 §3.11; v6 §3.4 | `screening_utility.py` |
 | 5 | On the elite subset the confound is **not diluted** — and the subset cannot show it strengthening: among hMOF's own elite subset (8,206 MOFs ≥ 2.0 mmol/g) **100.0%** of compositions are single-topology and H(topology \| chemistry) = **0.000 bit**, so the observable difference between "topology hold-out" and "chemistry hold-out" remains zero where screening actually selects. A **sample-level topology permutation null** puts the expected value at **21.4%** (sd 1.0%; 95% interval 19.4–23.4%; b = 10,000, **p < 1/10,000**), so this is not an arithmetic consequence of the subset's size or of its narrower topology pool. The stronger reading — that the coupling *strengthens* with performance — is **not** claimed: the subset contains no nbo, the one topology whose chemistry could overlap pcu's, so the zero rests partly on the selection rule; finer-grained counts are inflated by singletons and are reported only as robustness checks | §3.12 | `elite_subset_confound.py`, `null_model_controls.py` |
 | 6 | Across **10 targets** in a 2×2 design the **split** effect spans **0.001–0.571** (median 0.324, positive on 10/10, Wilcoxon p = 0.0020), while the **identity-feature** effect *within* a grouped split is indistinguishable from zero (median −0.011, 8/10 negative, p = 0.28) — the same features are worth **+0.031** under a random split (p = 0.0039). The identity effect is also **grouping-dependent**: zero for topology (−0.011) and metal-centre (+0.001, p = 0.49) groupings, but **+0.032 (p = 0.0039)** for the fine linker-pair grouping — so the "identity features are worthless under a grouped split" advice must **not** be generalised beyond coarse groupings. The mechanism is **measured, not inferred**: the grouping variable's own one-hot block is unavailable by construction (0.000 in every grouped split), and the effect size tracks the availability of the *surviving* identity blocks — 0.827 → −0.011, 0.909 → +0.001, 1.000 → +0.032, 1.000 → +0.031 (Spearman ρ = +0.95 under the tie convention of §4.2; the ρ = +1.00 ordering rests on a 7×10⁻⁶ availability difference and is deliberately not quoted) | §3.13, §3.14, §4.2 (Table 26) | `multitarget_confound.py`, `--group-col {metal,linker_pair}`, `chemistry_seen_grouping.py` |
-| 7 | **Replicated on a second database** built by a different pipeline (ARC-MOF v6, 264,225 MOFs; 301–486 topologies depending on which of the three topology columns shipped with the dataset is used): **99.7%** of compositions are still single-topology. ⚠️ ARC-MOF is **not independent** of hMOF (it spans all public MOF databases and shares two authors with it), so we **do not** claim independence; instead we bound any overlap by removing **any single** source sub-library, at **both** of the paper's chemistry definitions: the worst case (DB0 removed wholesale) leaves **98.57%** at the coarse granularity and **98.96%** at the fine one, and every other single removal leaves 99.22–99.84% | §3.15 | `arcmof_confound.py`, `arcmof_overlap.py` |
+| 7 | **Replicated on a second database** built by a different pipeline (ARC-MOF v6, 264,225 structures, of which 256,351 carry both metal and linker cluster keys — the other 7,874 lack them and are excluded; 301–486 topologies depending on which of the three topology columns shipped with the dataset is used): the coarse single-topology fraction is **99.3%**, which remains **97.3%** among the 49,869 non-singleton compositions, and the fine key gives **99.7%** (98.2% among its non-singletons) — the coupling does not reduce to a sparse-count artefact. ⚠️ ARC-MOF is **not independent** of hMOF (it spans all public MOF databases and shares two authors with it), so we **do not** claim independence; instead we bound any overlap by removing **any single** source sub-library, at **both** of the paper's chemistry definitions: the worst case (DB0 removed wholesale) leaves **98.57%** at the coarse granularity and **98.96%** at the fine one, and every other single removal leaves 99.22–99.84% | v5 §3.15; v6 §3.5 | `arcmof_confound.py`, `arcmof_overlap.py` |
 | 8 | **The confound is not uniform inside one database either.** Across ARC-MOF's source sub-libraries (7 with ≥ 200 samples and > 1 topology) it spans **86.1%–100.0%**, a spread 3,554× larger than a one-common-rate binomial null predicts (parametric bootstrap **p < 1/20,000**; `source_spread_test.py` — an earlier Kruskal–Wallis p was **withdrawn**, it was pseudo-replicated over bootstrap draws). The ordering is **identical at both real granularities** (Spearman ρ = 1.000). Confounding is a property of *how each sub-library was built*, not a constant of the database, and **not** a projection of topology richness: a within-source permutation null (sample-level, b = 1,000 per source) puts every source's observed exclusivity above its own null, with the excess running from **+2.6 pp** (DB15) to **+37.3 pp** (DB12) and no significant correlation with H(T) (Pearson r = +0.67, p = 0.10; Spearman ρ = +0.32, p = 0.48; Figure S6b) | §3.15 | `source_confound_granularity.py`, `null_model_controls.py`, `fig_source_confound.py` |
 | 9 | Cross-database magnitudes are **not comparable** unless three things are declared together: the **target**, the **granularity** at which "chemistry" is defined, and the **aggregation rule**. Compare at matched n (this effect alone is 98.9% → 93.2% inside hMOF) and never by randomly compressing the chemistry to a common granularity | §3.13–§3.15 | `sample_size_granularity.py`, `multi_seed_repeat.py` |
 
@@ -144,6 +171,16 @@ after any re-run; `run_all.py` now does it automatically.
 └── outputs/               ← every CSV and figure quoted in the manuscript
 ```
 
+### v1.3 archive layout
+
+The v1.3 release (GitHub tag `v1.3`, Zenodo archive) merges this reproduction
+package with the v6 submission package: this tree stays at the **archive root**
+and the v6 package — manuscript, SI, figures, cover letter and its own
+reproduction supplement — is added as **`manuscript_v6/`**. Every path in
+`DATA.md`, `REPRODUCE.md` and this file therefore stays valid inside the archive;
+`manuscript_v6/03_reproduction_package/REPRODUCE.md` maps every v6 claim to its
+producer and states what the v6 supplement adds.
+
 Scripts outside the fixed pipeline, kept only so the history can be traced:
 `granularity_control.py` (withdrawn) and `chemistry_topology_factorial.py` (design void).
 `cgcnn_mof.py` (the withdrawn deep-learning arm) is **not** in this package — it was moved
@@ -219,7 +256,9 @@ file the headline 93.2% comes from. Details in `REPRODUCE.md`, section 3.
 
 1. **Report four aggregation rules, always.** `pooled` is dominated by the
    largest group; with pcu holding 63% of hMOF, pooled = +0.381 while
-   macro = −0.541. Use **macro or median** for the main claim and publish all four.
+   macro = −0.541. Choose the headline by the intended deployment population
+   (macro/median for per-group performance, pooled for whole-database deployment)
+   and publish all four.
 2. **Check target variance before comparing R² across splits.** Our own withdrawn
    CGCNN comparison is the cautionary example (R² = −0.448 while MAE was actually
    better). Because R² is not robust here, §3.11 also reports hit rate and regret.
@@ -239,9 +278,13 @@ file the headline 93.2% comes from. Details in `REPRODUCE.md`, section 3.
 - The controlled contrast rests on a **single** isoreticular pair (pcu ↔ nbo) and
   does not generalise to all 11 hMOF topologies.
 - One set of structure-derived scalar descriptors is used. The deep-learning arm was
-  withdrawn (§3.7); the random-versus-topology gap was refitted under gradient
-  boosting and ridge (0.374 / 0.374 / 0.180, §3.1), so the gap is not an artefact of
-  the model family, but nothing here speaks to model capacity.
+  withdrawn (§3.7); the random-versus-topology gap is not specific to the model
+  family — gradient boosting and ridge were refit as single untuned fits (gaps
+  0.3742 and 0.180 against the forest's 0.3743; normalised by each family's own
+  random-split R²: 51.1% and 40.9% against 49.7%, so the normalisation does not
+  bring the families together and no equivalence is claimed) — and the gap is
+  **target-dependent** (log-selectivity 0.8357 → 0.7211 against uptake
+  0.7529 → 0.3786), so no single magnitude should be quoted without its target.
 - The cross-database replication uses ARC-MOF **metadata only** (chemical clusters
   plus topology); no adsorption property enters §3.15.
 - **ARC-MOF is not independent of hMOF.** We say so explicitly and bound it by

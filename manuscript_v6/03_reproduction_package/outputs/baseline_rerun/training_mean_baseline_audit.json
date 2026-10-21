@@ -1,0 +1,88 @@
+{
+  "created_at_utc": "2026-10-20T04:36:48.114274+00:00",
+  "input": {
+    "name": "all_MOFs_screening_data.csv",
+    "bytes": 148092921,
+    "md5": "81e9c75fcbf17368bce957ea06e7a79f",
+    "sha256": "19bd04e5839bb77d6e93e50064c0724c11752da9ef8dcb6930cf8773f887bf1a",
+    "rows": 324426,
+    "columns": 42
+  },
+  "reference": {
+    "name": "isoreticular_control_seeds.csv",
+    "sha256": "d4e9348ec080aa9945645f36e00f365aecfefed10eff11dff3c1067cc35ebc13"
+  },
+  "producer": {
+    "name": "training_mean_baseline.py",
+    "sha256": "d34df0cecd2833bd9e4b45535986e05813d99c8961e5f80f0597a415896963ae"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1"
+  },
+  "definition": {
+    "target": "CO2_uptake_P0.15bar_T298K [mmol/g]",
+    "seeds": [
+      42,
+      143,
+      244,
+      345,
+      446
+    ],
+    "sample_size": 50000,
+    "sampling": "pandas.DataFrame.sample(n=50000, random_state=seed)",
+    "filter": "numeric target and all eight numeric descriptors nonmissing",
+    "partner": "other topology with largest overlap of coarse composition keys",
+    "a": "train on all rows outside the test topology",
+    "b": "also remove the partner topology from training",
+    "constant": "arithmetic mean of each arm's training targets",
+    "metric": "mean(abs(y_test - mean(y_train))) / std(y_test, ddof=0)",
+    "summary": "mean and sample SD (ddof=1) of five per-seed metric values"
+  },
+  "sample_fingerprints": [
+    {
+      "seed": 42,
+      "sampled_n": 50000,
+      "retained_n": 50000,
+      "sampled_row_order_sha256": "2a51bbd0342d60e2884978565d6efa6545fd3ce23de1a6ed35467a7184240b61",
+      "retained_row_order_sha256": "2a51bbd0342d60e2884978565d6efa6545fd3ce23de1a6ed35467a7184240b61"
+    },
+    {
+      "seed": 143,
+      "sampled_n": 50000,
+      "retained_n": 50000,
+      "sampled_row_order_sha256": "959a01b60fb39556a21cc4de90626c57a99d13253ba3db19ad5412010574f3cc",
+      "retained_row_order_sha256": "959a01b60fb39556a21cc4de90626c57a99d13253ba3db19ad5412010574f3cc"
+    },
+    {
+      "seed": 244,
+      "sampled_n": 50000,
+      "retained_n": 50000,
+      "sampled_row_order_sha256": "36fff3471ce6a7eed740163c1e495ce3c48bd280bd0249fb346388a234ee4f14",
+      "retained_row_order_sha256": "36fff3471ce6a7eed740163c1e495ce3c48bd280bd0249fb346388a234ee4f14"
+    },
+    {
+      "seed": 345,
+      "sampled_n": 50000,
+      "retained_n": 50000,
+      "sampled_row_order_sha256": "c3fff3d9bd24a8981462b1f47a94841c2952c20dc95c70797fc265b41539b7bc",
+      "retained_row_order_sha256": "c3fff3d9bd24a8981462b1f47a94841c2952c20dc95c70797fc265b41539b7bc"
+    },
+    {
+      "seed": 446,
+      "sampled_n": 50000,
+      "retained_n": 50000,
+      "sampled_row_order_sha256": "1ebcfb0f8812782500ecd2212687c59c4671f11534e89edc7e89bf866ed18392",
+      "retained_row_order_sha256": "1ebcfb0f8812782500ecd2212687c59c4671f11534e89edc7e89bf866ed18392"
+    }
+  ],
+  "checks": {
+    "raw_md5_matches": true,
+    "all_20_train_counts_match": true,
+    "all_20_test_SDs_match_RF_archive": true
+  },
+  "model_training": false,
+  "verification_scope": "raw-data recomputation and archived RF alignment checks",
+  "human_author_independent_rerun": "not established by automated execution"
+}

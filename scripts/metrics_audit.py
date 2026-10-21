@@ -16,10 +16,11 @@
       macro    R² = -0.541   ← 逐拓扑 R² 简单平均（每种拓扑同等权重）
       median   R² = +0.278   ← 逐拓扑 R² 中位数
 
-pooled 之所以为正，是因为 pcu（63,447 个样本、R²=+0.298）在池子里占 63%，
-把 etb(−2.49)、fof(−1.92)、nbo(−0.94) 的灾难性失败稀释掉了。
-**用 pooled 去代表"未见拓扑下的典型表现"是错的**，方向甚至是反的：
-剔除 pcu 后其余 10 组的加权平均是 −0.678。
+pooled 为正、macro 为负，是因为两者用了不同的分母与权重：pooled 把各折预测拼成
+一份，对总均值只算一次；macro 是逐折 R² 的等权平均。前者确实受最大组 pcu
+（63,447 个样本、R²=+0.298）主导，但**排除 pcu 评分折后 pooled 仍为正（+0.4629）**，
+所以「剔除 pcu 后其余 10 组加权 −0.678」是逐组口径的结论，不能当作 pooled 的替代；
+pooled 与 macro 的符号分歧来自分母不同，不是「正值完全来自 pcu」。
 
 本脚本从已落盘的 per-group / per-fold CSV 重算四种口径，
 输出一份"再也不能拿 pooled 冒充"的对照表（Table 2 修正版）。
@@ -31,9 +32,15 @@ pooled 之所以为正，是因为 pcu（63,447 个样本、R²=+0.298）在池�
 
 import argparse
 import os
+import sys
 
 import numpy as np
 import pandas as pd
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+except Exception:  # noqa: BLE001
+    pass
 
 
 def four_ways(d, r2col="R2", ncol="n_test"):
@@ -59,6 +66,7 @@ def main():
 
     out_rows = []
     reports = []
+    complete = True          # False → 归档复核/缺输入，不覆盖归档 CSV
 
     # ------------------------------------------------------------------
     # 1) 留一拓扑：per-group CSV
@@ -71,6 +79,9 @@ def main():
     ]:
         p = os.path.join(args.outdir, fn)
         if not os.path.exists(p):
+            print(f"  [missing] {label}: 缺 {fn}；先跑 "
+                  f"mof_leakage_benchmark.py --max-rows 100000 --loto --tag final")
+            complete = False
             continue
         d = pd.read_csv(p)
         agg = four_ways(d)
@@ -82,6 +93,24 @@ def main():
             m = lr[lr["strategy"].astype(str).str.contains(key, na=False)]
             if len(m):
                 pooled = float(m["R2"].iloc[0])
+        if pooled is None:
+            # 归档复核：从现有 metrics_audit.csv 恢复（无需重跑 benchmark）。
+            # 一进入该分支就视为“归档复核”模式：即便恢复成功，也不覆盖正式结果。
+            complete = False
+            old_path = os.path.join(args.outdir, "metrics_audit.csv")
+            if os.path.exists(old_path):
+                try:
+                    old = pd.read_csv(old_path, encoding="utf-8-sig")
+                    hit = old[old["result"].astype(str) == label]
+                    if len(hit) and pd.notna(hit["pooled_as_reported"].iloc[0]):
+                        pooled = float(hit["pooled_as_reported"].iloc[0])
+                        print(f"  [archive] {label}: pooled 从现有 metrics_audit.csv 恢复")
+                except Exception as exc:  # noqa: BLE001
+                    print(f"  [archive] {label}: 读取旧 metrics_audit.csv 失败 ({exc})")
+        if pooled is None:
+            print(f"  [missing] {label}: 缺 {pooled_fn}（pooled 无法从归档恢复）；"
+                  f"先跑 mof_leakage_benchmark.py --max-rows 100000 --loto --tag final")
+            complete = False
 
         # 剔除最大组后再算一次，检验"被大组主导"的程度
         if "topology" in fn:
@@ -103,9 +132,10 @@ def main():
                 **agg_rest,
             })
 
+        pooled_txt = f"{pooled:.4f}" if pooled is not None else "n/a (missing input)"
         reports.append(
             f"\n【{label}】\n"
-            f"  稿件里报的 pooled R² = {pooled:.4f}\n"
+            f"  稿件里报的 pooled R² = {pooled_txt}\n"
             f"  macro(每组等权)      = {agg['macro']:+.4f}\n"
             f"  weighted(按 n 加权)  = {agg['weighted']:+.4f}\n"
             f"  median               = {agg['median']:+.4f}\n"
@@ -143,7 +173,13 @@ def main():
 
     df = pd.DataFrame(out_rows)
     op = os.path.join(args.outdir, "metrics_audit.csv")
-    df.to_csv(op, index=False, encoding="utf-8-sig")
+    if complete:
+        df.to_csv(op, index=False, encoding="utf-8-sig")
+    else:
+        # 归档复核 / 缺输入：不覆盖已有 metrics_audit.csv（避免把完整的归档写残），
+        # 只把本次可算的部分写到 *review* 文件，便于对照。
+        rp = os.path.join(args.outdir, "metrics_audit.review.csv")
+        df.to_csv(rp, index=False, encoding="utf-8-sig")
 
     print("=" * 78)
     print("指标口径审计")
@@ -159,7 +195,11 @@ def main():
     print("  3. 若 pooled 与 macro 符号相反，必须在正文明确说明，并解释原因。")
     print("  4. 比较 R² 时，两侧测试集的目标变量方差必须可比；方差不同则改用")
     print("     RMSE 或标准化后的指标。")
-    print(f"\n已保存: {op}")
+    if complete:
+        print(f"\n已保存: {op}")
+    else:
+        print(f"\n⚠️ 输入不完整（见上方 [missing]/[archive]）——"
+              f"未覆盖归档的 metrics_audit.csv；本次复核写入 {rp}")
 
 
 if __name__ == "__main__":
