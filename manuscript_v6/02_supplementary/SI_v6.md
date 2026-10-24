@@ -54,7 +54,7 @@ the S_g curve uses 100 to match the ten-target panel.
 
 | Experiment | Section | Rows | Features | Trees | Split | Replication unit |
 | --- | --- | ---: | --- | ---: | --- | --- |
-| Protocol comparison | §3.2 | 100,000 | 426 / matched 415 | 120 | random KFold; grouped GroupKFold (chemistry/linker/metal/topology); separate LOTO (11 folds) | single run |
+| Protocol comparison | §3.2 | 100,000 | 426 / matched 415 | 120 | shuffled 5-fold KFold, seed 42; GroupKFold(5); separate LOTO (11 folds) | single run |
 | Controlled intervention | §3.3 | 50,000 | 426 | 120 | fixed test set, training pool varied (arms a–f) | 5 outer seeds; arm (c) 5×5 nested draws |
 | Screening | §3.4 | 25,000 | 426 | 120 | 5 strategies, out-of-fold on a shared support set | 5 seeds |
 | Multi-seed LOTO aggregation | SI-D | 25,000 | 426 | 100 | LOTO per topology | 5 seeds |
@@ -64,7 +64,11 @@ the S_g curve uses 100 to match the ten-target panel.
 | Geometric residual model (η²) | §4.2 | 25,000 | 8 numeric descriptors | 120 | shuffled 5-fold KFold | single run |
 | Single-group residual predictor (η²) | §4.2 | 25,000 | one-hot for the named grouping variable | 120 | shuffled 5-fold KFold | single run |
 
-The hMOF release's 42 fields group as 28 property-and-error fields, 8 numerical structure
+The random-split arms use shuffled 5-fold KFold at seed 42, the grouped arms use GroupKFold(5)
+over the same rows, and the LOTO runs hold out one topology per fit. The 426 one-hot columns
+are built once over the sampled rows before splitting, so every fold shares the vocabulary;
+the follow-up representation study instead fits encoders within each fold. The hMOF release's
+42 fields group as 28 property-and-error fields, 8 numerical structure
 descriptors, 5 identity fields (metal centre, two linkers, functional group, topology) and 1
 `MOFname` identifier. Models use the 8 descriptors plus the categorical one-hot blocks of
 §2.3.
@@ -73,7 +77,11 @@ descriptors, 5 identity fields (metal centre, two linkers, functional group, top
 
 The complete checklist is reproduced here (the one-page summary table and the rules); the
 long-form evidence per rule lives in `REPORTING_CHECKLIST.md` alongside the runnable
-`scripts/confound_diagnostic.py`. The three principles of main-text §4.3 are the condensed
+`scripts/confound_diagnostic.py`.
+
+**Read this before applying any rule: on an enumerated library a high single-topology fraction is partly expected from the building-block recombination recipe, so the audit reports the size of the coupling, not its cause. The numbers must not be quoted as evidence about MOF chemistry, and a reporter should state whether their own library is enumerated before quoting the fraction as a finding.** This warning governs every rule below, which is why it is stated once here instead of being repeated in 22 rows.
+
+The three principles of main-text §4.3 are the condensed
 form of these 22 rules.
 
 | # | Rule | Why it matters here |
@@ -306,7 +314,11 @@ first-order Miller–Madow correction is
 ΔH(T|C) = (K_TC − K_C)/(2 N ln 2): 0.000912 bit (0.3%) at coarse and 0.0307 bit (22%) at
 fine, against H(T|C) = 0.320 and 0.139 bit. The coarse headline is barely affected by the
 observed singleton count (21 of 1,622, i.e. 1.3%; 74.4% among non-singletons against 74.7%
-overall). The correction is a first-order diagnostic, not a proof of unbiasedness.
+overall). The correction is a first-order diagnostic, not a proof of unbiasedness. Because a
+22.1% correction demotes the hMOF fine value while a 19.8% correction leaves the ARC fine value
+standing, "survives" means only that the corrected value stays well above the coarse comparison;
+all fine-granularity values are reported as robustness checks rather than headline estimates,
+whatever their correction.
 The `NA` fill convention inherited from `chemistry_seen.py` does not merge distinct values
 here: the three coarse key fields have 0 missing and 0 literal `NA` values, and the fine
 key's only missing category is the 1,997 unannotated functional-group entries (no literal
@@ -597,7 +609,7 @@ values (−0.541 and −0.531) are close by coincidence, not identity.
 
 ### SI-D.2 Model families and the second target
 
-The random-to-topology gap was refit under gradient boosting and ridge (single fits, no
+The three families are instantiated as `RandomForestRegressor(n_estimators=120, random_state=42)`, `HistGradientBoostingRegressor(random_state=42)` with scikit-learn defaults, and `StandardScaler` followed by `RidgeCV(alphas=(0.1, 1.0, 10.0, 100.0))`; the 100,000-row subsample is drawn with `random_state=42` and no seed is varied, so each family contributes one fit per protocol. The random-to-topology gap was refit under gradient boosting and ridge (single fits, no
 tuning), confirming it is not specific to random forests; the per-family rows are in
 `outputs/leakage_results_gb100k.csv` and `outputs/leakage_results_ridge100k.csv`. The
 second target (log-selectivity) is in `outputs/leakage_results_logsel100k.csv`; the main
@@ -829,8 +841,9 @@ values, both singleton counts and both corrections); the marginals are also in
 
 **Why the audit N is 256,351.** The ARC-MOF release has 264,225 structures; 7,874 lack the
 metal/linker cluster keys and are excluded from the coarse audit (256,351 rows). The fine
-key additionally requires a functional-group key, which 49,682 structures lack, leaving
-214,543 rows. Rows are therefore dropped by key availability, not by topology; the
+key additionally requires a functional-group key. Of the 256,351 coarse-valid rows,
+41,808 lack that key and the remaining 214,543 carry both; 49,682 is the full-release count
+of structures missing either key (264,225 − 214,543). Rows are therefore dropped by key availability, not by topology; the
 topology column used here is `Crystalnet`.
 
 **Cluster IDs are chemistry-level labels generated from RAC descriptors.** The release
@@ -1097,7 +1110,9 @@ medians of unit novelty (0.1742241556) and far fraction (0.2340862423), contain
 1/5/5/0 topologies in the low/low, low/high, high/low and high/high cells.
 These sparse strata do not establish complementary predictive value. Negative
 distance correlations do not imply that greater distance improves predictions.
-Absolute archived fold MAE is not a matched random-to-LOTO performance loss.
+Absolute archived fold MAE is not a matched random-to-LOTO performance loss. Fourteen
+correlations are reported here (seven diagnostics by two fold sets); no multiplicity correction
+is applied and they are exploratory.
 *Source data:* `experiment4/fold_diagnostics.csv`,
 `experiment4/joint_group_strata.csv` and `experiment4/analysis_metadata.json`.
 
@@ -1113,7 +1128,7 @@ shared rows. These percentages describe the partner subset, not complete test
 coverage: even 100% gives only 78.75% and 15.08% exact-key coverage of the respective
 historical test sets.
 
-Five seeds vary the model and replacement order, with the same fixed pools and
+Five seeds (42, 143, 244, 345, 446) vary the model and replacement order, with the same fixed pools and
 test rows. At the endpoints, training membership is fixed across seeds.
 The RF has 120 trees and default `max_features=1.0`.
 Paired intervals below describe conditional learner variability, not uncertainty
@@ -1156,7 +1171,7 @@ Categorical encoding is fitted on training rows only. G/B/I have the definitions
 above, and topology is not an input. RF and ET each have 120 trees with default
 `max_features=1.0`, unlike the `'sqrt'` setting in experiment 1.
 Absolute differences across these experiments cannot be attributed to representation
-alone. Five learner seeds keep training and candidate membership fixed.
+alone. Five learner seeds (42, 143, 244, 345, 446) keep training and candidate membership fixed.
 
 Budgets are 1%, 5%, 10% and 20%, with k = ceil(N × fraction).
 True and predicted ties are resolved by the original source-row ID. Recovery is
