@@ -4,11 +4,11 @@
 Tao Wang, College of Chemical Engineering, Nanjing Tech University, Nanjing 211816, China
 
 > This Supporting Information accompanies the main text. Its sections are
-> organised into eight thematic containers — **SI-A** (data, methods and reporting
+> organised into nine thematic containers — **SI-A** (data, methods and reporting
 > standard), **SI-B** (support audit and identification bounds), **SI-C** (fixed-test-set
 > interventions), **SI-D** (protocol and aggregation robustness), **SI-E** (diagnostics and
 > alternative analyses), **SI-F** (screening and elite subset), **SI-G** (ten targets and
-> identity information) and **SI-H** (ARC-MOF sources and granularity). Tables are numbered
+> identity information) **SI-H** (ARC-MOF sources and granularity) and **SI-I** (six follow-up experiments and evidence limits). Tables are numbered
 > `Table S1` … in the order they appear.
 
 ---
@@ -37,6 +37,13 @@ under `outputs/`. `outputs/MD5SUMS.txt` is regenerated from that archive by
 against the files. Table S7 has a separate SHA256 manifest under `outputs/baseline/`.
 Final figure files are stored under `../01_manuscript/figures/`. The manuscript and SI
 PDFs are built from their Markdown sources and the designated final figures.
+
+The code deposit is described in main-text §9: the concept DOI
+`10.5281/zenodo.23415179` resolves to the latest deposited version, which is the version of
+record for every analysis in this manuscript (original pipeline plus the six follow-ups of
+SI-I and the sensitivity runs); the version DOI `10.5281/zenodo.23434268` refers to v1.3,
+which contains the original analyses only. Both this SI and the manuscript quote the same
+two identifiers, so the reader can tell which archived bytes support which claim.
 
 ### SI-A.2b Model and experiment parameters
 
@@ -85,7 +92,7 @@ form of these 22 rules.
 | **B6** | Compare groupwise metrics at a common support set, or state the coverage and distribution of each population | a different support set is a different denominator, and those cannot be subtracted |
 | **B7** | Stratify the diagnostic by source sub-library | needs no cross-database comparison; range here 86.1% – 100.0% |
 | **C1** | Fix the test set and change only the training set for a training-intervention effect (this does not by itself isolate jointly-changing chemistry and geometry) | supports a training-intervention reading, not an automatic isolation of the chemical factor |
-| **C2** | Add a training-size-matched arm | separates *which* samples went from *how many* |
+| **C2** | Add a training-size-matched arm | Tests whether random thinning to the same size reproduces the contrast; it does not isolate chemistry or exclude size–distribution interactions. |
 | **C3** | State how many independent contrasts you actually have | one pair is not a population |
 | **C4** | Removing a topology with no shared chemical keys does not directly remove matched chemical examples, but it can still change training size, descriptor coverage, and the target distribution | it is not a chemistry intervention, and it is not a pure sample-count intervention either |
 | **D1** | Do not treat an ordered top-N slice as a random sample; state the sampling rule | enumerated files are sorted by topology, so the first N rows are a handful of topologies |
@@ -332,11 +339,12 @@ the same topology, measured on one common run (100,000 samples, the 100-tree, se
 model, leave-one-topology-out; `scripts/s_g_curve.py`, `outputs/s_g_curve.csv`). That run
 is distinct from the 120-tree LOTO run behind Table S8, which is why the two tables'
 per-topology R² values differ in the second decimal (for example etb −2.55 here against
-−2.49 there); neither is a correction of the other. **It does not.**
-Seven of the eleven topologies share S_miss = 1.000 yet their pooled R² spans −2.55 (etb)
-to +0.47 (bcu); across the ten topologies with n_test ≥ 100 the relation is flat
-(Pearson r = +0.10, p = 0.78; Spearman ρ = +0.28, p = 0.44), and it stays non-significant
-excluding pcu (r = +0.53, p = 0.11) (Figure S7).
+−2.49 there); neither is a correction of the other. This exploratory analysis did not
+establish a statistical association. Seven of the eleven topologies share S_miss = 1.000
+yet their pooled R² spans −2.55 (etb) to +0.47 (bcu). Across the ten topologies with
+n_test ≥ 100, Pearson r = +0.10 (p = 0.78) and Spearman ρ = +0.28 (p = 0.44); excluding
+pcu gives r = +0.53 (p = 0.11). These small-sample results do not establish absence of an
+association (Figure S7).
 
 **Table S3.** S_g curve: per held-out topology, on one common run (100,000 samples).
 
@@ -359,10 +367,11 @@ populations, so their differences cannot be attributed uniquely to the model or 
 the panel is a descriptive sensitivity analysis. R² on the *same* test rows is a strong
 control (the denominator does not change), and R² on different populations can still be
 reported — it just cannot be differenced as a model or protocol effect. The
-flat S_miss–R² relation means the unseen-chemistry rate alone does not order the observed
-cross-topology costs. This does **not** weaken the controlled contrast of §3.3, where the
-test set is held fixed and S_miss is varied *within one test population* (MAE +70.0%); it
-says the metric does not transfer to a *cross-topology* comparison.
+exploratory S_miss–R² analysis does not establish an error ordering across topology
+groups. It uses a different outcome and model configuration from the absolute-MAE
+associations in SI-I.4; neither analysis calibrates a prospective risk rule.
+The fixed-test intervention in §3.3 addresses a separate within-population
+training-pool contrast.
 
 ---
 
@@ -370,7 +379,8 @@ says the metric does not transfer to a *cross-topology* comparison.
 
 ### SI-C.1 Arms and the two size-matched designs
 
-The six arms (a–f) are defined in the main text Methods. Two distinct size-matched (c)
+The six prespecified arms (a–f) are defined in the main text Methods, which also defines
+the post hoc arm (g) used only as a control in SI-C.4. Two distinct size-matched (c)
 designs exist and are kept separate: the **nested (c)** (0.1071 ± 0.0048 MAE on nbo,
 0.2364 ± 0.0031 on pcu, from `scripts/diversity_control.py`,
 `outputs/composition_matched_control.csv`) makes five size-matched draws **within each of
@@ -481,18 +491,21 @@ on whether their composition occurs in the test set. This control was run after 
 design was fixed; it is a post hoc check, not a new preregistered arm, and it does not change
 Table 2.
 
-On pcu, e < g < a in all five seeds (a 0.2424, e 0.2293, g 0.2341; g−e +0.0049, range
-+0.0012…+0.0121). On nbo, e > g > a in all five (a 0.1065, e 0.1326, g 0.1189; g−e
-−0.0137, range −0.0173…−0.0093). A generic partner-row removal therefore accounts for part
-of the pcu improvement and part of the nbo degradation, but the shared-composition arm is
-consistently more extreme: the shared-specific increment is +0.0049 mmol/g on pcu (e lower
-than g) and +0.0137 mmol/g on nbo (e higher than g). The direction dependence is therefore
-not an artefact of arm (e)'s size, but it is also not purely a “shared composition” effect;
-both components are present. *Source data:* `outputs/partner_random_g.csv` (g) and
-`outputs/arm_e_partner_coverage.csv` (a, e); producer `scripts/partner_random_g.py` (five
-seeds, same fixed test sets, same 120-tree forest). A second chemistry-matched pair is not
-available in hMOF (only pcu ↔ nbo and rht ↔ tbo, the latter with two shared compositions),
-so this is a within-pair control, not a between-pair replication.
+The original five-seed means are a/e/g = 0.2424/0.2293/0.2341 mmol/g on pcu
+and 0.1065/0.1326/0.1189 on nbo. A paired-seed reanalysis gives e−g =
+−0.004850 mmol/g for pcu (95% t interval [−0.010086, +0.000385]) and
++0.013668 for nbo ([+0.009000, +0.018337]). The pcu interval includes zero.
+Thus e's improvement over a does not establish a composition-specific advantage
+over same-count random partner deletion. These are contrasts between training
+interventions within one chemistry-overlapping pair; they do not isolate shared
+composition from descriptor or target-distribution changes. The five sample redraws
+overlap within the same database, so the intervals do not represent independent
+external validation. A second adequately supported chemistry-matched pair is not
+available in hMOF (rht ↔ tbo has only two shared compositions).
+*Source data:* `outputs/partner_random_g.csv`, `outputs/arm_e_partner_coverage.csv`
+and `outputs/followup_20261023/experiment5/main_a_e_g_paired.csv`.
+The fixed-size matched replacement follow-up (SI-I.5) addresses a different
+intervention and retains residual composition and outcome differences.
 
 ---
 
@@ -679,8 +692,11 @@ holds.
 | structure-derived + hash encoding (32-dim) | 40 | 0.6652 | 0.3762 | 0.289 |
 | structure-derived + **in-fold target encoding** | 11 | 0.6998 | 0.2885 | **0.411** |
 
-Deleting identity features leaves the grouped-split R² essentially unchanged (0.366 →
-0.374), so the value of identity features is realised entirely under the random split.
+In this single-run comparison using the original identity block, removing that block
+changes topology-grouped R² from 0.366 to 0.374 while lowering random-split R². This
+does not characterize the effect of adding linker identities: the follow-up I−B
+comparisons use a different identity block, encoding and feature-subsampling setting
+(SI-I.1).
 Under this implementation, in-fold target encoding increased the random-versus-grouped
 performance gap (0.411 against the 0.341 baseline); the implementation encodes each training fold with its own whole-fold
 category means and no inner cross-fitting, and a canonical inner-cross-fitted implementation
@@ -716,7 +732,33 @@ SD across the five seeds; the same five seeds for every strategy).
 The gap persists at all three budgets and is not monotonic in k: 31.1 percentage points
 at 1%, 23.5 at 5% and 26.6 at 10% (random minus topology, five-seed means). The main text
 quotes the k = 1% headline and refers the 5%/10% values here rather than mixing them with
-the seed-42 numbers. *Source data:* `outputs/screening_utility_seed{42,143,244,345,446}.csv`.
+the seed-42 numbers. For the k = 1% headline the five paired within-seed differences give
+31.12 ± 5.26 percentage points (95% paired t interval 24.59 to 37.65; t(4) = 13.24,
+p = 1.9 × 10⁻⁴), computed by `scripts/screening_paired_tests.py` and archived in
+`outputs/paired_tests_20261024.csv`; the 5% and 10% gaps are reported descriptively only,
+because k = 1% is the prespecified headline budget and no test is attached to the wider
+budgets. As in the main text, the interval describes seed-to-seed variation within one
+database. *Source data:* `outputs/screening_utility_seed{42,143,244,345,446}.csv`.
+
+**Tie audit at the truncation.** Row-level predictions are archived for the random and
+topology strategies (five seeds, two row policies: historical and cleaned). At k = 1%, 5%
+and 10% no predicted score tie straddles the cut in any of the 60 combinations; the maximum
+number of rows sharing the boundary score is one. Re-ranking the tied block by lowest source
+row ID instead of archived row order selects exactly the same members in every case
+(`outputs/finish_20261023/tie_audit.csv`, produced by `scripts/analyze_finish_20261023.py`).
+The chemistry-key, linker-pair and metal strategies are archived only as summary metrics, so
+the same audit cannot be repeated for them; the rule in the main text applies to all five but
+is only verified for two. For the fixed candidate pool, ties are resolved by source-row ID and
+the archived file stores only the selected materials, not the full score vector
+(SI-I.6), so no tie audit is possible there.
+
+**Candidate resampling versus model redraws.** A within-sample row bootstrap (200 resamples
+per seed and strategy, k = 1%) gives an overlap SD of 2.1–3.0 percentage points, against a
+five-seed SD of 2.5 points for random and 7.1 points for topology. The two objects answer
+different questions: the bootstrap varies which 25,000 materials are in the candidate set under
+one fitted protocol, while the seed SD varies the model redraw and its training memberships.
+Neither estimates variation across independent MOF libraries, and the smaller bootstrap SD must
+not be substituted for the seed SD (`outputs/finish_20261023/oof_candidate_bootstrap.csv`).
 
 ### SI-F.2 The elite subset and its permutation nulls
 
@@ -765,11 +807,10 @@ descriptive, not confirmatory.
 
 ### SI-G.2 Identity-block availability
 
-The identity block matters only where identity information crosses the fold boundary: the
-availability of the non-grouped identity information orders the identity effect across the
-three groupings (topology / metal / linker pair). A test sample's own group label never
-occurs in the training fold, so the within-split identity effect for topology and metal is
-a construction consequence, not a sufficient mechanism. *Source data:*
+Under the original representation, the observed identity effects differ across grouping
+schemes and covary descriptively with the availability of non-grouped identifiers.
+This availability pattern is a property of the fold construction; it is not a general
+rule for the value of identity features or an identified mechanism of the topology penalty. *Source data:*
 `outputs/chemistry_seen_grouping.csv`, `outputs/multitarget_confound_{metal,linker_pair}.csv`.
 
 ---
@@ -852,7 +893,7 @@ percentage points (Figure S6b; the per-source exclusivity rates of Figure S6a sh
 spread at both granularities). The two nulls
 used in this section address different hypotheses and are reported separately: (i) the
 within-source permutation holds composition keys and topology-label counts fixed and
-permutes topology labels across records (1,000 permutations, Figure 4c); (ii) a
+permutes topology labels across records (1,000 permutations, Figure S8c); (ii) a
 common-rate binomial parametric bootstrap (20,000 draws) tests between-source
 heterogeneity. The excess shows a moderate-to-strong positive point estimate against H(T)
 (Pearson r = +0.67, p = 0.10; Spearman ρ = +0.32, p = 0.48; n = 7 non-degenerate sources),
@@ -869,11 +910,366 @@ of a database-construction mechanism.
 
 ---
 
+## SI-I. Follow-up and sensitivity experiments: representation, support and screening limits
+
+These follow-up analyses were integrated on 23 October 2026 and comprise exactly six
+experiments, in the order used in the abstract, main-text 2.7 and the cover letter:
+(1) representation (SI-I.1), (2) constituent novelty and numerical support (SI-I.2),
+(3) the CoRE structural-feasibility pilot (SI-I.3), (4) descriptive fold-level diagnostics
+(SI-I.4), (5) fixed-size partner replacement (SI-I.5) and (6) fixed-candidate-pool
+screening (SI-I.6). The ARC-MOF audit is not one of the six: it is the second-database
+support audit of main-text 3.5, with its controls in SI-H, and it adds no new performance
+or representation experiment. They complement the original analyses; they do not share a
+single replication unit, preprocessing rule or feature-encoding implementation. The new
+evidence is archived under `outputs/followup_20261023/` and belongs to the version-of-record
+deposit described in main-text 9 (v1.4), not to the earlier v1.3 release, which covers the
+original analyses only. No model was refitted during this manuscript-integration step.
+Tables S19–S24 can be recomputed from the archived metrics with
+`scripts/verify_followup_tables.py`. SI-I.7 adds a prespecified feature-subsampling
+sensitivity (Table S25) that *was* refitted on 24 October 2026 and is counted outside the
+six; its archive is `outputs/sensitivity_mf1/mapped/` and `outputs/sensitivity_mf1/full/`.
+That check establishes arithmetic consistency, not a fresh raw-data rerun.
+
+### SI-I.1 Representation comparisons (experiment 1)
+
+Both targets were modelled: CO₂ uptake at 0.15 bar and 298 K (mmol g⁻¹), and
+log₁₀(CO₂/N₂ selectivity), retaining only positive selectivity before transformation.
+G contains the eight numerical structure descriptors; these include mass and
+mass-normalized quantities and are not chemically orthogonal. B adds metal-node
+and functional-group identifiers. I adds the two linker identifiers in their original
+file slots. O adds topology to B; its training-fold encoding and feature-sampling
+configuration differ from the original 426-column analysis, so it is not an exact
+rerun of that model. T retains B and substitutes two parent-linker fingerprints for
+the linker-identifier blocks: 2,048 Morgan bits per slot, radius 2, no chirality.
+Constant fingerprint bits are removed using training rows only. Categorical encoders
+are fitted on training rows; unknown categories are ignored.
+
+RF and ExtraTrees (ET) each use 120 trees and `max_features='sqrt'`.
+Five independent 25,000-row redraws use seeds 42, 143, 244, 345 and 446.
+The 100,000-row stage uses seed 42 only. Rows are sampled before removing
+non-finite values and negative numerical descriptors; no replacement rows are added.
+The targets therefore have different retained counts. The 100k run is a
+within-database sample-size check, not an independent or external test.
+
+Parent-linker mappings were available for 33 of 58 identifiers, supported by
+automated graph-consistency checks; 21 have a second reference and 12 have a single
+reference. This is not expert confirmation of all framework-bound linker identities.
+The common mapped population retains 5,977/24,985 valid uptake rows in the seed-42
+25k draw and 23,711/99,945 in the 100k draw. Only eight of eleven topologies remain;
+rht, tbo and the have no mapped rows. All mapped representations are compared on the
+same retained population. Fingerprint results are conditional on this mapping,
+parent representation, population selection and fixed model configuration.
+
+**Table S19.** Paired pooled LOTO MAE changes. Each contrast is the first representation
+minus the second; negative values favour the first. The 25k columns show mean and
+sample SD across five paired redraws. The 100k column is one paired result. Uptake
+MAE is in mmol g⁻¹; log-selectivity MAE is on the log₁₀ scale.
+
+| Population | Contrast | Target | Model | 25k ΔMAE, mean ± SD | 100k ΔMAE |
+| --- | --- | --- | --- | --- | --- |
+| Full | I-B | Uptake | RF | -0.008929 ± 0.005451 | -0.005575 |
+| Full | I-B | Uptake | ET | -0.023178 ± 0.008336 | -0.033010 |
+| Full | I-B | Log-selectivity | RF | -0.005480 ± 0.000609 | -0.007276 |
+| Full | I-B | Log-selectivity | ET | -0.006210 ± 0.002166 | -0.007255 |
+| Mapped | T-I | Uptake | RF | +0.149485 ± 0.015124 | +0.164800 |
+| Mapped | T-I | Uptake | ET | +0.160250 ± 0.014027 | +0.153138 |
+| Mapped | T-I | Log-selectivity | RF | +0.039205 ± 0.001760 | +0.042820 |
+| Mapped | T-I | Log-selectivity | ET | +0.054883 ± 0.003967 | +0.055937 |
+
+All five 25k contrasts are negative for full-population I−B and positive for
+mapped-population T−I, for both targets and ensembles. Pooled directions do not
+imply uniform per-topology effects or superiority over G. Resolving each contrast
+topology by topology (five-redraw mean of the paired difference) makes the reversals
+explicit. For uptake/RF, I−B is negative in 7 of 11 topologies and positive in bcu,
+fof, tbo and the, with mean differences from −0.023 to +0.035 mmol g⁻¹; 10 of 11
+topologies keep the same sign in at least four of the five redraws. On the mapped
+subset, T−I is positive on average for uptake/RF yet negative in 3 of 8 topologies,
+and the largest single-topology change is +0.277 mmol g⁻¹. A pooled mean therefore
+summarises opposing local effects; the signs and counts for all four
+contrast–target–model combinations are in
+`outputs/finish_20261023/per_topology_direction_counts.csv`. For example, five-redraw
+uptake/RF mean MAE is 0.2510 for I and 0.2400 for G. Numerical inputs already contain
+chemical information, and dimensionality changes the feature-sampling opportunities
+of the trees. The experiment does not isolate a causal effect of chemical information.
+*Source data:* `experiment12/{full,mapped_common}/pooled_metrics.csv`,
+`experiment12/paper_tables/primary_LOTO_paired_directions.csv` and
+`experiment12/paper_tables/size_sensitivity_LOTO_paired.csv`, all beneath the
+follow-up archive.
+
+### SI-I.2 Constituent novelty and numerical support (experiment 2)
+
+The primary coarse key is the ordered tuple (metal-node ID, linker-1 ID, linker-2 ID),
+without functional group. For each training/test split, CU denotes missing constituent
+identity; C0 has a seen coarse key; C1 has an unseen key but a seen metal-node ID and
+seen ordered linker pair; C2 has an unseen pair but a seen metal-node ID and both
+role-specific linker IDs seen separately; C3 has at least one unseen metal-node or
+role-specific linker ID. Sorted-pair and union-vocabulary alternatives are sensitivity
+analyses. The role distinction follows the source columns and does not establish a
+chemical site interpretation.
+
+Numerical support uses nearest-neighbour Euclidean distance in the eight-descriptor
+space, standardized using training medians and IQRs; zero IQR falls back to training
+population SD and then one. A test row is outside at a distance above the training
+leave-one-out nearest-neighbour 95th percentile. This differs from the mean/SD
+definition in SI-I.4.
+
+**Table S20.** Constituent novelty in the seed-42, full-population uptake I/RF LOTO
+audit. The classes partition all retained predictions in these two samples. MAE is
+in mmol g⁻¹. Class numbering is a support taxonomy, not an ordinal risk scale.
+
+| Class | 25k n | 25k MAE | 100k n | 100k MAE |
+| --- | --- | --- | --- | --- |
+| C0 | 9,336 | 0.170034 | 38,490 | 0.178178 |
+| C1 | 4,624 | 0.268939 | 17,550 | 0.287387 |
+| C2 | 3,653 | 0.243445 | 14,441 | 0.262556 |
+| C3 | 7,372 | 0.349379 | 29,464 | 0.341106 |
+
+Among unseen-key predictions, C1+C2 account for 52.9% at 25k and 52.1% at 100k.
+Thus exact-key loss often consists of recombining previously observed constituents.
+Approximately 96.9% of C3 rows involve unseen database metal-node identifiers; these
+are not unseen chemical elements. Linker-only unseen subclasses can be very sparse
+and do not justify general conclusions about new linker chemistry. In this specified
+I/RF audit, C1 MAE exceeds C2 at both sizes. At 25k, within each C0–C3 class,
+numerically outside rows have lower MAE than inside rows; target and topology
+composition can confound these comparisons. Neither pattern validates a monotonic
+novelty-to-error rule.
+*Source data:* `experiment12/full/novelty_error_metrics.csv`,
+`experiment12/full/C3_subtype_metrics.csv` and
+`experiment12/paper_tables/main_novelty_numerical_cross.csv`.
+
+### SI-I.3 CoRE structural-feasibility pilot (experiment 3)
+
+The source is CoRE MOF 2019 ASR v1.1.0, Zenodo DOI
+`10.5281/zenodo.3370144`. Forty CIFs were randomly sampled with seed 20261022.
+The topology sub-pilot uses a preselected ten-structure subset. Counts below refer
+to successful parsing or returned technical objects, not identification accuracy.
+
+**Table S21.** Completed technical steps in the CoRE pilot.
+
+| Pilot measure | Returned / completed |
+| --- | --- |
+| CIFs in source archive | 12,020 |
+| Sampled CIFs parsed | 40 / 40 |
+| Metal + organic candidates with bond cuts | 38 / 40 |
+| Topology pilot: net key | 9 / 10 |
+| Topology pilot: named-net match | 6 / 10 |
+| Independent expert checks completed | 0 / 40 |
+
+The five independent-check fields (node, linker, periodic boundary, interpenetration,
+and source-publication checks) remain pending for all 40 records. A retry returning
+fragments does not resolve missing molecular identifiers. No database-wide composition
+support audit, comparable full-library topology annotation or external
+adsorption-prediction validation was completed. The zero completed expert checks
+must not be interpreted as zero correct structures.
+*Source data:* `experiment3/summary.json`, `experiment3/topology_pilot.json`,
+`experiment3/expert_review_sheet.csv` and `experiment3/sample_manifest.json`.
+
+### SI-I.4 Descriptive fold-level diagnostics (experiment 4)
+
+This analysis attaches support summaries to the archived original LOTO fold MAE;
+it does not fit a risk model. The 66 fold records span six samples but reuse the same
+eleven topology groups. They are not 66 independent groups. Table S22 uses only
+the seed-42 100k sample. Its eight numerical descriptors are standardized by
+training means and population SDs (zero SD becomes one). The far threshold is the
+95th percentile of leave-one-out nearest-neighbour distances for a deterministic
+sample of up to 5,000 training rows. Linker novelty uses the union of both training
+slot vocabularies. These metrics must not be identified with the role-specific
+classes or median/IQR distances of SI-I.2.
+
+**Table S22.** Spearman correlations between topology-level diagnostics and absolute
+LOTO MAE. The second column uses eleven topologies; the last excludes the five-row
+rht group and retains ten topologies and 99,995 test rows. These are descriptive
+associations, without a claim of calibrated risk prediction.
+
+| Diagnostic | ρ, 11 topologies | ρ, 10 topologies (n ≥ 100) |
+| --- | --- | --- |
+| Exact-key mismatch | +0.515932 | +0.589077 |
+| Any building-unit novelty | +0.603023 | +0.609723 |
+| Metal-node novelty | +0.575642 | +0.547898 |
+| Linker novelty (union) | +0.193649 | +0.189934 |
+| Mean numerical distance | -0.781818 | -0.818182 |
+| Numerically far fraction | -0.763636 | -0.818182 |
+| Novel and numerically far | +0.295573 | +0.231363 |
+
+Seven topologies have complete exact-key mismatch, yet their MAE ranges from
+0.115300 to 1.260980 mmol g⁻¹. The original joint strata, cut at the eleven-group
+medians of unit novelty (0.1742241556) and far fraction (0.2340862423), contain
+1/5/5/0 topologies in the low/low, low/high, high/low and high/high cells.
+These sparse strata do not establish complementary predictive value. Negative
+distance correlations do not imply that greater distance improves predictions.
+Absolute archived fold MAE is not a matched random-to-LOTO performance loss.
+*Source data:* `experiment4/fold_diagnostics.csv`,
+`experiment4/joint_group_strata.csv` and `experiment4/analysis_metadata.json`.
+
+### SI-I.5 Fixed-size partner replacement (experiment 5)
+
+Within the seed-42 50k sample, the held-out test topology, nonpartner background,
+training size and partner fraction are fixed. Shared and nonshared partner rows
+are matched without replacement using outcome-blind greedy matching in the
+standardized eight-descriptor space, using the mean and population SD of the non-target-topology candidate pool (Euclidean caliper 0.5).
+The nbo direction uses 1,000 matched partner pairs and 4,000 background rows; pcu
+uses 726 pairs and 4,000 background rows. Partner doses are 0, 25, 50, 75 and 100%
+shared rows. These percentages describe the partner subset, not complete test
+coverage: even 100% gives only 78.75% and 15.08% exact-key coverage of the respective
+historical test sets.
+
+Five seeds vary the model and replacement order, with the same fixed pools and
+test rows. At the endpoints, training membership is fixed across seeds.
+The RF has 120 trees and default `max_features=1.0`.
+Paired intervals below describe conditional learner variability, not uncertainty
+over new test sets, material populations or independent chemistry pairs.
+A separate paired sensitivity removes rows with negative numerical descriptors;
+only its two endpoints were refitted.
+
+**Table S23.** Endpoint uptake MAE (mmol g⁻¹), averaged across five learner seeds.
+ΔMAE is 100% minus 0% shared partner rows. Intervals are paired t intervals
+(df = 4), conditional on the fixed pools.
+
+| Row policy | Test | MAE, 0% | MAE, 100% | ΔMAE | Paired 95% t interval |
+| --- | --- | --- | --- | --- | --- |
+| Historical rows | nbo | 0.149276 | 0.158659 | +0.009384 | [+0.004902, +0.013865] |
+| Historical rows | pcu | 0.233135 | 0.239102 | +0.005967 | [+0.004025, +0.007909] |
+| Negative descriptors removed | nbo | 0.151084 | 0.158125 | +0.007041 | [+0.001748, +0.012335] |
+| Negative descriptors removed | pcu | 0.232815 | 0.238754 | +0.005939 | [+0.003533, +0.008346] |
+
+Both directions show increased endpoint MAE with shared partners in this local
+replacement design, including after descriptor cleaning. This does not demonstrate
+a causal disadvantage of shared chemistry. Residual differences remain in
+multivariate descriptor, metal-node, functional-group and target distributions:
+maximum metal total-variation distances are 0.095 and 0.171, and functional-group
+distances 0.340 and 0.416. Approximate numerical matching does not eliminate them.
+The cleaned test/training counts are nbo 7,663/4,991 and pcu 31,682/4,719.
+For the original deletion arms, the paired e−g interval includes zero on pcu
+(SI-C.4), so arm e's improvement over a does not establish a composition-specific
+advantage over same-count random partner deletion.
+*Source data:* `experiment5/curve_metrics.csv`,
+`experiment5/paired_endpoints.csv`, `experiment5/cleaned_endpoint_metrics.csv`,
+`experiment5/cleaned_endpoint_summary.csv` and
+`experiment5/matching_quality_summary.csv`.
+
+### SI-I.6 Fixed-candidate-pool retrospective screening (experiment 6)
+
+One fitted model scores each entire frozen candidate pool, using the cleaned
+experiment-5 endpoint training sets. Candidate pools were examined in earlier
+analyses; this is a retrospective simulation, not an untouched external test.
+Categorical encoding is fitted on training rows only. G/B/I have the definitions
+above, and topology is not an input. RF and ET each have 120 trees with default
+`max_features=1.0`, unlike the `'sqrt'` setting in experiment 1.
+Absolute differences across these experiments cannot be attributed to representation
+alone. Five learner seeds keep training and candidate membership fixed.
+
+Budgets are 1%, 5%, 10% and 20%, with k = ceil(N × fraction).
+True and predicted ties are resolved by the original source-row ID. Recovery is
+the overlap between predicted and oracle top-k sets divided by k. Regret is oracle
+mean uptake minus selected mean uptake; both refer to the same candidates.
+All G/B/I × RF/ET × 0/100%-shared arms and budgets are retained in the archived CSV.
+
+**Table S24.** RF at the prespecified illustrative 5% budget: all twelve
+direction × partner-support × representation arms. Recovery SD reflects learner
+randomness only. Selected mean and regret are in mmol g⁻¹. The nbo candidate/training
+counts are 7,663/4,991; pcu counts are 31,682/4,719.
+
+| Test | Shared partners | Representation | k | Recovery (%), mean ± SD | Selected mean | Regret |
+| --- | --- | --- | --- | --- | --- | --- |
+| nbo | 0% | G | 384 | 51.20 ± 0.93 | 0.433540 | 0.105741 |
+| nbo | 0% | B | 384 | 49.95 ± 0.56 | 0.429056 | 0.110225 |
+| nbo | 0% | I | 384 | 53.44 ± 0.56 | 0.437661 | 0.101621 |
+| nbo | 100% | G | 384 | 51.30 ± 0.88 | 0.431347 | 0.107934 |
+| nbo | 100% | B | 384 | 50.05 ± 0.65 | 0.428988 | 0.110294 |
+| nbo | 100% | I | 384 | 51.61 ± 1.16 | 0.433466 | 0.105815 |
+| pcu | 0% | G | 1585 | 20.08 ± 0.27 | 1.028581 | 1.012150 |
+| pcu | 0% | B | 1585 | 20.96 ± 0.24 | 1.041194 | 0.999537 |
+| pcu | 0% | I | 1585 | 15.81 ± 0.57 | 0.903649 | 1.137082 |
+| pcu | 100% | G | 1585 | 20.06 ± 0.42 | 1.029769 | 1.010962 |
+| pcu | 100% | B | 1585 | 21.35 ± 0.50 | 1.054243 | 0.986488 |
+| pcu | 100% | I | 1585 | 17.05 ± 0.62 | 0.933868 | 1.106863 |
+
+The identity representation increases recovery relative to G for nbo but decreases
+it for pcu under nonshared partners. Within I, shared-partner replacement changes
+recovery in opposite directions across the two tests. Results also depend on budget
+and model. They establish local ranking sensitivity, not a universally preferable
+representation, reliable benefit of shared composition, prospective screening
+performance or a validated synthesis budget.
+*Source data:* `experiment6/screening_metrics.csv`,
+`experiment6/screening_summary.csv`, `experiment6/pool_audit.csv`,
+`experiment6/frozen_config.json` and `experiment6/candidates_*.csv`.
+
+---
+
+## SI-I.7 Feature-subsampling sensitivity (`max_features=1.0`)
+
+The representation comparisons above use `max_features='sqrt'`. Feature dimension changes how
+many descriptors a tree can sample at each split, so the same contrast was re-run with
+`max_features=1.0` and every other setting held fixed: 120 trees, the same sampling seed, the
+same targets and preprocessing, and the archived `split.npz` files reused row for row (no new
+sample, no new split). The setting was written into `frozen_config.json` before any fit, and
+all seeds, targets and folds are reported regardless of direction. Runs are archived under
+`outputs/sensitivity_mf1/mapped/` and `outputs/sensitivity_mf1/full/`; the analysis is
+`scripts/analyze_mf_sensitivity.py`, which asserts identical `raw_row_id` vectors on both
+sides before computing any difference.
+
+**Table S25.** Mapped-subset I versus T contrast under the two feature-subsampling settings
+(5 seeds × 25,000-row draws; pooled leave-one-topology-out MAE in mmol g⁻¹ for uptake and on
+the log₁₀ scale for selectivity). "Gap" is T − I; "seeds > 0" counts the five redraws in which
+the gap is positive.
+
+| Target | Model | MAE I (sqrt → 1.0) | MAE T (sqrt → 1.0) | Gap (sqrt → 1.0) | Seeds > 0 (sqrt / 1.0) |
+| --- | --- | --- | --- | --- | --- |
+| Uptake | RF | 0.3131 → 0.3144 | 0.4626 → 0.4365 | +0.1495 → **+0.1221** | 5/5 / 5/5 |
+| Uptake | ET | 0.3269 → 0.3391 | 0.4872 → 0.4643 | +0.1603 → **+0.1252** | 5/5 / 5/5 |
+| Log-selectivity | RF | 0.1443 → 0.1450 | 0.1835 → 0.1462 | +0.0392 → **+0.0011** | 5/5 / 3/5 |
+| Log-selectivity | ET | 0.1488 → 0.1476 | 0.2036 → 0.1590 | +0.0549 → **+0.0114** | 5/5 / 5/5 |
+
+*Source data:* `outputs/sensitivity_mf1/mapped/mf1_pooled.csv`, `mf1_paired.csv`.
+
+**Table S25b.** Full-sample B versus I contrast under the two settings (5 seeds; RF; pooled
+LOTO MAE). "Gap" is I − B; "seeds < 0" counts redraws in which I is better.
+
+| Target | MAE B (sqrt → 1.0) | MAE I (sqrt → 1.0) | Gap (sqrt → 1.0) | Seeds < 0 (sqrt / 1.0) |
+| --- | --- | --- | --- | --- |
+| Uptake | 0.2599 → 0.2532 | 0.2510 → 0.2499 | −0.0089 → **−0.0034** | 5/5 / 5/5 |
+| Log-selectivity | 0.1340 → 0.1382 | 0.1285 → 0.1321 | −0.0055 → **−0.0061** | 5/5 / 5/5 |
+
+*Source data:* `outputs/sensitivity_mf1/full/mf1_pooled.csv`, `mf1_paired.csv`.
+
+Three consequences. (i) For uptake, the T−I direction is unchanged: T is worse than I in all
+five redraws under both settings, and the gap is 18% (RF) and 22% (ET) smaller under the
+full-feature setting. (ii) For log-selectivity, the T−I gap nearly disappears under the
+full-feature setting (97% smaller for RF, where only 3 of 5 redraws remain positive; 79% for
+ET). (iii) Neither representation is uniformly better per topology: under the full-feature
+setting the uptake/RF gap is concentrated in pcu (+0.209) and etb (+0.132), with fof (−0.102)
+and nbo (−0.023) still favouring T, and pts changing sign from +0.010 to −0.038.
+
+For the full-sample B/I contrast the direction is preserved in all five redraws for both
+targets: I remains better than B under the full-feature setting, by a smaller margin for
+uptake (−0.0034 against −0.0089) and by the same margin for log-selectivity (−0.0061 against
+−0.0055). The representation statements in the main text therefore hold under both settings,
+with the uptake magnitude explicitly configuration-dependent.
+
+The two settings support different strengths of statement. "T did not improve pooled
+leave-one-topology-out MAE" holds for uptake and is the sentence used in the main text; for
+log-selectivity the correct statement is that the difference becomes negligible under the
+full-feature setting, not that fingerprints are neutral or harmful there. Random-split results
+are unchanged in direction (both representations improve slightly under 1.0), so the
+sensitivity bears on the topology-held-out contrast, not on the random-split level.
+
+**Limits.** The full-feature tier covers the full 25,000-row samples for the B/I contrast with
+RF only: ExtraTrees requires about 150 s per fit at this setting, which exceeded the available
+compute, so no ET row exists for that tier (the mapped tier covers both learners). The mapped
+tier is 5,977 of 24,985 uptake rows and eight of eleven topologies, so it cannot represent the
+full sample. Neither tier is a hyperparameter search: one prespecified setting is compared with
+the archived one.
+
+---
+
 ## SI figures
 
 **Figure S1.** SHAP attribution aggregated by feature family under a random split and under
 topology hold-out. The attribution is dominated by structure-derived scalar descriptors in
-both regimes (82.3% / 85.1%); building-block identity contributes little under either split.
+both regimes (82.3% / 85.1%). The original model assigns 17.7% and 14.9% of total
+mean absolute SHAP attribution to its encoded identity block. These shares do not
+measure the information content of chemistry or the benefit of adding linker
+identities (SI-I.1).
 Left panel: mean |SHAP| per fold; right panel: the same numbers as a share of total
 attribution. n_folds = 5 (random) and 11 (topology hold-out). *Source data:*
 `outputs/fig5_shap_family_final.csv`.
@@ -933,7 +1329,19 @@ cost? (a) Each held-out topology is one point: horizontal = S_miss (fraction of 
 topology's structures with no chemical counterpart in training), vertical = that fold's
 held-out R²; panel (a) is restricted to the ten topologies with n_test ≥ 100, while panel
 (b) shows all eleven. Seven points sit at S_miss = 1.000 and still span R² from −2.55 (etb)
-to +0.47 (bcu); the relation is flat (Pearson r = +0.10, p = 0.78; Spearman ρ = +0.28,
+to +0.47 (bcu); the exploratory association was not statistically established
+(Pearson r = +0.10, p = 0.78; Spearman ρ = +0.28,
 p = 0.44). (b) Target variation within held-out topologies (sd(y) from 0.11 to 0.88 mmol/g);
 the pcu fold accounts for 63.4% of the scored test rows. *Source data:*
 `outputs/s_g_curve.csv`.
+
+**Figure S8.** Bounded support audit in ARC-MOF (moved here from the main figures; the
+compact summary remains Table 3). **(a)** Single-topology composition fraction at four
+combinations (coarse/fine × all/non-singleton): 99.3, 97.3, 99.7 and 98.2.
+**(b)** Leave-one-source-out sensitivity: removing DB0 moves the fraction to 98.57–98.96,
+any other single source to 99.22–99.84. **(c)** Observed versus within-source
+topology-permutation null on the common support set, with the degenerate single-topology
+source (DB6) excluded; the permutation SD is below 0.5%, so the horizontal error bars are
+not visually distinguishable. *Source data:* `outputs/confound_arcmof.csv`,
+`outputs/confound_arcmof_excl_derived.csv`,
+`outputs/common_support/null_topology_cardinality.csv`.

@@ -1,0 +1,61 @@
+{
+  "sample_stages": {
+    "25000": [
+      42,
+      143,
+      244,
+      345,
+      446
+    ],
+    "100000": [
+      42
+    ]
+  },
+  "targets": {
+    "uptake": "CO2_uptake_P0.15bar_T298K [mmol/g]",
+    "selectivity": "CO2/N2_selectivity"
+  },
+  "representations": {
+    "G": [],
+    "B": [
+      "metal_linker",
+      "functional_groups"
+    ],
+    "I": [
+      "metal_linker",
+      "functional_groups",
+      "organic_linker1",
+      "organic_linker2"
+    ],
+    "O": [
+      "metal_linker",
+      "functional_groups",
+      "topology"
+    ]
+  },
+  "models": [
+    "RF",
+    "ET"
+  ],
+  "protocols": [
+    "random",
+    "topology",
+    "LOTO"
+  ],
+  "n_estimators": 120,
+  "n_jobs": 12,
+  "max_features": "sqrt",
+  "model_defaults": "sklearn defaults except n_estimators, max_features=sqrt, random_state, n_jobs; runtime-only preflight amended before performance inspection",
+  "distance": "train median/IQR Euclidean nearest; IQR=0 falls back train population SD then 1; train LOO q95 linear",
+  "threshold_sensitivity": [
+    0.9,
+    0.95,
+    0.99
+  ],
+  "role_policy": "primary role-specific linker vocabularies and ordered keys; union and sorted-key sensitivity, because exchangeability unverified",
+  "sparse_category_rule": "n<30 or unique ordered coarse<5; descriptive only",
+  "fingerprints": "not available unless independently validated mapping acquired; never use ID distances",
+  "sampling": "sample once then filter finite scalar/target and negative scalar values; no refill",
+  "screening": "pooled OOF retrospective ranking, not single-model deployment",
+  "freeze_date": "2026-10-22"
+}

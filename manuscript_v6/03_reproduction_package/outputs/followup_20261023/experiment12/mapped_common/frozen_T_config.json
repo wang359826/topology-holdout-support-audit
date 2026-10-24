@@ -1,0 +1,20 @@
+{
+  "representation": "T",
+  "definition": "G plus train-onehot metal/functional_groups plus role-specific concatenated Morgan parent-linker bits",
+  "fingerprint": {
+    "radius": 2,
+    "n_bits_per_linker": 2048,
+    "chirality": false
+  },
+  "feature_filter": "training-only remove constant fingerprint bits, including all-one bits; numerical and onehot unchanged",
+  "models": [
+    "RF",
+    "ET"
+  ],
+  "n_estimators": 120,
+  "max_features": "sqrt",
+  "n_jobs": 6,
+  "mapping_sha256": "1029452dc330497b9aa210c757a83f6e402a8053cdcb9c79477f0efcc256c723",
+  "decision": "Morgan config fixed before inspecting predictive results; strict 33-ID subset selected solely by graph consistency; common G/B/I/O refitted; no outer-test tuning",
+  "limitation": "fingerprints represent unfunctionalized parent chemistry; missing FG remains explicit; feature dimension changes tree feature-sampling opportunities"
+}

@@ -1,0 +1,31 @@
+{
+  "file": "DAKVUI_clean.cif",
+  "timeout_seconds": 180,
+  "elapsed_seconds": 122.31299999996554,
+  "returncode": 0,
+  "stdout": "{\"file\": \"DAKVUI_clean.cif\", \"backend\": \"rdkit\", \"wrap_system\": true, \"ok\": true, \"metals\": [{\"formula\": \"Cu2\", \"smiles\": null, \"inchikey\": \"None\"}], \"linkers\": [{\"formula\": \"C37H20O20\", \"smiles\": null, \"inchikey\": \"None\"}], \"warnings\": [\"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\"]}\n",
+  "stderr": "",
+  "result": {
+    "file": "DAKVUI_clean.cif",
+    "backend": "rdkit",
+    "wrap_system": true,
+    "ok": true,
+    "metals": [
+      {
+        "formula": "Cu2",
+        "smiles": null,
+        "inchikey": "None"
+      }
+    ],
+    "linkers": [
+      {
+        "formula": "C37H20O20",
+        "smiles": null,
+        "inchikey": "None"
+      }
+    ],
+    "warnings": [
+      "crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+    ]
+  }
+}

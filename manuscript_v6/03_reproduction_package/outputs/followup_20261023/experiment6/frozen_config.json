@@ -1,0 +1,40 @@
+{
+  "design": "retrospective cleaned experiment5 endpoints",
+  "representations": {
+    "G": [],
+    "B": [
+      "metal_linker",
+      "functional_groups"
+    ],
+    "I": [
+      "metal_linker",
+      "functional_groups",
+      "organic_linker1",
+      "organic_linker2"
+    ]
+  },
+  "seeds": [
+    42,
+    143,
+    244,
+    345,
+    446
+  ],
+  "models": [
+    "RF",
+    "ET"
+  ],
+  "trees": 120,
+  "budget_fractions": [
+    0.01,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "support": [
+    0,
+    1
+  ],
+  "selection": "all prespecified arms reported; no candidate-label tuning",
+  "transferable_chemistry": "unavailable: no validated structure mapping"
+}

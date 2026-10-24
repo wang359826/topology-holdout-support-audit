@@ -76,9 +76,9 @@ EDGE_CANDIDATES = [
 # ---- 图注编号 -> PNG 文件（权威映射，见 FIGURE_MANIFEST.md）----
 FIG_MAP = {
     1: "Fig1_support_structure.png",
-    2: "Fig2_intervention.png",
-    3: "Fig3_screening.png",
-    4: "Fig4_arcmof.png",
+    2: "Fig2_protocol_support.png",
+    3: "Fig3_intervention.png",
+    4: "Fig4_screening.png",
 }
 
 # ---- SI 图（Supplementary Information）----
@@ -92,6 +92,7 @@ FIG_MAP_SI = {
     5: "figS5_aggregation_rules.png",
     6: "figS6_source_confound.png",
     7: "figS7_sg_curve.png",
+    8: "figS8_arcmof.png",
 }
 
 CSS = """
@@ -107,7 +108,7 @@ h2 { font-size: 13pt; margin: 7mm 0 2mm; border-bottom: 1px solid #ccc;
      padding-bottom: 1mm; page-break-after: avoid; }
 h3 { font-size: 11.5pt; margin: 5mm 0 1.5mm; page-break-after: avoid; }
 h4 { font-size: 10.5pt; margin: 4mm 0 1mm; font-style: italic; page-break-after: avoid; }
-p  { margin: 0 0 2.2mm; text-align: justify; }
+p  { margin: 0 0 2.2mm; text-align: justify; page-break-inside: avoid; }
 ul, ol { margin: 1mm 0 2.5mm; padding-left: 6mm; }
 li { margin-bottom: 0.8mm; text-align: justify; }
 hr { border: none; border-top: 1px solid #bbb; margin: 5mm 0; }
@@ -194,6 +195,11 @@ def is_sep_row(line: str) -> bool:
 
 
 def md_to_html(md: str) -> str:
+    # HTML 注释按 Markdown 规范不参与渲染，但本转换器会 html.escape '<'，
+    # 会把注释印成可见正文（例如溯源标记 <!-- src: ... -->）。
+    # 因此在转换前先剥掉注释：行为对既有文本无影响（v6 稿此前无注释），
+    # 但能保证注释永远不出现在 PDF 里。（2026-10-24）
+    md = re.sub(r"<!--.*?-->", "", md, flags=re.S)
     lines = md.split("\n")
     out = []
     i = 0
@@ -534,7 +540,7 @@ def main():
         os.remove(tmp_pdf)
     profile = tempfile.mkdtemp(prefix="edge-pdf-")
     cmd = [
-        edge, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+        edge, "--headless=new", "--disable-gpu", "--no-sandbox", "--no-pdf-header-footer",
         f"--user-data-dir={profile}",
         f"--print-to-pdf={tmp_pdf}",
         "file:///" + html_path.replace("\\", "/").lstrip("/"),

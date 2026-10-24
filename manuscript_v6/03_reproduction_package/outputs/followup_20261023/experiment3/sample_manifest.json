@@ -1,0 +1,242 @@
+[
+  {
+    "order": 0,
+    "member": "structure_11660/XIDBUJ_clean.cif",
+    "file": "XIDBUJ_clean.cif",
+    "sha256": "0c35e8d6c7e9b5fca97f8bc4505656f3a10167bdb656f710315de2a4963678f3"
+  },
+  {
+    "order": 1,
+    "member": "structure_11660/LIQCUK_clean.cif",
+    "file": "LIQCUK_clean.cif",
+    "sha256": "a4211685dbd5dcf9e470f5059865856cdab93bf35a526e0fe8ba72bc21ec5ada"
+  },
+  {
+    "order": 2,
+    "member": "structure_11660/UCABAE_clean.cif",
+    "file": "UCABAE_clean.cif",
+    "sha256": "98794d2797acb446e450d2f04120d48593a09289bbf3947afa4a10a28e538431"
+  },
+  {
+    "order": 3,
+    "member": "structure_11660/IXUHUE_clean.cif",
+    "file": "IXUHUE_clean.cif",
+    "sha256": "081c74c70ca43b952f7fc2ab9f195fb17ee3a19b60ae842a810a5e3e235ff630"
+  },
+  {
+    "order": 4,
+    "member": "structure_11660/FATKUI_clean.cif",
+    "file": "FATKUI_clean.cif",
+    "sha256": "f12d070e3cdd5ca571b640ea22bcbd7c5064fb62d853109a22c3a2ef2905d01b"
+  },
+  {
+    "order": 5,
+    "member": "structure_11660/AVUPIR_SL.cif",
+    "file": "AVUPIR_SL.cif",
+    "sha256": "90dba3607d27695066c5dba9130150fc3518a93fb715b1538da86012ab524930"
+  },
+  {
+    "order": 6,
+    "member": "structure_11660/HOQMUX_clean.cif",
+    "file": "HOQMUX_clean.cif",
+    "sha256": "d491bc68ab1c7870784ec0b1a12ccf2940473e88eb6bbcb81df57efc5d29080a"
+  },
+  {
+    "order": 7,
+    "member": "structure_11660/HAZWIP_clean.cif",
+    "file": "HAZWIP_clean.cif",
+    "sha256": "ae89a52dd5c04fd10345f90aec375f1b633b3a150fd32858179cef8d22fbac10"
+  },
+  {
+    "order": 8,
+    "member": "structure_11660/HIDBIH_clean.cif",
+    "file": "HIDBIH_clean.cif",
+    "sha256": "d3effe26c43ad81cdfb596a05a859724cd3946984592b934026d823e8c12a578"
+  },
+  {
+    "order": 9,
+    "member": "disorder_360/cg801267m_si_004_clean.cif",
+    "file": "cg801267m_si_004_clean.cif",
+    "sha256": "b3467aaf01b46351c0c9fae6143e2faded1c16cb466e84bcc163157efabacfdf"
+  },
+  {
+    "order": 10,
+    "member": "structure_11660/YOZRUC_clean.cif",
+    "file": "YOZRUC_clean.cif",
+    "sha256": "68c53eeab3b7f88637354ca49e2b47121b55a08e094c35711ad7f451cc0baad7"
+  },
+  {
+    "order": 11,
+    "member": "structure_11660/SOKKUZ_clean.cif",
+    "file": "SOKKUZ_clean.cif",
+    "sha256": "e28ebb4841a997cd8554bbed6159e889988de82ecc3b36f11bf48fc830f3282a"
+  },
+  {
+    "order": 12,
+    "member": "structure_11660/DUMXIU_clean.cif",
+    "file": "DUMXIU_clean.cif",
+    "sha256": "7c616e975b4f8ded714dd4944ca55f1c8f7a441e7ebf42f349cf4f739f269529"
+  },
+  {
+    "order": 13,
+    "member": "structure_11660/BELVEV_charged.cif",
+    "file": "BELVEV_charged.cif",
+    "sha256": "26958431080f53bf67b62967e98d4032a98a4890bc59d6dd22a017d073564bf5"
+  },
+  {
+    "order": 14,
+    "member": "structure_11660/GAJZAU_clean.cif",
+    "file": "GAJZAU_clean.cif",
+    "sha256": "572087a74c09565232e69c252686f8e534c48f9a6b505ffd354f1b7f74a37025"
+  },
+  {
+    "order": 15,
+    "member": "structure_11660/FUSMOW_clean.cif",
+    "file": "FUSMOW_clean.cif",
+    "sha256": "498f269eaef62db5879c4b1f92d7e9d988f3448eb050d58886f0033247b8ee95"
+  },
+  {
+    "order": 16,
+    "member": "structure_11660/JUTCUW_SL.cif",
+    "file": "JUTCUW_SL.cif",
+    "sha256": "d902ccf85b5f50f48f1078274c6d1d01a6d1279573e40b34baa19e29efab558d"
+  },
+  {
+    "order": 17,
+    "member": "structure_11660/WAVQER_clean.cif",
+    "file": "WAVQER_clean.cif",
+    "sha256": "191d8ac2a4dd66e4e84343e686eb37eec66d23d2d08632d01da1f263b871a656"
+  },
+  {
+    "order": 18,
+    "member": "structure_11660/YEKXOD_clean.cif",
+    "file": "YEKXOD_clean.cif",
+    "sha256": "aad54d5946a3bf9aa5c1b9dba10514aa1ad056c7565d8a6a32f2b24ad27609a0"
+  },
+  {
+    "order": 19,
+    "member": "structure_11660/WOWBIV_clean.cif",
+    "file": "WOWBIV_clean.cif",
+    "sha256": "e2d5c4ce9fe078893f9b0760bd603c6347f05d550bb1d7e4dda745610910fe30"
+  },
+  {
+    "order": 20,
+    "member": "structure_11660/VIXGAM01_clean.cif",
+    "file": "VIXGAM01_clean.cif",
+    "sha256": "b41db66488d94095ad3c7c4ddef5d6c7b074e66e763d41619a04c90986c0c277"
+  },
+  {
+    "order": 21,
+    "member": "structure_11660/CUGYUA_clean.cif",
+    "file": "CUGYUA_clean.cif",
+    "sha256": "f95dcadfaa97147a444aeaa4e08929708223164bcabaa1a9094f89227b019214"
+  },
+  {
+    "order": 22,
+    "member": "structure_11660/FUSMUC_clean.cif",
+    "file": "FUSMUC_clean.cif",
+    "sha256": "c319272a8658a07894b95942735e7dfa7ae9b714711380ddd8955f7499460fec"
+  },
+  {
+    "order": 23,
+    "member": "structure_11660/EMIHEO_charged.cif",
+    "file": "EMIHEO_charged.cif",
+    "sha256": "a2b9e37232e57a33e035bd39a0853b8274b3c4711f306f65204d9f3718102324"
+  },
+  {
+    "order": 24,
+    "member": "structure_11660/RAXROX_charged.cif",
+    "file": "RAXROX_charged.cif",
+    "sha256": "ab119ba27992057d18c8c47602e299e4c296615b93c79b18de599b427fee4c49"
+  },
+  {
+    "order": 25,
+    "member": "structure_11660/DANVAQ_clean.cif",
+    "file": "DANVAQ_clean.cif",
+    "sha256": "099e2540cbc6f4887714b88b39f74be958f7616970211deeb1534ef15c138706"
+  },
+  {
+    "order": 26,
+    "member": "structure_11660/GOYYIE_clean.cif",
+    "file": "GOYYIE_clean.cif",
+    "sha256": "364eb44e08a750bba2632531394135a92db07ec1f8b96fa654ed03689162c255"
+  },
+  {
+    "order": 27,
+    "member": "structure_11660/UMEDIB_clean.cif",
+    "file": "UMEDIB_clean.cif",
+    "sha256": "494a13a51ebd99514b7a64ab446be9982349ee347cd62d51f538b97a0562206e"
+  },
+  {
+    "order": 28,
+    "member": "structure_11660/OXAPEJ_charged.cif",
+    "file": "OXAPEJ_charged.cif",
+    "sha256": "c07dffae41c6a22cb4f3ba46386cb27e21cd19d6c7b1584df11c1c02b154cdbf"
+  },
+  {
+    "order": 29,
+    "member": "disorder_360/EYOCUS_clean.cif",
+    "file": "EYOCUS_clean.cif",
+    "sha256": "77378a5c98d8de1473ad1a1b471092f8193b7efa88a745c1b96ea6fbd163efdc"
+  },
+  {
+    "order": 30,
+    "member": "structure_11660/ULOGIL_clean.cif",
+    "file": "ULOGIL_clean.cif",
+    "sha256": "a3da99b250478469ca0a282a8b709fefbe7c38232071f061203c957dde2adbb5"
+  },
+  {
+    "order": 31,
+    "member": "structure_11660/DAKVUI_clean.cif",
+    "file": "DAKVUI_clean.cif",
+    "sha256": "b1f0e71721308bdea87e0ea9ffee7c3b65909c67523682b651314d99f9d7fbfa"
+  },
+  {
+    "order": 32,
+    "member": "structure_11660/MAGVOG_clean.cif",
+    "file": "MAGVOG_clean.cif",
+    "sha256": "9c23d110f98aebcc4583c177fdd440b76760e16510e59fc049d857b92b112785"
+  },
+  {
+    "order": 33,
+    "member": "structure_11660/EDAPIK_clean_h.cif",
+    "file": "EDAPIK_clean_h.cif",
+    "sha256": "f2740ab554c7f365431a382c953564a2bff5bd25bdff3cdd80fbe24d9d2e6148"
+  },
+  {
+    "order": 34,
+    "member": "structure_11660/UJILAA_clean.cif",
+    "file": "UJILAA_clean.cif",
+    "sha256": "f384febe19dd3adf2f18b08896e0dc9375f64dac8d196baf65466432bc898f9c"
+  },
+  {
+    "order": 35,
+    "member": "structure_11660/LEPLEZ_clean.cif",
+    "file": "LEPLEZ_clean.cif",
+    "sha256": "9a4324d48559e61dc0556d4eb20bfb98604fd677db111c0df7ee455970e2fc51"
+  },
+  {
+    "order": 36,
+    "member": "structure_11660/PUKVAU_clean.cif",
+    "file": "PUKVAU_clean.cif",
+    "sha256": "fc75e83b982bfd93760e98778301f26d8393da62d0a11743bf4e0415018fda49"
+  },
+  {
+    "order": 37,
+    "member": "structure_11660/BAZDAJ_clean.cif",
+    "file": "BAZDAJ_clean.cif",
+    "sha256": "9829879892759595d05c77ce22b43b620771d2d9501d7b1aefa700bcc0940395"
+  },
+  {
+    "order": 38,
+    "member": "structure_11660/BETGAK_clean.cif",
+    "file": "BETGAK_clean.cif",
+    "sha256": "bc7125030841ddfb74c6c3ad7dc2bf4dbb22b809d6dcf5f6e7abf3e058aa6e36"
+  },
+  {
+    "order": 39,
+    "member": "structure_11660/ELIKUG_clean.cif",
+    "file": "ELIKUG_clean.cif",
+    "sha256": "c42ade7739022237a050c929033086f6f0555cc9ffa6edb4df6ee9e8a0bfbb0c"
+  }
+]

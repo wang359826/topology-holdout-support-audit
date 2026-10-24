@@ -1,0 +1,4 @@
+# Release checklists stay in the repository but are not part of the archived
+# artefact: they describe how the archive is produced, so shipping them inside
+# it would make their own build numbers self-referential.
+manuscript_v6/RELEASE_v1.4_清单.md export-ignore

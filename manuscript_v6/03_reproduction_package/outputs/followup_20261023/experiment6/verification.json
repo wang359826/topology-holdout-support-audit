@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "fits": 120,
+  "metric_rows": 480,
+  "candidate_hash_consistent": true,
+  "no_train_candidate_overlap": true,
+  "independently_recomputed": [
+    "recovery",
+    "regret",
+    "lift"
+  ],
+  "uncertainty_scope": "model randomness conditional on fixed pools"
+}

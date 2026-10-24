@@ -1,0 +1,63 @@
+{
+  "study": "What topology hold-out removes - and what it does not",
+  "package": "v6 compressed submission package (manuscript + SI + reproduction)",
+  "config_version": "2026-10-24",
+  "inputs": {
+    "hmof": {
+      "record": "https://archive.materialscloud.org/records/nsp7v-2dk91",
+      "file": "all_MOFs_screening_data.csv",
+      "bytes": 148092921,
+      "sha256": "19bd04e5839bb77d6e93e50064c0724c11752da9ef8dcb6930cf8773f887bf1a",
+      "rows": 324426,
+      "redistributed": false,
+      "note": "Fetch from the public record; verify the SHA256 before a level-3 rerun."
+    },
+    "arcmof": {
+      "record": "https://doi.org/10.5281/zenodo.13891643",
+      "version": "6",
+      "redistributed": false,
+      "note": "Only topology and cluster metadata are used; no adsorption label is consumed."
+    },
+    "core": {
+      "record": "https://doi.org/10.5281/zenodo.3370144",
+      "version": "CoRE MOF 2019 ASR v1.1.0",
+      "redistributed": false
+    }
+  },
+  "environment": {
+    "python": "3.12.15",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "gpu_required": false,
+    "note": "Levels 1-2 need only the Python standard library plus (for level 2) numpy and pandas. Level 3 additionally needs scikit-learn."
+  },
+  "levels": {
+    "1_numeric": {
+      "entry": "level1_verify/run_level1.ps1",
+      "does": "Rebuild every main-text and SI table number, the figure files and the cross-reference/citation map from the archived outputs.",
+      "does_not": "No model is fitted and no raw data are read.",
+      "claims": "All table cells and the named headline values."
+    },
+    "2_predictions": {
+      "entry": "level2_predictions/verify_predictions.py",
+      "does": "Recompute MAE/R2/overlap from the archived row-level predictions (arms and screening) and compare with the archived summaries.",
+      "does_not": "No model is fitted; the experiment-12 prediction files (npz) and the fixed-pool full score vectors are NOT in this slim archive, so those cannot be recomputed here.",
+      "claims": "Table 2 arms, SI-C seed rows, Figure 4a-b screening overlaps, SI-F.1."
+    },
+    "3_rerun": {
+      "entry": "level3_rerun/run_subset.py --csv PATH",
+      "does": "Rebuild the seed-42, 25,000-row, random-split random-forest G/B/I comparison from the public hMOF CSV and compare with the archived pooled metrics.",
+      "does_not": "This is one representative subset, not a full-paper retrain; LOTO, the intervention arms, ARC-MOF and the follow-up experiments are not rebuilt.",
+      "claims": "SI-I.1 / Table S19 direction (I < B < G in pooled MAE for this configuration)."
+    }
+  },
+  "result_provenance": {
+    "historical": "outputs/ (original analyses; included in the public v1.3 archive)",
+    "followup_20261023": "outputs/followup_20261023/ (six follow-ups; NOT in the cited v1.3 release)",
+    "finish_20261023": "outputs/finish_20261023/ (tie audit, candidate bootstrap, per-topology deltas; new in this revision)",
+    "sensitivity_mf1": "reported in SI-I.7; archived with the follow-up material, not in v1.3"
+  }
+}

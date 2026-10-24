@@ -1,9 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Build the four main figures for Manuscript_v6 from archived CSVs.
-Self-contained matplotlib; no pubfig dependency. Outputs PNG into
-../01_manuscript/figures/ (relative to this file's package root)."""
+"""Build the four main figures and the SI figures for Manuscript_v6 from archived CSVs.
+
+Figure order follows the argument of the paper:
+  Fig 1  what the split removes (support)
+  Fig 2  how support change relates to measured performance (protocols + representation)
+  Fig 3  what the interventions allow one to interpret (removal arms + matched replacement)
+  Fig 4  what it means for screening (OOF rankings + fixed candidate pool)
+  figS8  the ARC-MOF support audit (moved out of the main figures)
+
+Self-contained matplotlib; outputs PNG/PDF into ../01_manuscript/figures/.
+"""
 import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..", "..", "..", "_tools", "pylibs312")))
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -79,8 +91,89 @@ def figure1():
     save(fig, "Fig1_support_structure")
 
 
-# ---------------- Figure 2: intervention ----------------
+# ---------------- Figure 2: protocol contrasts and representation ----------------
 def figure2():
+    fin = pd.read_csv(os.path.join(OUT, "leakage_results_final.csv"))
+    chem = pd.read_csv(os.path.join(OUT, "leakage_results_chemistry.csv"))
+    notopo = pd.read_csv(os.path.join(OUT, "leakage_results_notopo100k.csv"))
+
+    def r2(df, prefix):
+        row = df[df.strategy.str.startswith(prefix)]
+        return float(row.R2.iloc[0]) if len(row) else np.nan
+
+    schemes = [("random", "随机划分（多数文献做法）", "random"),
+               ("chemistry key", "按化学组成分组（metal+2 linkers）", "chemistry key"),
+               ("linker pair", "按有机连接体分组", "linker pair"),
+               ("metal", "按金属中心分组", "metal"),
+               ("topology", "按拓扑分组", "topology")]
+    vals, vals415 = [], []
+    for _, f426, f415 in schemes:
+        src = chem if "化学组成" in f426 else fin
+        vals.append(100 * r2(src, f426))
+        vals415.append(100 * r2(notopo, f415))
+
+    fig, axes = plt.subplots(1, 4, figsize=(15.5, 4.3))
+    ax, ax2, ax3, ax4 = axes
+    x = np.arange(len(schemes))
+    ax.bar(x, vals, color=["#1f77b4"] * 4 + ["#d62728"], edgecolor="white", linewidth=0.5)
+    ax.scatter(x, vals415, marker="D", s=20, facecolors="white", edgecolors="#222222",
+               linewidths=0.8, zorder=6, label="415 features (topology block removed)")
+    for xi, v, v415 in zip(x, vals, vals415):
+        ax.text(xi, v + 1.2, f"{v:.1f}", ha="center", fontsize=7)
+        if np.isfinite(v415):
+            ax.text(xi + 0.30, v415, f"{v415:.1f}", ha="left", va="center", fontsize=6,
+                    color="#222222")
+    ax.set_xticks(x); ax.set_xticklabels([s[0] for s in schemes], rotation=20, ha="right", fontsize=7)
+    ax.set_ylabel("pooled R²  [%]")
+    ax.set_ylim(0, 85)
+    ax.set_title("(a) five validation schemes, 100k", loc="left", fontsize=9)
+    ax.legend(fontsize=6, loc="upper right")
+    ax.grid(axis="y", alpha=0.3)
+
+    agg = pd.read_csv(os.path.join(OUT, "loto_aggregates_100k.csv")).iloc[0]
+    rules = [("pooled", agg.pooled, "#1f77b4"), ("weighted", agg.weighted, "#ff7f0e"),
+             ("macro", agg.macro, "#d62728"), ("median", agg["median"], "#2ca02c")]
+    xb = np.arange(len(rules))
+    ax2.bar(xb, [100 * r[1] for r in rules], color=[r[2] for r in rules],
+            edgecolor="white", linewidth=0.5)
+    per = pd.read_csv(os.path.join(OUT, "loto_per_topology_metrics_100k.csv"))
+    per = per[per.valid_R2.astype(str).str.lower() == "true"]
+    rng = np.random.default_rng(0)
+    for i in range(len(rules)):
+        ax2.scatter(i + rng.uniform(-0.18, 0.18, len(per)), 100 * per.R2.to_numpy(),
+                    s=9, color="#333333", zorder=5, alpha=0.8)
+    for xi, r in zip(xb, rules):
+        ha = "left" if xi == 0 else "center"
+        xt = xi + 0.08 if xi == 0 else xi
+        ax2.text(xt, 100 * r[1] + (7 if r[1] >= 0 else -12), f"{100*r[1]:+.1f}", ha=ha,
+                 fontsize=7, bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.85))
+    ax2.axhline(0, color="gray", lw=0.7, ls="--")
+    ax2.set_xticks(xb); ax2.set_xticklabels([r[0] for r in rules], fontsize=7)
+    ax2.set_ylabel("leave-one-topology-out R²  [%]")
+    ax2.set_ylim(-70, 55)
+    ax2.set_title("(b) one LOTO run, four aggregation rules", loc="left", fontsize=9)
+    ax2.grid(axis="y", alpha=0.3)
+
+    pt = pd.read_csv(os.path.join(OUT, "finish_20261023", "per_topology_paired_deltas.csv"))
+    for axx, scope, title in [(ax3, "full", "(c) I − B, full sample"),
+                              (ax4, "mapped_common", "(d) T − I, mapped subset")]:
+        d = pt[(pt.scope == scope) & (pt.target == "uptake") & (pt.model == "RF")
+               & (pt.contrast.isin(["I-B", "T-I"]))].sort_values("mean_delta")
+        y = np.arange(len(d))
+        colors = ["#1f77b4" if v < 0 else "#d62728" for v in d.mean_delta]
+        axx.barh(y, 1000 * d.mean_delta.to_numpy(), color=colors, edgecolor="white", linewidth=0.4)
+        axx.axvline(0, color="gray", lw=0.7)
+        axx.set_yticks(y); axx.set_yticklabels(d.topology, fontsize=6.5)
+        axx.set_xlabel("ΔMAE, first − second  [10⁻³ mmol/g]")
+        axx.set_title(title, loc="left", fontsize=9)
+        axx.grid(axis="x", alpha=0.3)
+        axx.text(0.98, 0.02, "blue = first representation better\nn = %d topologies" % len(d),
+                 transform=axx.transAxes, fontsize=6, color="#444444", ha="right", va="bottom")
+    save(fig, "Fig2_protocol_support")
+
+
+# ---------------- Figure 3: interventions ----------------
+def figure3():
     s = pd.read_csv(os.path.join(OUT, "isoreticular_control_seeds.csv"))
     e = pd.read_csv(os.path.join(OUT, "arm_e_partner_coverage.csv"))
 
@@ -100,7 +193,9 @@ def figure2():
     nbo_c = (0.1071, 0.0048)
     pcu_c = (0.2364, 0.0031)
 
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10, 4.4))
+    fig, axes = plt.subplots(1, 3, figsize=(14.5, 4.3))
+    fig.subplots_adjust(wspace=0.55)
+    ax, ax2, ax3 = axes
     arms = ["a", "b", "c", "e", "f"]
     nbo_m = [nbo_a[0], nbo_b[0], nbo_c[0], nbo_e[0], nbo_f[0]]
     nbo_s = [nbo_a[1], nbo_b[1], nbo_c[1], nbo_e[1], nbo_f[1]]
@@ -119,15 +214,40 @@ def figure2():
         axx.set_ylabel("MAE  [mmol/g]")
         axx.set_title(ttl, loc="left", fontsize=10)
         axx.grid(axis="y", alpha=0.3)
-    save(fig, "Fig2_intervention")
+
+    pe = pd.read_csv(os.path.join(OUT, "followup_20261023", "experiment5", "paired_endpoints.csv"))
+    cl = pd.read_csv(os.path.join(OUT, "followup_20261023", "experiment5",
+                                  "cleaned_endpoint_summary.csv"))
+    rows = [("nbo, historical", float(pe[(pe.target == "nbo") & (pe.subset == "all")].MAE_100_minus_0.iloc[0]),
+             float(pe[(pe.target == "nbo") & (pe.subset == "all")].CI95_low.iloc[0]),
+             float(pe[(pe.target == "nbo") & (pe.subset == "all")].CI95_high.iloc[0])),
+            ("nbo, negatives removed", float(cl[cl.target == "nbo"].delta.iloc[0]),
+             float(cl[cl.target == "nbo"].CI95_low.iloc[0]), float(cl[cl.target == "nbo"].CI95_high.iloc[0])),
+            ("pcu, historical", float(pe[(pe.target == "pcu") & (pe.subset == "all")].MAE_100_minus_0.iloc[0]),
+             float(pe[(pe.target == "pcu") & (pe.subset == "all")].CI95_low.iloc[0]),
+             float(pe[(pe.target == "pcu") & (pe.subset == "all")].CI95_high.iloc[0])),
+            ("pcu, negatives removed", float(cl[cl.target == "pcu"].delta.iloc[0]),
+             float(cl[cl.target == "pcu"].CI95_low.iloc[0]), float(cl[cl.target == "pcu"].CI95_high.iloc[0]))]
+    y = np.arange(len(rows))
+    vals = [1000 * r[1] for r in rows]
+    lo = [1000 * (r[1] - r[2]) for r in rows]
+    hi = [1000 * (r[3] - r[1]) for r in rows]
+    ax3.errorbar(vals, y, xerr=[lo, hi], fmt="o", ms=5, color="#d62728", capsize=3)
+    ax3.axvline(0, color="gray", lw=0.8, ls="--")
+    ax3.set_yticks(y); ax3.set_yticklabels([r[0] for r in rows], fontsize=7)
+    ax3.set_xlabel("ΔMAE, 100% − 0% shared partner rows  [10⁻³ mmol/g]")
+    ax3.set_title("(c) separate follow-up: replacement", loc="left", fontsize=9)
+    ax3.grid(axis="x", alpha=0.3)
+    fig.text(0.01, 0.01, "Panels (a,b): arms a–f, five outer seeds, test set fixed within each seed; "
+             "arm (c) is the nested 5 × 5 draw. Panel (c) is not an arm of that design: a separate "
+             "follow-up on its own test population with five learner seeds (SI-I.5).", fontsize=6,
+             color="#555555")
+    save(fig, "Fig3_intervention")
 
 
-# ---------------- Figure 3: screening ----------------
-def figure3():
+# ---------------- Figure 4: screening ----------------
+def figure4():
     seeds = [42, 143, 244, 345, 446]
-    strat_names = {"random": "random", "topology": "topology",
-                   "chemistry": "chemistry key", "linker_pair": "linker pair",
-                   "metal": "metal"}
     order = ["random", "chemistry", "linker_pair", "metal", "topology"]
     frames = []
     for sd in seeds:
@@ -143,12 +263,12 @@ def figure3():
     oracle_vals = allf.groupby("seed")["oracle_topk_mean"].first()
     oracle_mean, oracle_sd = float(oracle_vals.mean()), float(oracle_vals.std())
 
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10, 4.4))
+    fig, axes = plt.subplots(1, 3, figsize=(14.5, 4.3))
+    ax, ax2, ax3 = axes
     x = np.arange(len(order))
     m = [ov[k][0] * 100 for k in order]
     sd = [ov[k][1] * 100 for k in order]
     ax.bar(x, m, yerr=sd, capsize=3, color="#1f77b4", edgecolor="white", linewidth=0.5)
-    # per-seed paired points (same five seeds for every strategy)
     rng = np.random.default_rng(0)
     tops = []
     for i, k in enumerate(order):
@@ -160,7 +280,7 @@ def figure3():
         ax.text(xi, t + 2.0, f"{v:.1f}", ha="center", fontsize=7)
     ax.set_xticks(x); ax.set_xticklabels(order, rotation=20, ha="right")
     ax.set_ylabel("top-1% overlap  [%]")
-    ax.set_title("(a) five-seed top-1% recovery", loc="left", fontsize=10)
+    ax.set_title("(a) out-of-fold top-1% recovery", loc="left", fontsize=10)
     ax.grid(axis="y", alpha=0.3)
 
     ax2.bar(x, [up[k] for k in order], yerr=[up_sd[k] for k in order], capsize=3,
@@ -174,13 +294,36 @@ def figure3():
         ax2.text(xi, v + up_sd[order[xi]] + 0.03, f"{v:.2f}", ha="center", fontsize=7)
     ax2.set_xticks(x); ax2.set_xticklabels(order, rotation=20, ha="right")
     ax2.set_ylabel("mean uptake of selected top-1%  [mmol/g]")
-    ax2.set_title("(b) selected vs oracle uptake (mean ± SD over seeds)", loc="left", fontsize=10)
+    ax2.set_title("(b) selected vs oracle uptake", loc="left", fontsize=10)
     ax2.grid(axis="y", alpha=0.3)
-    save(fig, "Fig3_screening")
+
+    # (c) fixed candidate pool, 5% budget, RF
+    fs = pd.read_csv(os.path.join(OUT, "followup_20261023", "experiment6", "screening_summary.csv"))
+    fs = fs[(fs.budget_fraction == 0.05) & (fs.model == "RF")]
+    labels, vals, errs = [], [], []
+    for target in ("nbo", "pcu"):
+        for supp, slab in ((0, "0%"), (1, "100%")):
+            for rep in ("G", "B", "I"):
+                r = fs[(fs.target == target) & (fs.support == supp) & (fs.representation == rep)]
+                if not len(r):
+                    continue
+                labels.append(f"{target}\n{rep}·{slab}")
+                vals.append(100 * float(r.recovery_mean.iloc[0]))
+                errs.append(100 * float(r.recovery_std.iloc[0]))
+    xb = np.arange(len(labels))
+    ax3.bar(xb, vals, yerr=errs, capsize=2, color="#9467bd", edgecolor="white", linewidth=0.4)
+    for xi, v in zip(xb, vals):
+        ax3.text(xi, v + 1.2, f"{v:.1f}", ha="center", fontsize=5, rotation=90)
+    ax3.set_xticks(xb); ax3.set_xticklabels(labels, fontsize=5.5, rotation=45, ha="right")
+    ax3.set_ylabel("recovery at 5%  [%]")
+    ax3.set_ylim(0, 72)
+    ax3.set_title("(c) fixed pool, 5% budget, RF", loc="left", fontsize=10)
+    ax3.grid(axis="y", alpha=0.3)
+    save(fig, "Fig4_screening")
 
 
-# ---------------- Figure 4: ARC-MOF ----------------
-def figure4():
+# ---------------- Figure S8: ARC-MOF (SI) ----------------
+def figureS8():
     null = pd.read_csv(os.path.join(OUT, "common_support", "null_topology_cardinality.csv"))
     # exclude the degenerate single-topology source (DB6)
     null = null[null["n_topologies"] > 1]
@@ -188,9 +331,6 @@ def figure4():
     fig, axes = plt.subplots(1, 3, figsize=(12, 4.2))
     ax, ax2, ax3 = axes
 
-    # (a) single-topology fraction: full/non-singleton x coarse/fine (four bars).
-    # Every value is read from the two archived audit tables; none is hard-coded,
-    # so a change in the input propagates into the panel.
     audit = pd.read_csv(os.path.join(OUT, "singleton_audit.csv"))
     nss = pd.read_csv(os.path.join(OUT, "arcmof_non_singleton_summary.csv"))
     a_arc = audit[audit["dataset"] == "ARC-MOF"].set_index("granularity")
@@ -222,7 +362,6 @@ def figure4():
     ax.set_title("(a) exclusivity by granularity", loc="left", fontsize=9)
     ax.grid(axis="y", alpha=0.3)
 
-    # (b) leave-one-source-out: two point series (coarse/fine), one point per removed source
     ex = pd.read_csv(os.path.join(OUT, "confound_arcmof_excl_derived.csv"))
     base = ex[ex["subset"] == "全部（未剔除）"].set_index("granularity")
     rem = ex[ex["subset"].str.startswith("剔除")].copy()
@@ -241,12 +380,9 @@ def figure4():
     ax2.set_xticks(xb); ax2.set_xticklabels(dbs, rotation=45, ha="right", fontsize=6)
     ax2.set_ylabel("single-topology fraction  [%]")
     ax2.set_title("(b) leave-one-source-out", loc="left", fontsize=9)
-    # the DB0 removal is the lowest coarse point, so the legend goes to the
-    # lower-right corner where the series are above it
     ax2.legend(fontsize=6, loc="lower right", frameon=True, framealpha=0.95)
     ax2.grid(axis="y", alpha=0.3)
 
-    # (c) observed vs within-source permutation null (common support set, DB6 excluded)
     ax3.errorbar(null["null_mean"] * 100, null["observed"] * 100,
                  xerr=null["null_sd"] * 100, fmt="o", ms=4, color="#1f77b4", capsize=2)
     ax3.plot([50, 100], [50, 100], color="gray", lw=0.7, ls="--")
@@ -254,7 +390,7 @@ def figure4():
     ax3.set_ylabel("observed exclusivity  [%]")
     ax3.set_title("(c) observed vs null (DB6 excluded)", loc="left", fontsize=9)
     ax3.grid(alpha=0.3)
-    save(fig, "Fig4_arcmof")
+    save(fig, "figS8_arcmof")
 
 
 # ---------------- Figure S7: S_g curve (SI) ----------------
@@ -263,7 +399,6 @@ def figureS7():
     a = sg[sg.n_test >= 100].copy()
 
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10, 4.2))
-    # (a) S_miss vs held-out R2, restricted to n_test >= 100 (10 topologies)
     ax.scatter(a.S_miss_unseen, a.R2_pooled, s=28, color="#1f77b4", zorder=3)
     saturated = a[a.S_miss_unseen >= 0.999]
     upper = saturated[saturated.R2_pooled >= 0].sort_values("R2_pooled")
@@ -287,7 +422,6 @@ def figureS7():
     ax.set_title("(a) S_g curve (n_test ≥ 100, 10 topologies)", loc="left", fontsize=9)
     ax.grid(alpha=0.3)
 
-    # (b) target variation within held-out topologies (all 11, by n_test desc)
     b = sg.sort_values("n_test", ascending=False).reset_index(drop=True)
     xb = np.arange(len(b))
     ax2.bar(xb, b.sd_y_test, color="#2ca02c", edgecolor="white", linewidth=0.5)
@@ -368,7 +502,5 @@ if __name__ == "__main__":
     figure2()
     figure3()
     figure4()
+    figureS8()
     figureS3()
-    figureS4()
-    figureS7()
-    print("done")

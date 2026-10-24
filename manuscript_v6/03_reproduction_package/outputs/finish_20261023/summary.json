@@ -1,0 +1,153 @@
+{
+  "tie_audit": {
+    "n_rows": 60,
+    "any_tie_straddles_cut": false,
+    "max_rows_at_boundary_score": 1,
+    "max_members_changed_by_rule": 0
+  },
+  "bootstrap": {
+    "n_rows": 20,
+    "mean_boot_sd": 0.02487771543084597,
+    "by_strategy": {
+      "random|cleaned": {
+        "overlap_point": 0.504,
+        "boot_sd": 0.02991256269588375
+      },
+      "random|historical": {
+        "overlap_point": 0.508,
+        "boot_sd": 0.02629128674663852
+      },
+      "topology|cleaned": {
+        "overlap_point": 0.112,
+        "boot_sd": 0.020589542156909557
+      },
+      "topology|historical": {
+        "overlap_point": 0.132,
+        "boot_sd": 0.02116312332678529
+      }
+    }
+  },
+  "fixed_pool": {
+    "n_rows": 96,
+    "budgets": [
+      0.01,
+      0.05,
+      0.1,
+      0.2
+    ]
+  },
+  "per_topology": [
+    {
+      "scope": "full",
+      "contrast": "I-B",
+      "target": "selectivity",
+      "model": "ET",
+      "n_topologies": 11,
+      "n_mean_MAE_lower": 5,
+      "n_mean_MAE_higher": 6,
+      "n_sign_consistent_4of5": 7,
+      "topologies_mean_higher": "acs,bcu,etb,pts,tbo,the",
+      "min_delta": -0.01250235371046518,
+      "max_delta": 0.00780235745842732,
+      "median_delta": 0.00050352964641064
+    },
+    {
+      "scope": "full",
+      "contrast": "I-B",
+      "target": "selectivity",
+      "model": "RF",
+      "n_topologies": 11,
+      "n_mean_MAE_lower": 7,
+      "n_mean_MAE_higher": 4,
+      "n_sign_consistent_4of5": 7,
+      "topologies_mean_higher": "bcu,rht,tbo,the",
+      "min_delta": -0.0087191461075985,
+      "max_delta": 0.00802138904083392,
+      "median_delta": -0.0007594614854797998
+    },
+    {
+      "scope": "full",
+      "contrast": "I-B",
+      "target": "uptake",
+      "model": "ET",
+      "n_topologies": 11,
+      "n_mean_MAE_lower": 6,
+      "n_mean_MAE_higher": 5,
+      "n_sign_consistent_4of5": 11,
+      "topologies_mean_higher": "acs,bcu,fof,nbo,tbo",
+      "min_delta": -0.04783762954864938,
+      "max_delta": 0.03592457973051766,
+      "median_delta": -0.0006464106168002001
+    },
+    {
+      "scope": "full",
+      "contrast": "I-B",
+      "target": "uptake",
+      "model": "RF",
+      "n_topologies": 11,
+      "n_mean_MAE_lower": 7,
+      "n_mean_MAE_higher": 4,
+      "n_sign_consistent_4of5": 10,
+      "topologies_mean_higher": "bcu,fof,tbo,the",
+      "min_delta": -0.0233008093185241,
+      "max_delta": 0.03520695927874868,
+      "median_delta": -0.00641980605943578
+    },
+    {
+      "scope": "mapped_common",
+      "contrast": "T-I",
+      "target": "selectivity",
+      "model": "ET",
+      "n_topologies": 8,
+      "n_mean_MAE_lower": 2,
+      "n_mean_MAE_higher": 6,
+      "n_sign_consistent_4of5": 7,
+      "topologies_mean_higher": "acs,bcu,nbo,pcu,pts,sra",
+      "min_delta": -0.06782404368045915,
+      "max_delta": 0.09846362567207431,
+      "median_delta": 0.00974739245840496
+    },
+    {
+      "scope": "mapped_common",
+      "contrast": "T-I",
+      "target": "selectivity",
+      "model": "RF",
+      "n_topologies": 8,
+      "n_mean_MAE_lower": 4,
+      "n_mean_MAE_higher": 4,
+      "n_sign_consistent_4of5": 8,
+      "topologies_mean_higher": "acs,bcu,pcu,pts",
+      "min_delta": -0.040522979360930876,
+      "max_delta": 0.07714828129815238,
+      "median_delta": 0.00216459099208126
+    },
+    {
+      "scope": "mapped_common",
+      "contrast": "T-I",
+      "target": "uptake",
+      "model": "ET",
+      "n_topologies": 8,
+      "n_mean_MAE_lower": 2,
+      "n_mean_MAE_higher": 6,
+      "n_sign_consistent_4of5": 8,
+      "topologies_mean_higher": "acs,bcu,etb,nbo,pcu,pts",
+      "min_delta": -0.11488755885041124,
+      "max_delta": 0.25060992773721547,
+      "median_delta": 0.03011160701932683
+    },
+    {
+      "scope": "mapped_common",
+      "contrast": "T-I",
+      "target": "uptake",
+      "model": "RF",
+      "n_topologies": 8,
+      "n_mean_MAE_lower": 3,
+      "n_mean_MAE_higher": 5,
+      "n_sign_consistent_4of5": 7,
+      "topologies_mean_higher": "acs,bcu,etb,pcu,pts",
+      "min_delta": -0.08662184241143131,
+      "max_delta": 0.2773869612892571,
+      "median_delta": 0.00626411144011599
+    }
+  ]
+}

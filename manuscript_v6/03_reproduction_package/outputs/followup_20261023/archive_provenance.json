@@ -1,0 +1,552 @@
+{
+  "date": "2026-10-23",
+  "scope": "selected original metric, configuration and source-code snapshots; no raw database or prediction NPZ archive",
+  "files": [
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/pooled_metrics.csv",
+      "archive_path": "experiment12/full/pooled_metrics.csv",
+      "bytes": 73185,
+      "sha256": "08587f065c3afabb1375bc24164562709e8b92a86ef58a8b61666dcdf41bdfee"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/per_topology_metrics.csv",
+      "archive_path": "experiment12/full/per_topology_metrics.csv",
+      "bytes": 697664,
+      "sha256": "7caac02142afc7a8e1ee4a7045caa7ee181a23730dc1d3a594163f705b722514"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/novelty_error_metrics.csv",
+      "archive_path": "experiment12/full/novelty_error_metrics.csv",
+      "bytes": 1063194,
+      "sha256": "3839d1fe5be60362fc3966f792d0fa83b5704e7b13cd11811341f08110388571"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/C3_subtype_metrics.csv",
+      "archive_path": "experiment12/full/C3_subtype_metrics.csv",
+      "bytes": 210702,
+      "sha256": "76b7e2870127651659b621a7cf0faa2b86cf0ffb22801920047f59f58cbe5fa5"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/role_and_key_sensitivity.csv",
+      "archive_path": "experiment12/full/role_and_key_sensitivity.csv",
+      "bytes": 11743,
+      "sha256": "ad6518280821bd575380b94b5c0fce8e4b7d440ef0825b9e43e4b3ddc8962fe5"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/seen_unseen_error_metrics.csv",
+      "archive_path": "experiment12/full/seen_unseen_error_metrics.csv",
+      "bytes": 687705,
+      "sha256": "8440524b1cc8f7298125c3f3a27b1925684149273f690cb6b5c645b0ced60ea2"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/unknown_identity_audit.csv",
+      "archive_path": "experiment12/full/unknown_identity_audit.csv",
+      "bytes": 122854,
+      "sha256": "ed4f3ef61deb9e96b091062120f2ecea25c3e6709d56d1e00f3e9d290cd5c36a"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/pooled_metrics.csv",
+      "archive_path": "experiment12/mapped_common/pooled_metrics.csv",
+      "bytes": 90174,
+      "sha256": "3c1b2fea5a2f1259a8a957e411fdce1c8d7fd8036197420962dd3821dc8e8cbb"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/per_topology_metrics.csv",
+      "archive_path": "experiment12/mapped_common/per_topology_metrics.csv",
+      "bytes": 648794,
+      "sha256": "dc16cabab40e90f661f3b78186318c62dda1451461d2c59b8655ae8772421a42"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/novelty_error_metrics.csv",
+      "archive_path": "experiment12/mapped_common/novelty_error_metrics.csv",
+      "bytes": 1301829,
+      "sha256": "5d157868fb78022310ea10e1420808ef5d713350eb65354495a5f3a8da214a14"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/C3_subtype_metrics.csv",
+      "archive_path": "experiment12/mapped_common/C3_subtype_metrics.csv",
+      "bytes": 241782,
+      "sha256": "00d89932ea6b81befee66ba63fcbce503cbac958a65e8828c1f1b0985b181015"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/role_and_key_sensitivity.csv",
+      "archive_path": "experiment12/mapped_common/role_and_key_sensitivity.csv",
+      "bytes": 11350,
+      "sha256": "164da8e0e450c6e544e657cbb2f66cc14eb358b4831ee0d80e3a5a59ac3bf659"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/seen_unseen_error_metrics.csv",
+      "archive_path": "experiment12/mapped_common/seen_unseen_error_metrics.csv",
+      "bytes": 843093,
+      "sha256": "1cb2a60f1b14c2001d2b1fdfe48cb4f2903e13f4e2c0184bccf1b32cb5e50d9d"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/unknown_identity_audit.csv",
+      "archive_path": "experiment12/mapped_common/unknown_identity_audit.csv",
+      "bytes": 154210,
+      "sha256": "5e82dd43d8cafb5994b3be698cd5ad1858933e6f3b85af5cd9124bda02af4ef5"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/paper_tables/primary_LOTO_paired_directions.csv",
+      "archive_path": "experiment12/paper_tables/primary_LOTO_paired_directions.csv",
+      "bytes": 660,
+      "sha256": "8b8bb7ab532c91dc903b2161e8f087b034a4f87d050a1ada06f158432a93e2c2"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/paper_tables/size_sensitivity_LOTO_paired.csv",
+      "archive_path": "experiment12/paper_tables/size_sensitivity_LOTO_paired.csv",
+      "bytes": 631,
+      "sha256": "12cc331540892b17ebdcb895f264fe40fd9c473a5e3dd3f0263953ef70718efc"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/paper_tables/main_novelty_numerical_cross.csv",
+      "archive_path": "experiment12/paper_tables/main_novelty_numerical_cross.csv",
+      "bytes": 731,
+      "sha256": "cd589a9af8a59d83337546dcba6f779d2d38f1893e38493bd3d1b9b63806ab06"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/paper_tables/mapping_coverage_and_target_shift.csv",
+      "archive_path": "experiment12/paper_tables/mapping_coverage_and_target_shift.csv",
+      "bytes": 15176,
+      "sha256": "3bef03310dba67b6857f1bde2e4fcbabec782bfb2ee7c0d1ac3d57d772c35c30"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/paper_tables/linker_mapping_audit.csv",
+      "archive_path": "experiment12/paper_tables/linker_mapping_audit.csv",
+      "bytes": 7466,
+      "sha256": "8e0e4f58a9e80160e65772d8f516ce8012292703cc74eac1f67a79a70876bb96"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs/frozen_config.json",
+      "archive_path": "experiment12/full/frozen_config.json",
+      "bytes": 1668,
+      "sha256": "12fd0acc40fb1a2b1d23c6e02cb8cf3bd895956373d1371edda3de6525fafa12"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/outputs_mapped_common/frozen_T_config.json",
+      "archive_path": "experiment12/mapped_common/frozen_T_config.json",
+      "bytes": 925,
+      "sha256": "d333ea1d40f74eacbefb0f070953d7e6acea0cd8f385451b14f321df2b227f38"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/sources/validated_linker_mapping.json",
+      "archive_path": "experiment12/mapping/validated_linker_mapping.json",
+      "bytes": 5349,
+      "sha256": "1029452dc330497b9aa210c757a83f6e402a8053cdcb9c79477f0efcc256c723"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/sources/validated_linker_mapping_audit.json",
+      "archive_path": "experiment12/mapping/validated_linker_mapping_audit.json",
+      "bytes": 172714,
+      "sha256": "621768a5e17e27f945f6fde3ab2c763ee95b9a50f7afb773d3055b9b3189560f"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/sources/mapping_validation_secondary.json",
+      "archive_path": "experiment12/mapping/mapping_validation_secondary.json",
+      "bytes": 6172,
+      "sha256": "ceab497e9577d403bdd4d554ee66871d567939723d905065a90a375e838fbb53"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/sources/morgan_parent_fingerprints.npz",
+      "archive_path": "experiment12/mapping/morgan_parent_fingerprints.npz",
+      "bytes": 1774,
+      "sha256": "f65b57fe5ebb28b46fdc988f3b9b34b159e13072bb6cb256ae3d983fae64cbb3"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/sources/parent_tanimoto_matrix.npz",
+      "archive_path": "experiment12/mapping/parent_tanimoto_matrix.npz",
+      "bytes": 2751,
+      "sha256": "c387abc931eced3b0caedff82b6374aed88dee33b2151410f47720aba528516d"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/summary.json",
+      "archive_path": "experiment3/summary.json",
+      "bytes": 927,
+      "sha256": "ac59d52ace2fc183dae62596d9b87e5cc9ee6e9996f7b92d971dd66eef77c252"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/topology_pilot.json",
+      "archive_path": "experiment3/topology_pilot.json",
+      "bytes": 12145,
+      "sha256": "e1cd47fd63d2f9fcaf313e1f194a7d5a1ef0a97d8d49d72a1fc722d713b31fe7"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/expert_review_sheet.csv",
+      "archive_path": "experiment3/expert_review_sheet.csv",
+      "bytes": 3204,
+      "sha256": "16de1f62a8ad806ac70ceff761714401e89b96c627e583aaabb055c032174cc8"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/sample_manifest.json",
+      "archive_path": "experiment3/sample_manifest.json",
+      "bytes": 7819,
+      "sha256": "0d457fcd79936030db55168110c4b696ffc4e4661065cbe31b5080802a874262"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/pilot_structure_audit.csv",
+      "archive_path": "experiment3/pilot_structure_audit.csv",
+      "bytes": 7285,
+      "sha256": "d95f643a95e9352761a43d3501d67a9c0c354ca7be3608e025a9cf1b49f9bed8"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/metadata_census.json",
+      "archive_path": "experiment3/metadata_census.json",
+      "bytes": 12061,
+      "sha256": "9446bbb29eabe9a8a985c85d03e771bac1df84e7731207baa1368a4c3e2180c0"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/checksums.json",
+      "archive_path": "experiment3/checksums.json",
+      "bytes": 409,
+      "sha256": "ce2ad40fc4ae02d1818bd75359b1e50a3a0e7b2c688f6edd5d6f2e6b52353331"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/outputs/DAKVUI_retry_180s.json",
+      "archive_path": "experiment3/DAKVUI_retry_180s.json",
+      "bytes": 1094,
+      "sha256": "042b3e0579ac3c860085c0968b3e185dc933af31acc3c41965dca924fd7cfe58"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/data/record_3370144.json",
+      "archive_path": "experiment3/record_3370144.json",
+      "bytes": 6622,
+      "sha256": "51d563732045d0e7c3d4d0dbbe5e20a774ea8a778870117b605d85513f5e13e2"
+    },
+    {
+      "source_workspace_path": "实验4_验证风险诊断/outputs/fold_diagnostics.csv",
+      "archive_path": "experiment4/fold_diagnostics.csv",
+      "bytes": 15689,
+      "sha256": "941eb3b319795156739799b5d2d58b73a7a6d6ba514a5ba69ee7828492e6a3d3"
+    },
+    {
+      "source_workspace_path": "实验4_验证风险诊断/outputs/descriptive_correlations.csv",
+      "archive_path": "experiment4/descriptive_correlations.csv",
+      "bytes": 3753,
+      "sha256": "e42ac6aca11560720407ead12a31a6ca1ee4d6256323770c1652bd980f5a07fb"
+    },
+    {
+      "source_workspace_path": "实验4_验证风险诊断/outputs/joint_group_strata.csv",
+      "archive_path": "experiment4/joint_group_strata.csv",
+      "bytes": 426,
+      "sha256": "2189f9e5a88a527895cebcb042cf9c74b04b26e82b385d8e20b6ee70ba682338"
+    },
+    {
+      "source_workspace_path": "实验4_验证风险诊断/outputs/analysis_metadata.json",
+      "archive_path": "experiment4/analysis_metadata.json",
+      "bytes": 480,
+      "sha256": "46f94252fa655a3b9d6e886abd9a527be60cae875a7c5ccc4410ec3b15422b0b"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/curve_metrics.csv",
+      "archive_path": "experiment5/curve_metrics.csv",
+      "bytes": 22699,
+      "sha256": "e2b9e916a6ae552d22d669fe57cd086e253f7d54612be24c0d0248cf6d92f426"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/curve_summary.csv",
+      "archive_path": "experiment5/curve_summary.csv",
+      "bytes": 2893,
+      "sha256": "ef433d4a43b984c28d64653eecd95780b3b727bcf456218ffa4dd2dee03f856f"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/paired_endpoints.csv",
+      "archive_path": "experiment5/paired_endpoints.csv",
+      "bytes": 377,
+      "sha256": "db2db73847a4d67a79b32b671ddd08570aa1848878065e4ee7cd56b17fbf6967"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/cleaned_endpoint_metrics.csv",
+      "archive_path": "experiment5/cleaned_endpoint_metrics.csv",
+      "bytes": 853,
+      "sha256": "ad641e177925e80821b66bfc18b74efcf9494aa2cf78b59ba9c899ff856d81c9"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/cleaned_endpoint_summary.csv",
+      "archive_path": "experiment5/cleaned_endpoint_summary.csv",
+      "bytes": 261,
+      "sha256": "95e81102f6e874e5c7a30f66f3e0ad6c8c963b19a10a9156acc3e3b137027acd"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/cleaned_endpoint_counts.csv",
+      "archive_path": "experiment5/cleaned_endpoint_counts.csv",
+      "bytes": 94,
+      "sha256": "78d665ec333e67b6372b7c2f226aa06a8888652edd651de8bde8056e5c4c2ca1"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/main_a_e_g_paired.csv",
+      "archive_path": "experiment5/main_a_e_g_paired.csv",
+      "bytes": 494,
+      "sha256": "9e8b49b922dcf7d000cbae815029be6b23d146029c915a006e405fc08cc02239"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/e_g_seed_differences.csv",
+      "archive_path": "experiment5/e_g_seed_differences.csv",
+      "bytes": 712,
+      "sha256": "b24059addce641dd14b2be85faf5813095428ab3d9af441a2af617a984914131"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/matching_quality_summary.csv",
+      "archive_path": "experiment5/matching_quality_summary.csv",
+      "bytes": 367,
+      "sha256": "07c6db5e3038f04849fb62935e3102154301b31f6c240096123b68025abe13ac"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/feasibility_matching.csv",
+      "archive_path": "experiment5/feasibility_matching.csv",
+      "bytes": 458,
+      "sha256": "724b9bc5f310b6e9b773e76bfb05dff98f40b85391570fd58f0e82bb91071cf3"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/matched_pairs.csv",
+      "archive_path": "experiment5/matched_pairs.csv",
+      "bytes": 69255,
+      "sha256": "3ddc092d6b4b53e210d0a3c0177e449672d28407a7a1725d9db2b08babf2838b"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/balance_all_doses.csv",
+      "archive_path": "experiment5/balance_all_doses.csv",
+      "bytes": 45711,
+      "sha256": "6a25b7dd884bb0332a40bb2b4a887d7a358c69d3a1128cbb922c8d0bec9c68b8"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/residual_distributions.csv",
+      "archive_path": "experiment5/residual_distributions.csv",
+      "bytes": 4962,
+      "sha256": "9ccd3295471402e3b505ec9880123b9aac81de0172dc614a8559cdbb84877249"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/design.json",
+      "archive_path": "experiment5/design.json",
+      "bytes": 344791,
+      "sha256": "844c2b99658ac9c06cca23521bced8cfb97f4594467fc447ecb391c380cb2fa0"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/sample_to_raw_index.npy",
+      "archive_path": "experiment5/sample_to_raw_index.npy",
+      "bytes": 400128,
+      "sha256": "d7644e3f3538e4cd6ab9f54b532b6391c6e4236250ba54ca190144f1f9c7f233"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/matching_features_nbo.csv",
+      "archive_path": "experiment5/matching_features_nbo.csv",
+      "bytes": 1068,
+      "sha256": "ea463a695032eb6214238185136dad335a3417464e180f7418e87b80508d6194"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/matching_features_pcu.csv",
+      "archive_path": "experiment5/matching_features_pcu.csv",
+      "bytes": 1073,
+      "sha256": "78233a483a96e439df966f875db10dcc945f6cce4089612b7b86491c2d91aacb"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/outputs/environment_versions.json",
+      "archive_path": "experiment5/environment_versions.json",
+      "bytes": 115,
+      "sha256": "f3ca2206ea2e5d1e450605178e63fc321e6de872cea39c8b6be03f87b2fff040"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/screening_metrics.csv",
+      "archive_path": "experiment6/screening_metrics.csv",
+      "bytes": 116533,
+      "sha256": "b9ea85c117517bc8ab5ddb8a75bda811bdbe96a07b763ab94f39a2f85661cfa0"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/screening_summary.csv",
+      "archive_path": "experiment6/screening_summary.csv",
+      "bytes": 29858,
+      "sha256": "532e9fddd143f5b764523c0b7574e9eb79d44c0f8285602f133e1c6762f32f87"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/pool_audit.csv",
+      "archive_path": "experiment6/pool_audit.csv",
+      "bytes": 1134,
+      "sha256": "99c6f99a6834c66cb52d8dab8d238565675825bcf26723f0a6c0da354f737c75"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/frozen_config.json",
+      "archive_path": "experiment6/frozen_config.json",
+      "bytes": 687,
+      "sha256": "dedee70ca039cf48ed1244787b912104ea10a7de4369245f9efbafa4f9975db9"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/candidates_nbo.csv",
+      "archive_path": "experiment6/candidates_nbo.csv",
+      "bytes": 139320,
+      "sha256": "896211c7f63b6943d13c63324972a3d443bea72cfb4923fc720656a05458f244"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/candidates_pcu.csv",
+      "archive_path": "experiment6/candidates_pcu.csv",
+      "bytes": 569401,
+      "sha256": "700a835733d5703cf866276a76e4ccbce12497e54d35840fda446bd63e5ea55a"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/unknown_category_audit.csv",
+      "archive_path": "experiment6/unknown_category_audit.csv",
+      "bytes": 948,
+      "sha256": "9be39217d885cda5acc3ea095c6017ebdccad45110b9cb33d8f1d7501a6f6985"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/verification.json",
+      "archive_path": "experiment6/verification.json",
+      "bytes": 296,
+      "sha256": "0fb46273059bd62244fef02df01ed40da1d10b8073a768d9bed49bc296b4e176"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/training_membership.csv.gz",
+      "archive_path": "experiment6/training_membership.csv.gz",
+      "bytes": 66146,
+      "sha256": "c9f49ed89088c85c72a455b30bb44ecfc1678320bc46505470a095e289628e65"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/selected_materials.csv.gz",
+      "archive_path": "experiment6/selected_materials.csv.gz",
+      "bytes": 4705998,
+      "sha256": "6be01edb1dd187132525f6fbfbc0952d4a43b06bad7c95b3940ed56d8f93389a"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_nbo_0_B.json",
+      "archive_path": "experiment6/vocabulary_nbo_0_B.json",
+      "bytes": 5998,
+      "sha256": "d656ad22f068e64e8aef9b580374c4739f98e35c0e09de88931a887ca6e02734"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_nbo_0_I.json",
+      "archive_path": "experiment6/vocabulary_nbo_0_I.json",
+      "bytes": 7292,
+      "sha256": "9a75b2c8f04585e3cb03a0a3386390b3c3b9b725bb26a45e43843f635771138f"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_nbo_1_B.json",
+      "archive_path": "experiment6/vocabulary_nbo_1_B.json",
+      "bytes": 5941,
+      "sha256": "072ab6c88e5859ee037f2edea35b02103425d5b07fa5c5c6d1a6d61b5ed6cec9"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_nbo_1_I.json",
+      "archive_path": "experiment6/vocabulary_nbo_1_I.json",
+      "bytes": 7235,
+      "sha256": "a6daf96e380cfc928d0054a7238817393f269e6fdd07eeb8aeba45850d080f87"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_pcu_0_B.json",
+      "archive_path": "experiment6/vocabulary_pcu_0_B.json",
+      "bytes": 5938,
+      "sha256": "93dde680bb2504038770a938a0871a2a0ff11915c4a47fa18fd5bdb6f08e1d5f"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_pcu_0_I.json",
+      "archive_path": "experiment6/vocabulary_pcu_0_I.json",
+      "bytes": 7232,
+      "sha256": "8629679d168fe8e4de5bee1aeb062f6b960842f5f53b0059981e2c9ed08b14e1"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_pcu_1_B.json",
+      "archive_path": "experiment6/vocabulary_pcu_1_B.json",
+      "bytes": 6018,
+      "sha256": "8bbe8c010c753a3e2aa208690c6f3763bf1399b6b485275adbca592f15e4e206"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/outputs/vocabulary_pcu_1_I.json",
+      "archive_path": "experiment6/vocabulary_pcu_1_I.json",
+      "bytes": 7312,
+      "sha256": "c57f895057a2860fb95817dd2a1685cdc58a589ecde597af23631d1335991c0f"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/run_experiments.py",
+      "archive_path": "experiment12/source_scripts/run_experiments.py",
+      "bytes": 11514,
+      "sha256": "c539d987aecf2cf5badb956ac4e94333b94728eccb48c352bcd9e5a25dffc15a"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/run_transferable.py",
+      "archive_path": "experiment12/source_scripts/run_transferable.py",
+      "bytes": 9233,
+      "sha256": "341b3337c43eff5ead4682a0c8402735d9436b9d34d6b7f712c98a934600c5bf"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/summarize_results.py",
+      "archive_path": "experiment12/source_scripts/summarize_results.py",
+      "bytes": 16867,
+      "sha256": "d2e84da502750e7d83829ca6c3a656faca9b8a2203675348214746b22b266ba3"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/validate_mapping.py",
+      "archive_path": "experiment12/source_scripts/validate_mapping.py",
+      "bytes": 3514,
+      "sha256": "6bcc4c0e7731becae6c45a51493a317c6618201290019f2b842014c7882cd8df"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/verify_derived_tables.py",
+      "archive_path": "experiment12/source_scripts/verify_derived_tables.py",
+      "bytes": 10729,
+      "sha256": "4afef65f229f5d01e79cb2f0a79d7af11f97e25d08b03b8acefcde851a3606ff"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/test_summary_regression.py",
+      "archive_path": "experiment12/source_scripts/test_summary_regression.py",
+      "bytes": 1594,
+      "sha256": "b568e97036c2f7ba1dbcdbbbbddb0da9d132b67d52b77ba08256523345aaefc5"
+    },
+    {
+      "source_workspace_path": "实验12_化学表示与新颖性/scripts/finish_pipeline.py",
+      "archive_path": "experiment12/source_scripts/finish_pipeline.py",
+      "bytes": 1299,
+      "sha256": "b01d673be52d22b456fd0c36f42184c8be5b1ed4d51f5bb755b7b7f0a4e163db"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/scripts/run_pilot.py",
+      "archive_path": "experiment3/source_scripts/run_pilot.py",
+      "bytes": 4883,
+      "sha256": "a5676def6092d9ae91ad9ad4a9d350f471b450e739fc9a34b17f077922cc6e52"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/scripts/summarize_pilot.py",
+      "archive_path": "experiment3/source_scripts/summarize_pilot.py",
+      "bytes": 1852,
+      "sha256": "13909c4f5915668e98f0f8f89a853bb1f75359399d6dc690709e369fbaaf60f0"
+    },
+    {
+      "source_workspace_path": "实验3_CoRE独立结构审计/scripts/retry_dakvui.py",
+      "archive_path": "experiment3/source_scripts/retry_dakvui.py",
+      "bytes": 1005,
+      "sha256": "b1caae730c4aabf566a96e0a1f548543c9fb6d31cb4e8a76750d828880ab7663"
+    },
+    {
+      "source_workspace_path": "实验4_验证风险诊断/scripts/analyze_diagnostics.py",
+      "archive_path": "experiment4/source_scripts/analyze_diagnostics.py",
+      "bytes": 6235,
+      "sha256": "fd5cdda8898f485985dae5783da957cd35553652a96438dbd5ffaf203859b5fd"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/scripts/design_replacement.py",
+      "archive_path": "experiment5/source_scripts/design_replacement.py",
+      "bytes": 4383,
+      "sha256": "342b9a967e41a43d95d619ec95bab3bc072fe8cc2db9ff61e38c63950f242b0c"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/scripts/run_replacement.py",
+      "archive_path": "experiment5/source_scripts/run_replacement.py",
+      "bytes": 4675,
+      "sha256": "2ca1ebab295cc36888ccf73f8c8f6daab0c2b084b1af24276c0005ce76f0883b"
+    },
+    {
+      "source_workspace_path": "实验5_伙伴组成替换/scripts/cleaned_endpoint_sensitivity.py",
+      "archive_path": "experiment5/source_scripts/cleaned_endpoint_sensitivity.py",
+      "bytes": 2137,
+      "sha256": "b08e1227b8e764086188f0b6f6709c537848a30b4f94914a485002fac242f388"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/scripts/run_screening.py",
+      "archive_path": "experiment6/source_scripts/run_screening.py",
+      "bytes": 9799,
+      "sha256": "3ed751be8b27a8cd524f14842eb9e9c23895a184c308948fa040da3ca2b22ce8"
+    },
+    {
+      "source_workspace_path": "实验6_固定候选池筛选/scripts/verify_and_manuscript.py",
+      "archive_path": "experiment6/source_scripts/verify_and_manuscript.py",
+      "bytes": 5469,
+      "sha256": "41f70818d9983b84639c521b8a7a85f9119b0339c4cff100a5f1abd31579f5e6"
+    }
+  ]
+}

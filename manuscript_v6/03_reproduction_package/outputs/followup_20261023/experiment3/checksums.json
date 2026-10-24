@@ -1,0 +1,16 @@
+[
+  {
+    "file": "2019-07-01-ASR-public_12020.tar",
+    "size": 263168000,
+    "md5": "45d8a880ae9244fd84e1a77c11b429f1",
+    "expected_md5": "45d8a880ae9244fd84e1a77c11b429f1",
+    "ok": true
+  },
+  {
+    "file": "2019-07-01-ASR-public_12020.csv",
+    "size": 1753736,
+    "md5": "1bf8f78b37aaa024bac849a10b533e3f",
+    "expected_md5": "1bf8f78b37aaa024bac849a10b533e3f",
+    "ok": true
+  }
+]

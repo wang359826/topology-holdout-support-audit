@@ -1,0 +1,9 @@
+scope,contrast,target,model,n_topologies,n_mean_MAE_lower,n_mean_MAE_higher,n_sign_consistent_4of5,topologies_mean_higher,min_delta,max_delta,median_delta
+full,I-B,selectivity,ET,11,5,6,7,"acs,bcu,etb,pts,tbo,the",-0.01250235371046518,0.00780235745842732,0.00050352964641064
+full,I-B,selectivity,RF,11,7,4,7,"bcu,rht,tbo,the",-0.0087191461075985,0.00802138904083392,-0.0007594614854797998
+full,I-B,uptake,ET,11,6,5,11,"acs,bcu,fof,nbo,tbo",-0.04783762954864938,0.03592457973051766,-0.0006464106168002001
+full,I-B,uptake,RF,11,7,4,10,"bcu,fof,tbo,the",-0.0233008093185241,0.03520695927874868,-0.00641980605943578
+mapped_common,T-I,selectivity,ET,8,2,6,7,"acs,bcu,nbo,pcu,pts,sra",-0.06782404368045915,0.09846362567207431,0.00974739245840496
+mapped_common,T-I,selectivity,RF,8,4,4,8,"acs,bcu,pcu,pts",-0.040522979360930876,0.07714828129815238,0.00216459099208126
+mapped_common,T-I,uptake,ET,8,2,6,8,"acs,bcu,etb,nbo,pcu,pts",-0.11488755885041124,0.25060992773721547,0.03011160701932683
+mapped_common,T-I,uptake,RF,8,3,5,7,"acs,bcu,etb,pcu,pts",-0.08662184241143131,0.2773869612892571,0.00626411144011599

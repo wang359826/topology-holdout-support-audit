@@ -9,9 +9,9 @@ All final files live in `../01_manuscript/figures/`.
 | Figure | Final file | REPRODUCE entry |
 |---|---|---|
 | 1 | `Fig1_support_structure.png` / `.pdf` | `F1` |
-| 2 | `Fig2_intervention.png` / `.pdf` | `F2` |
-| 3 | `Fig3_screening.png` / `.pdf` | `F3` |
-| 4 | `Fig4_arcmof.png` / `.pdf` | `F4` |
+| 2 | `Fig2_protocol_support.png` / `.pdf` | `F2` |
+| 3 | `Fig3_intervention.png` / `.pdf` | `F3` |
+| 4 | `Fig4_screening.png` / `.pdf` | `F4` |
 | S1 | `figS1_shap_family.png` / `.pdf` / `.svg` / `.tiff` | `FS1` |
 | S2 | `figS2_pdp_geometry.png` / `.pdf` / `.svg` / `.tiff` | `FS2` |
 | S3 | `figS3_within_vs_cross.png` / `.pdf` | `FS3` |
@@ -19,6 +19,12 @@ All final files live in `../01_manuscript/figures/`.
 | S5 | `figS5_aggregation_rules.png` / `.pdf` / `.svg` / `.tiff` | `FS5` |
 | S6 | `figS6_source_confound.png` / `.pdf` / `.svg` / `.tiff` | `FS6` |
 | S7 | `figS7_sg_curve.png` / `.pdf` | `FS7` |
+| S8 | `figS8_arcmof.png` / `.pdf` | `FS8` |
+
+Figure order follows the paper's argument: Fig 1 = what the split removes; Fig 2 = how the
+support change relates to measured performance (protocols, aggregation, representation);
+Fig 3 = what the interventions allow one to interpret; Fig 4 = what it means for screening.
+The ARC-MOF audit moved from main Fig 4 to Fig S8; its compact summary remains Table 3.
 
 `TOC_graphic.png` (975 × 525 px, 300 dpi) is the journal table-of-contents graphic: a
 purpose-built two-block schematic — "support removed" (74.7%, hMOF) and "cost at screening"

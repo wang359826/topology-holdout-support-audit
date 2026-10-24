@@ -1,0 +1,62 @@
+[
+  {
+    "file": "XIDBUJ_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"sit\", \"key\": \"3 1 2 0 0 0 1 2 0 1 -1 1 2 1 0 -1 1 3 0 0 0 1 3 0 1 0 1 3 0 2 -1\", \"key_hash\": \"graph_net/1:sha256:6d6039b82b8f8c3a455494f7e038fbf81f8ab21367c4407004e74a71936f5396\", \"n_components\": 2, \"components\": [{\"periodicity\": 3, \"n_vertices\": 3, \"n_edges\": 6, \"interpenetration\": 1, \"key\": \"3 1 2 0 0 0 1 2 0 1 -1 1 2 1 0 -1 1 3 0 0 0 1 3 0 1 0 1 3 0 2 -1\", \"key_hash\": \"graph_net/1:sha256:6d6039b82b8f8c3a455494f7e038fbf81f8ab21367c4407004e74a71936f5396\", \"key_version\": \"graph_net/1\", \"topology\": \"sit\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"sit\"}}, {\"periodicity\": 3, \"n_vertices\": 3, \"n_edges\": 6, \"interpenetration\": 1, \"key\": \"3 1 2 0 0 0 1 2 0 1 -1 1 2 1 0 -1 1 3 0 0 0 1 3 0 1 0 1 3 0 2 -1\", \"key_hash\": \"graph_net/1:sha256:6d6039b82b8f8c3a455494f7e038fbf81f8ab21367c4407004e74a71936f5396\", \"key_version\": \"graph_net/1\", \"topology\": \"sit\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"sit\"}}]}\n",
+    "stderr": "C:\\Users\\\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\\Desktop\\MOF_topholdout_\u0376\ufffd\ufffd\ufffd_v5\ufffd\u07b6\ufffd\\\u02b5\ufffd\ufffd3_CoRE\ufffd\ufffd\ufffd\ufffd\ufffd\u1e79\ufffd\ufffd\ufffd\\.venv\\Lib\\site-packages\\ase\\io\\cif.py:411: UserWarning: crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\n  warnings.warn(\n2026-10-22 17:50:01,987 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "LIQCUK_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"unknown\", \"key\": \"3 1 2 0 0 0 1 3 0 0 0 1 4 0 0 0 1 5 0 0 0 2 6 0 0 0 3 7 0 0 0 4 7 0 1 0 5 6 2 -1 -1 6 8 0 0 0 6 9 0 0 0 7 8 1 -1 0 7 9 1 -1 -1\", \"key_hash\": \"graph_net/1:sha256:cc50dc2f839ca115a5a601512db887befb5ed7b3c27a560d192b4b342fe52531\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 9, \"n_edges\": 12, \"interpenetration\": 1, \"key\": \"3 1 2 0 0 0 1 3 0 0 0 1 4 0 0 0 1 5 0 0 0 2 6 0 0 0 3 7 0 0 0 4 7 0 1 0 5 6 2 -1 -1 6 8 0 0 0 6 9 0 0 0 7 8 1 -1 0 7 9 1 -1 -1\", \"key_hash\": \"graph_net/1:sha256:cc50dc2f839ca115a5a601512db887befb5ed7b3c27a560d192b4b342fe52531\", \"key_version\": \"graph_net/1\", \"topology\": null, \"topology_source\": null, \"names\": {}}]}\n",
+    "stderr": "C:\\Users\\\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\\Desktop\\MOF_topholdout_\u0376\ufffd\ufffd\ufffd_v5\ufffd\u07b6\ufffd\\\u02b5\ufffd\ufffd3_CoRE\ufffd\ufffd\ufffd\ufffd\ufffd\u1e79\ufffd\ufffd\ufffd\\.venv\\Lib\\site-packages\\ase\\io\\cif.py:411: UserWarning: crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\n  warnings.warn(\n2026-10-22 17:50:04,568 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "UCABAE_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"unidentified\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"error\", \"key\": null, \"key_hash\": null, \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 3, \"n_edges\": 9, \"interpenetration\": 1, \"error\": \"unstable net: net is not locally stable: neighbours collide in the barycentric placement, so no canonical key exists\", \"collisions\": [[0, [\"-1/2\", \"0\", \"-1/2\"]], [0, [\"-1/2\", \"0\", \"1/2\"]], [0, [\"1/2\", \"0\", \"-1/2\"]], [0, [\"1/2\", \"0\", \"1/2\"]]]}], \"detail\": \"unstable net: net is not locally stable: neighbours collide in the barycentric placement, so no canonical key exists\"}\n",
+    "stderr": "2026-10-22 17:50:07,218 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "IXUHUE_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"pcu\", \"key\": \"3 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:c09a19983feb32ef9c5337506781ebaab4c89debba4d1971e53489440bd1351c\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 1, \"n_edges\": 3, \"interpenetration\": 1, \"key\": \"3 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:c09a19983feb32ef9c5337506781ebaab4c89debba4d1971e53489440bd1351c\", \"key_version\": \"graph_net/1\", \"topology\": \"pcu\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"pcu\"}}]}\n",
+    "stderr": "C:\\Users\\\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\\Desktop\\MOF_topholdout_\u0376\ufffd\ufffd\ufffd_v5\ufffd\u07b6\ufffd\\\u02b5\ufffd\ufffd3_CoRE\ufffd\ufffd\ufffd\ufffd\ufffd\u1e79\ufffd\ufffd\ufffd\\.venv\\Lib\\site-packages\\ase\\io\\cif.py:411: UserWarning: crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\n  warnings.warn(\n2026-10-22 17:50:09,872 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "FATKUI_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"pcu\", \"key\": \"3 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:c09a19983feb32ef9c5337506781ebaab4c89debba4d1971e53489440bd1351c\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 1, \"n_edges\": 3, \"interpenetration\": 1, \"key\": \"3 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:c09a19983feb32ef9c5337506781ebaab4c89debba4d1971e53489440bd1351c\", \"key_version\": \"graph_net/1\", \"topology\": \"pcu\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"pcu\"}}]}\n",
+    "stderr": "C:\\Users\\\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\\Desktop\\MOF_topholdout_\u0376\ufffd\ufffd\ufffd_v5\ufffd\u07b6\ufffd\\\u02b5\ufffd\ufffd3_CoRE\ufffd\ufffd\ufffd\ufffd\ufffd\u1e79\ufffd\ufffd\ufffd\\.venv\\Lib\\site-packages\\ase\\io\\cif.py:411: UserWarning: crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\n  warnings.warn(\n2026-10-22 17:50:12,535 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "AVUPIR_SL.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"hex\", \"key\": \"3 1 1 -1 -1 0 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:9e32196e264f796443bc9f732b8e8b678d7d01921461486c888624267aed54de\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 1, \"n_edges\": 4, \"interpenetration\": 1, \"key\": \"3 1 1 -1 -1 0 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:9e32196e264f796443bc9f732b8e8b678d7d01921461486c888624267aed54de\", \"key_version\": \"graph_net/1\", \"topology\": \"hex\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"hex\"}}]}\n",
+    "stderr": "C:\\Users\\\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\\Desktop\\MOF_topholdout_\u0376\ufffd\ufffd\ufffd_v5\ufffd\u07b6\ufffd\\\u02b5\ufffd\ufffd3_CoRE\ufffd\ufffd\ufffd\ufffd\ufffd\u1e79\ufffd\ufffd\ufffd\\.venv\\Lib\\site-packages\\ase\\io\\cif.py:411: UserWarning: crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\n  warnings.warn(\n2026-10-22 17:50:14,975 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "HOQMUX_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"pcu\", \"key\": \"3 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:c09a19983feb32ef9c5337506781ebaab4c89debba4d1971e53489440bd1351c\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 2, \"n_edges\": 6, \"interpenetration\": 1, \"key\": \"3 1 1 -1 0 0 1 1 0 -1 0 1 1 0 0 -1\", \"key_hash\": \"graph_net/1:sha256:c09a19983feb32ef9c5337506781ebaab4c89debba4d1971e53489440bd1351c\", \"key_version\": \"graph_net/1\", \"topology\": \"pcu\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"pcu\"}}]}\n",
+    "stderr": "2026-10-22 17:50:17,485 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "HAZWIP_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"unknown\", \"key\": \"3 1 2 0 0 0 1 3 0 0 0 1 4 0 0 0 1 5 0 0 0 2 6 0 0 0 2 7 0 0 0 4 6 1 0 -1 4 8 0 0 0 5 7 1 0 0 5 8 1 -1 -1 6 9 0 0 0 6 10 0 0 0 7 9 1 -1 -1 7 11 0 0 0 8 9 2 0 -1 8 12 0 0 0\", \"key_hash\": \"graph_net/1:sha256:4f64af34bab197e795ad520bb665812ad1f5fa76ba8c41545147776619e9f7fd\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 12, \"n_edges\": 16, \"interpenetration\": 1, \"key\": \"3 1 2 0 0 0 1 3 0 0 0 1 4 0 0 0 1 5 0 0 0 2 6 0 0 0 2 7 0 0 0 4 6 1 0 -1 4 8 0 0 0 5 7 1 0 0 5 8 1 -1 -1 6 9 0 0 0 6 10 0 0 0 7 9 1 -1 -1 7 11 0 0 0 8 9 2 0 -1 8 12 0 0 0\", \"key_hash\": \"graph_net/1:sha256:4f64af34bab197e795ad520bb665812ad1f5fa76ba8c41545147776619e9f7fd\", \"key_version\": \"graph_net/1\", \"topology\": null, \"topology_source\": null, \"names\": {}}]}\n",
+    "stderr": "2026-10-22 17:50:20,001 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "HIDBIH_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"tfw\", \"key\": \"3 1 2 0 0 0 1 3 0 0 0 1 4 0 0 0 1 5 0 0 0 2 3 -3 1 2 2 6 0 0 0 3 4 -1 0 1 3 7 0 0 0 4 8 0 0 0 5 6 0 0 0 5 8 4 -2 -3 6 7 1 -1 -1 6 8 1 -1 -1 7 8 -1 0 1\", \"key_hash\": \"graph_net/1:sha256:c30ae07da8a36988dcdea65faba272811a212be978cf09344ee86c961664464b\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 16, \"n_edges\": 28, \"interpenetration\": 1, \"key\": \"3 1 2 0 0 0 1 3 0 0 0 1 4 0 0 0 1 5 0 0 0 2 3 -3 1 2 2 6 0 0 0 3 4 -1 0 1 3 7 0 0 0 4 8 0 0 0 5 6 0 0 0 5 8 4 -2 -3 6 7 1 -1 -1 6 8 1 -1 -1 7 8 -1 0 1\", \"key_hash\": \"graph_net/1:sha256:c30ae07da8a36988dcdea65faba272811a212be978cf09344ee86c961664464b\", \"key_version\": \"graph_net/1\", \"topology\": \"tfw\", \"topology_source\": \"rcsr\", \"names\": {\"rcsr\": \"tfw\"}}]}\n",
+    "stderr": "2026-10-22 17:50:22,773 - INFO - Building CGD with method='sbus', name='net'\n"
+  },
+  {
+    "file": "cg801267m_si_004_clean.cif",
+    "returncode": 0,
+    "stdout": "{\"status\": \"ok\", \"material\": \"mof\", \"method\": \"sbus\", \"key_version\": \"graph_net/1\", \"topology\": \"unknown\", \"key\": \"3 1 2 0 0 0 1 2 1 -1 0 1 2 1 1 -1 1 2 2 0 -1 1 3 0 0 0 1 3 0 0 1 2 3 -1 0 1\", \"key_hash\": \"graph_net/1:sha256:941eac808b3c3fe310cad5ed20ea25cc10bcb3d3be94d7fa0efa566f26b19c6e\", \"n_components\": 1, \"components\": [{\"periodicity\": 3, \"n_vertices\": 3, \"n_edges\": 7, \"interpenetration\": 1, \"key\": \"3 1 2 0 0 0 1 2 1 -1 0 1 2 1 1 -1 1 2 2 0 -1 1 3 0 0 0 1 3 0 0 1 2 3 -1 0 1\", \"key_hash\": \"graph_net/1:sha256:941eac808b3c3fe310cad5ed20ea25cc10bcb3d3be94d7fa0efa566f26b19c6e\", \"key_version\": \"graph_net/1\", \"topology\": null, \"topology_source\": null, \"names\": {}}]}\n",
+    "stderr": "C:\\Users\\\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\\Desktop\\MOF_topholdout_\u0376\ufffd\ufffd\ufffd_v5\ufffd\u07b6\ufffd\\\u02b5\ufffd\ufffd3_CoRE\ufffd\ufffd\ufffd\ufffd\ufffd\u1e79\ufffd\ufffd\ufffd\\.venv\\Lib\\site-packages\\ase\\io\\cif.py:411: UserWarning: crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!\n  warnings.warn(\n2026-10-22 17:50:25,402 - INFO - Building CGD with method='sbus', name='net'\n"
+  }
+]

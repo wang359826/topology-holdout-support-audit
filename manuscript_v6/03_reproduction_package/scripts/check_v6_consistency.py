@@ -50,7 +50,7 @@ BUILD = HERE / "build_pdf_v6.py"
 MANIFEST = PKG / "FIGURE_MANIFEST.md"
 
 N_MAIN_FIGS, N_MAIN_TABS = 4, 3
-N_SI_FIGS, N_SI_TABS = 7, 18
+N_SI_FIGS, N_SI_TABS = 8, 25
 
 FAILURES: list[str] = []
 CHECKS = 0
@@ -232,8 +232,8 @@ def check_text():
     # every SI table/figure must be reachable from the main text or from the SI itself
     reach = used_t | {int(x) for x in re.findall(r"Table S(\d+)", si)}
     ok("every SI table is referenced", si_t <= reach, str(sorted(si_t - reach)))
-    section_refs = {s for s in re.findall(r"SI-[A-H]\b", md)}
-    si_sections = {f"SI-{s}" for s in re.findall(r"^##\s*SI-([A-H])\.", si, re.M)}
+    section_refs = {s for s in re.findall(r"SI-[A-I]\b", md)}
+    si_sections = {f"SI-{s}" for s in re.findall(r"^##\s*SI-([A-I])\.", si, re.M)}
     ok("SI section references exist", section_refs <= si_sections,
        str(sorted(section_refs - si_sections)))
 
@@ -263,6 +263,53 @@ def check_text():
     # H(T\|C) inside a table cell legitimately escapes the pipe, so only
     # leftover escaped asterisks indicate markdown escaping litter
     ok("no escaped bold markers left", not re.search(r"\\\*\\\*", md + si))
+
+
+def check_enumeration():
+    """Cross-document consistency of the six follow-ups, arm (g) and the deposit.
+
+    Review 2026-10-24: the abstract enumerated seven follow-ups, SI-2.7 six,
+    and the cover letter a third set of six; arm (g) was used in 3.3 but never
+    defined in 2.4. These checks pin the canonical enumeration in every place
+    that states it.
+    """
+    _out("\n[1b] follow-up enumeration, arm (g), deposit")
+    md, si = read(MD), read(SI)
+    cl_path = ROOT / "04_cover_letter" / "Cover_Letter_v6.md"
+    cl = read(cl_path) if cl_path.exists() else ""
+    # the cover letter and SI are hard-wrapped, so match on flattened whitespace
+    flat = lambda s: re.sub(r"\s+", " ", s)
+    md_s, si_s, cl_s = flat(md), flat(si), flat(cl)
+    six = ("(1) representation, (2) constituent novelty, (3) CoRE structural feasibility, "
+           "(4) fold-level support diagnostics, (5) matched partner replacement and "
+           "(6) fixed-pool screening")
+    ok("2.7 enumerates the canonical six", six in md_s)
+    ok("2.7 says ARC-MOF is not one of the six",
+       "The ARC-MOF audit is not one of the six" in md_s)
+    ok("abstract enumerates six follow-ups", "Six follow-ups (SI-I)" in md_s)
+    ok("abstract says ARC-MOF is not a seventh follow-up",
+       "not a seventh follow-up" in md_s)
+    ok("conclusion names the same six",
+       "representation, constituent novelty, CoRE feasibility, fold-level diagnostics, "
+       "matched replacement and fixed-pool screening (SI-I)" in md_s)
+    ok("cover letter names the same six",
+       (not cl) or ("representation, constituent novelty, CoRE feasibility, fold-level "
+                    "diagnostics, matched replacement and fixed-pool screening" in cl_s),
+       "cover letter not shipped in this distribution" if not cl
+       else "cover letter missing the canonical list")
+    ok("SI-I keeps ARC-MOF outside the six", "not one of the six" in si_s)
+    ok("2.4 defines post hoc arm (g)", "A seventh arm, **(g)**, is post hoc" in md_s)
+    ok("SI-C.1 mentions the post hoc arm (g)", "post hoc arm (g)" in si_s)
+    ok("Fig. 3 panel (c) labelled a separate design",
+       "not an arm of the a–g contrast" in md_s)
+    ok("single-pair/single-library limit sits in 3.3",
+       "Two boundaries belong to this result" in md_s)
+    ok("Data availability names a version of record",
+       "version of record for every analysis" in md_s)
+    ok("v1.3 labelled original-analyses-only",
+       "contains the original analyses only" in md_s)
+    ok("stale 'added in this local revision' wording removed",
+       "added in this local revision" not in md_s)
 
 
 def check_figures():
@@ -924,6 +971,28 @@ def check_headline():
     ok("50.4% random top-1%", f"{100 * r_m:.1f}%" in md, f"csv {100 * r_m:.2f}")
     ok("19.3% topology top-1%", f"{100 * t_m:.1f}%" in md, f"csv {100 * t_m:.2f}")
     ok("31.1 pp gap", f"{100 * (r_m - t_m):.1f}" in md, f"csv {100 * (r_m - t_m):.2f}")
+
+    # paired-seed tests quoted in 3.3/3.4 and abstract, recomputed by
+    # scripts/screening_paired_tests.py into outputs/paired_tests_20261024.csv
+    pt = {row["test"]: row for row in load_csv("paired_tests_20261024.csv")}
+    gap = pt["screening top-1% overlap, random minus topology"]
+    ok("screening gap interval 24.6 to 37.6",
+       f"{float(gap['ci_low']):.1f} to {float(gap['ci_high']):.1f}" in md,
+       f"csv {float(gap['ci_low']):.1f} to {float(gap['ci_high']):.1f}")
+    ok("screening gap paired t(4) = 13.2",
+       f"t(4) = {float(gap['t']):.1f}" in md, f"csv {float(gap['t']):.3f}")
+    ok("screening gap p = 1.9e-4", "p = 1.9 × 10⁻⁴" in md)
+    ab = pt["nbo MAE, arm (b) minus arm (a)"]
+    ok("nbo paired interval +0.0591 to +0.0900",
+       f"+{float(ab['ci_low']):.4f} to +{float(ab['ci_high']):.4f}" in md,
+       f"csv +{float(ab['ci_low']):.4f} to +{float(ab['ci_high']):.4f}")
+    pct = pt["nbo MAE change, arm (a) to (b)"]
+    ok("nbo percentage interval +55.5% to +84.5%",
+       f"+{float(pct['ci_low']):.1f}% to +{float(pct['ci_high']):.1f}%" in md,
+       f"csv +{float(pct['ci_low']):.1f}% to +{float(pct['ci_high']):.1f}%")
+    ok("nbo paired t(4) = 13.4, p = 1.8e-4",
+       f"t(4) = {float(ab['t']):.1f}, p = 1.8 × 10⁻⁴" in md,
+       f"csv t {float(ab['t']):.3f}, p {float(ab['p']):.6f}")
     for strat, lit in (("chemistry", "44.0"), ("linker_pair", "41.1"), ("metal", "29.2")):
         got = k_stats(strat, 0.01)[0]
         ok(f"{lit}% {strat} top-1%", f"{100 * got:.1f}" in md and lit in md,
@@ -1006,13 +1075,20 @@ def main() -> int:
 
     check_layout(args.no_pdf)
     check_text()
+    check_enumeration()
     check_figures()
     check_main_tables()
     check_si_tables()
+    from verify_followup_tables import verify as verify_followup
+    try:
+        verify_followup()
+        ok("SI S19-S24 independently recomputed from archived metrics", True)
+    except (AssertionError, ValueError, KeyError, StopIteration, OSError) as exc:
+        ok("SI S19-S24 independently recomputed from archived metrics", False, str(exc))
     check_headline()
     check_lengths()
 
-    _out("\n  Coverage note: tables 1-3, SI S1-S9/S12/S15-S18, the named headline")
+    _out("\n  Coverage note: tables 1-3, SI S1-S9/S12/S15-S24, the named headline")
     _out("  claims and all numbering/citation/file checks are automated. SI Tables")
     _out("  S10/S11/S13/S14, the prose outside the named claims, and the PDF layout")
     _out("  are NOT verified here; they need a human read before submission.")

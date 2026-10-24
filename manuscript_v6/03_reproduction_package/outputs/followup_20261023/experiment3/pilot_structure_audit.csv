@@ -1,0 +1,41 @@
+﻿archive_member,candidate_usable,decomp_returned,file,has_carbon,human_review,metadata_disorder,metadata_metals,metals,n_atoms,n_breaks,n_linker_units,n_metal_elements,n_metal_units,parse_ok,partial_occupancy,warnings
+structure_11660/XIDBUJ_clean.cif,True,True,XIDBUJ_clean.cif,True,pending,,Zn,Zn,140,48,2,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/LIQCUK_clean.cif,True,True,LIQCUK_clean.cif,True,pending,,Ag,Ag,186,18,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/UCABAE_clean.cif,True,True,UCABAE_clean.cif,True,pending,,Cd,Cd,150,16,2,1,1,True,False,
+structure_11660/IXUHUE_clean.cif,False,True,IXUHUE_clean.cif,True,pending,,"Mo,Cu","Cu,Mo",236,8,0,2,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/FATKUI_clean.cif,True,True,FATKUI_clean.cif,True,pending,,Ce,Ce,160,144,2,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/AVUPIR_SL.cif,True,True,AVUPIR_SL.cif,True,pending,,Zr,Zr,90,12,2,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/HOQMUX_clean.cif,True,True,HOQMUX_clean.cif,True,pending,,Mg,Mg,224,80,2,1,1,True,False,
+structure_11660/HAZWIP_clean.cif,True,True,HAZWIP_clean.cif,True,pending,,"Cu,Ni","Cu,Ni",120,24,1,2,2,True,False,
+structure_11660/HIDBIH_clean.cif,True,True,HIDBIH_clean.cif,True,pending,,Cd,Cd,256,72,2,1,1,True,False,
+disorder_360/cg801267m_si_004_clean.cif,True,True,cg801267m_si_004_clean.cif,True,pending,DISORDER,"Fe,Co","Co,Fe",191,24,2,2,2,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/YOZRUC_clean.cif,True,True,YOZRUC_clean.cif,True,pending,,Co,Co,68,40,2,1,1,True,False,
+structure_11660/SOKKUZ_clean.cif,True,True,SOKKUZ_clean.cif,True,pending,,In,In,108,96,1,1,1,True,False,
+structure_11660/DUMXIU_clean.cif,True,True,DUMXIU_clean.cif,True,pending,,Dy,Dy,132,60,1,1,1,True,False,
+structure_11660/BELVEV_charged.cif,True,True,BELVEV_charged.cif,True,pending,,Mn,Mn,222,80,3,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/GAJZAU_clean.cif,False,True,GAJZAU_clean.cif,True,pending,,Pr,Pr,104,40,0,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/FUSMOW_clean.cif,True,True,FUSMOW_clean.cif,True,pending,,Ag,Ag,414,36,1,1,1,True,False,
+structure_11660/JUTCUW_SL.cif,True,True,JUTCUW_SL.cif,True,pending,,Cd,Cd,10,12,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/WAVQER_clean.cif,True,True,WAVQER_clean.cif,True,pending,,"In,Sm","In,Sm",248,96,1,2,1,True,False,
+structure_11660/YEKXOD_clean.cif,True,True,YEKXOD_clean.cif,True,pending,,Cu,Cu,232,64,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/WOWBIV_clean.cif,True,True,WOWBIV_clean.cif,True,pending,,Cd,Cd,168,96,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/VIXGAM01_clean.cif,True,True,VIXGAM01_clean.cif,True,pending,,Zr,Zr,28,48,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/CUGYUA_clean.cif,True,True,CUGYUA_clean.cif,True,pending,,Ag,Ag,116,24,1,1,1,True,False,
+structure_11660/FUSMUC_clean.cif,True,True,FUSMUC_clean.cif,True,pending,,Ag,Ag,414,36,1,1,1,True,False,
+structure_11660/EMIHEO_charged.cif,True,True,EMIHEO_charged.cif,True,pending,,"Cd,In","Cd,In",130,160,2,2,2,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/RAXROX_charged.cif,True,True,RAXROX_charged.cif,True,pending,,Cu,Cu,112,24,2,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/DANVAQ_clean.cif,True,True,DANVAQ_clean.cif,True,pending,,La,La,384,312,1,1,1,True,False,
+structure_11660/GOYYIE_clean.cif,True,True,GOYYIE_clean.cif,True,pending,,"Yb,Ag","Ag,Yb",136,112,2,2,2,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/UMEDIB_clean.cif,True,True,UMEDIB_clean.cif,True,pending,,Zn,Zn,648,48,1,1,1,True,False,
+structure_11660/OXAPEJ_charged.cif,True,True,OXAPEJ_charged.cif,True,pending,,Co,Co,352,88,2,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+disorder_360/EYOCUS_clean.cif,True,True,EYOCUS_clean.cif,True,pending,DISORDER,Tb,Tb,832,416,3,1,2,True,False,
+structure_11660/ULOGIL_clean.cif,True,True,ULOGIL_clean.cif,True,pending,,Cd,Cd,39,28,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/DAKVUI_clean.cif,True,True,DAKVUI_clean.cif,True,pending,,Cu,Cu,324,128,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/MAGVOG_clean.cif,True,True,MAGVOG_clean.cif,True,pending,,Ag,Ag,52,8,1,1,1,True,False,
+structure_11660/EDAPIK_clean_h.cif,True,True,EDAPIK_clean_h.cif,True,pending,,Cu,Cu,210,16,2,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/UJILAA_clean.cif,True,True,UJILAA_clean.cif,True,pending,,Cu,Cu,360,405,1,1,1,True,False,
+structure_11660/LEPLEZ_clean.cif,True,True,LEPLEZ_clean.cif,True,pending,,Sm,Sm,58,56,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/PUKVAU_clean.cif,True,True,PUKVAU_clean.cif,True,pending,,Cu,Cu,172,28,2,1,2,True,False,
+structure_11660/BAZDAJ_clean.cif,True,True,BAZDAJ_clean.cif,True,pending,,"Cr,Mn,Fe","Cr,Fe,Mn",284,144,1,3,3,True,False,
+structure_11660/BETGAK_clean.cif,True,True,BETGAK_clean.cif,True,pending,,La,La,128,72,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"
+structure_11660/ELIKUG_clean.cif,True,True,ELIKUG_clean.cif,True,pending,,Gd,Gd,60,40,1,1,1,True,False,"crystal system 'triclinic' is not interpreted for space group Spacegroup(1, setting=1). This may result in wrong setting!"

@@ -1,0 +1,11 @@
+{
+  "raw_sha256": "19bd04e5839bb77d6e93e50064c0724c11752da9ef8dcb6930cf8773f887bf1a",
+  "n_raw": 324426,
+  "folds": 66,
+  "independent_topology_groups": 11,
+  "cut_novelty": 0.17422415559443316,
+  "cut_geometry_far": 0.23408624229979466,
+  "no_fitted_risk_model": true,
+  "chem_similarity": "unavailable: no validated linker structure mapping",
+  "outcomes": "archived absolute fold MAE, not matched random-split performance loss; per-row LOTO predictions unavailable"
+}

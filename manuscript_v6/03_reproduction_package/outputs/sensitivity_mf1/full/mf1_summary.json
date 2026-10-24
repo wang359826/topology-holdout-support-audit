@@ -1,0 +1,62 @@
+{
+  "scope": "full",
+  "n_units": 20,
+  "paired": [
+    {
+      "scope": "full",
+      "target": "selectivity",
+      "protocol": "LOTO",
+      "representation": "B",
+      "model": "RF",
+      "n_seeds": 5,
+      "mean_dMAE": 0.004173939661691367,
+      "sd_dMAE": 0.0014062457716665536,
+      "n_negative": 0,
+      "n_positive": 5,
+      "mean_MAE_sqrt": 0.13401188891686136,
+      "mean_MAE_mf1": 0.13818582857855272
+    },
+    {
+      "scope": "full",
+      "target": "selectivity",
+      "protocol": "LOTO",
+      "representation": "I",
+      "model": "RF",
+      "n_seeds": 5,
+      "mean_dMAE": 0.003530159012400269,
+      "sd_dMAE": 0.0025393546458694623,
+      "n_negative": 0,
+      "n_positive": 5,
+      "mean_MAE_sqrt": 0.12853161694870371,
+      "mean_MAE_mf1": 0.13206177596110397
+    },
+    {
+      "scope": "full",
+      "target": "uptake",
+      "protocol": "LOTO",
+      "representation": "B",
+      "model": "RF",
+      "n_seeds": 5,
+      "mean_dMAE": -0.006672262567625953,
+      "sd_dMAE": 0.0038542719442817073,
+      "n_negative": 5,
+      "n_positive": 0,
+      "mean_MAE_sqrt": 0.25991596036387843,
+      "mean_MAE_mf1": 0.2532436977962525
+    },
+    {
+      "scope": "full",
+      "target": "uptake",
+      "protocol": "LOTO",
+      "representation": "I",
+      "model": "RF",
+      "n_seeds": 5,
+      "mean_dMAE": -0.001113000717578111,
+      "sd_dMAE": 0.004304539716455157,
+      "n_negative": 2,
+      "n_positive": 3,
+      "mean_MAE_sqrt": 0.25098689565990073,
+      "mean_MAE_mf1": 0.24987389494232265
+    }
+  ]
+}

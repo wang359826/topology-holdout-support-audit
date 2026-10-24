@@ -1,0 +1,4 @@
+test,unit,n,estimate,sd,se,t,df,p,ci_low,ci_high,reference
+"screening top-1% overlap, random minus topology",percentage points,5,31.120000,5.256615,2.350830,13.237880,4,0.000188,24.593051,37.646949,"random 50.4 / topology 19.3, five 25,000-row redraws"
+"nbo MAE, arm (b) minus arm (a)",mmol/g,5,0.074587,0.012435,0.005561,13.412382,4,0.000179,0.059147,0.090027,"arm (a) mean 0.1065 mmol/g, denominator held fixed"
+"nbo MAE change, arm (a) to (b)",percent of arm-(a) mean,5,70.026790,,,13.412382,4,0.000179,55.530816,84.522764,interval bounds are the mmol/g bounds divided by 0.1065

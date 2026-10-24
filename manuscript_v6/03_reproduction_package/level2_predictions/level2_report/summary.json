@@ -1,0 +1,7 @@
+{
+  "arms_rows": 50,
+  "arms_all_match": true,
+  "screening_rows": 30,
+  "screening_all_match": true,
+  "note": "Recomputed from row-level predictions; no model is fitted here."
+}

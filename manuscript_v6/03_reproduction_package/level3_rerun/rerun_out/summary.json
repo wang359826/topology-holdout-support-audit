@@ -1,0 +1,54 @@
+{
+  "csv": "..\\..\\03_\u6295\u7a3f\u4e13\u7528\u5305\\03_reproduction_package\\data\\all_MOFs_screening_data.csv",
+  "sha256": "19bd04e5839bb77d6e93e50064c0724c11752da9ef8dcb6930cf8773f887bf1a",
+  "n_rows": 24985,
+  "seed": 42,
+  "elapsed_seconds": 162.6,
+  "metrics": [
+    {
+      "representation": "G",
+      "n": 24985,
+      "MAE": 0.17324323691648325,
+      "R2": 0.6696380135183098
+    },
+    {
+      "representation": "B",
+      "n": 24985,
+      "MAE": 0.1686834868607831,
+      "R2": 0.6875407019326609
+    },
+    {
+      "representation": "I",
+      "n": 24985,
+      "MAE": 0.14153295521946502,
+      "R2": 0.7817615456354065
+    }
+  ],
+  "comparison": [
+    {
+      "representation": "G",
+      "MAE_rerun": 0.17324323691648325,
+      "MAE_archive": 0.1732432369164832,
+      "R2_rerun": 0.6696380135183098,
+      "R2_archive": 0.6696380135183098,
+      "match": true
+    },
+    {
+      "representation": "B",
+      "MAE_rerun": 0.1686834868607831,
+      "MAE_archive": 0.1686834868607831,
+      "R2_rerun": 0.6875407019326609,
+      "R2_archive": 0.6875407019326609,
+      "match": true
+    },
+    {
+      "representation": "I",
+      "MAE_rerun": 0.14153295521946502,
+      "MAE_archive": 0.141532955219465,
+      "R2_rerun": 0.7817615456354065,
+      "R2_archive": 0.7817615456354065,
+      "match": true
+    }
+  ],
+  "all_match": true
+}

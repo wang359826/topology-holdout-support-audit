@@ -1,0 +1,167 @@
+{
+  "5": {
+    "smiles": "O=C(O)C#CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "6": {
+    "smiles": "O=C(O)C#Cc1ccc(C#CC(=O)O)cc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "7": {
+    "smiles": "O=C(O)c1ccc(C#Cc2ccc(C(=O)O)cc2)cc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "9": {
+    "smiles": "O=C(O)c1cc(-c2ccccc2)c(C(=O)O)cc1-c1ccccc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "10": {
+    "smiles": "O=C(O)C=CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "11": {
+    "smiles": "O=C(O)C=CC=CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "15": {
+    "smiles": "O=C(O)c1c2ccccc2c(C(=O)O)c2ccccc12",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "16": {
+    "smiles": "O=C(O)c1ccc2ccc3c(C(=O)O)cccc3c2c1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "18": {
+    "smiles": "O=C(O)c1ccc2ccc3c4cc(C(=O)O)ccc4ccc3c2c1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "19": {
+    "smiles": "O=C(O)C#CC#CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "20": {
+    "smiles": "O=C(O)C#CC#CC#CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "22": {
+    "smiles": "O=C(O)C12CCC(C(=O)O)(CC1)CC2",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "25": {
+    "smiles": "O=C(O)C#CC12C3C4C1C1C2C3C41C#CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "26": {
+    "smiles": "O=C(O)c1ccc(C=Cc2ccc(C(=O)O)cc2)cc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "34": {
+    "smiles": "O=C(O)C#Cc1ccc(C(c2ccc(C#CC(=O)O)cc2)(c2ccc(C#CC(=O)O)cc2)c2ccc(C#CC(=O)O)cc2)cc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "35": {
+    "smiles": "O=C(O)c1ccc(C#CC(C#Cc2ccc(C(=O)O)cc2)(C#Cc2ccc(C(=O)O)cc2)C#Cc2ccc(C(=O)O)cc2)cc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "36": {
+    "smiles": "O=C(O)c1ccc(C(c2ccc(C(=O)O)cc2)(c2ccc(C(=O)O)cc2)c2ccc(C(=O)O)cc2)cc1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "37": {
+    "smiles": "O=C(O)C#CC(C#CC(=O)O)(C#CC(=O)O)C#CC(=O)O",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "38": {
+    "smiles": "O=C(O)c1cc(C(=O)O)cc(-c2ccc(-c3cc(C(=O)O)cc(C(=O)O)c3)cc2)c1",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "40": {
+    "smiles": "O=C(O)c1cc(C(=O)O)c2ccc3c4ccc5c(C(=O)O)cc(C(=O)O)c6ccc(c7ccc1c2c73)c4c65",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "41": {
+    "smiles": "O=C(O)c1cc(C(=O)O)c2cc3ccc4cc5c(C(=O)O)cc(C(=O)O)c6cc7ccc8cc1c2c1c8c7c(c65)c4c31",
+    "n_references": 2,
+    "validation": "validated_cross_reference"
+  },
+  "42": {
+    "smiles": "CCOP(=O)(O)c1cc(-c2cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c2)cc(P(=O)(O)OCC)c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "43": {
+    "smiles": "CCOP(=O)(O)c1cc(-c2ccc(-c3cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c3)cc2)cc(P(=O)(O)OCC)c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "44": {
+    "smiles": "CCOP(=O)(O)c1cc(C#Cc2cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c2)cc(P(=O)(O)OCC)c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "45": {
+    "smiles": "CCOP(=O)(O)c1cc(N=Nc2cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c2)cc(P(=O)(O)OCC)c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "46": {
+    "smiles": "CCOP(=O)(O)c1cc(P(=O)(O)OCC)c2cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c2c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "47": {
+    "smiles": "CCOP(=O)(O)c1cc(P(=O)(O)OCC)c2cc3cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c3cc2c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "48": {
+    "smiles": "CCOP(=O)(O)c1cc(P(=O)(O)OCC)c2ccc3c(P(=O)(O)OCC)cc(P(=O)(O)OCC)cc3c2c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "49": {
+    "smiles": "CCOP(=O)(O)c1cc(P(=O)(O)OCC)c2ccc3c(P(=O)(O)OCC)cc(P(=O)(O)OCC)c4ccc1c2c43",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "50": {
+    "smiles": "CCOP(=O)(O)C1=CCC(C=Cc2ccc(P(=O)(O)OCC)cc2P(=O)(O)OCC)C(P(=O)(O)OCC)=C1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "55": {
+    "smiles": "CCOP(=O)(O)c1cc(-c2c3ccccc3c(-c3cc(P(=O)(O)OCC)cc(P(=O)(O)OCC)c3)c3ccccc23)cc(P(=O)(O)OCC)c1",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "56": {
+    "smiles": "CCOP(=O)(O)c1cc(P(=O)(O)OCC)c2ccc3c4ccc5c(P(=O)(O)OCC)cc(P(=O)(O)OCC)c6ccc(c7ccc1c2c73)c4c65",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  },
+  "57": {
+    "smiles": "CCOP(=O)(O)c1cc(P(=O)(O)OCC)c2cc3ccc4cc5c(P(=O)(O)OCC)cc(P(=O)(O)OCC)c6cc7ccc8cc1c2c1c8c7c(c65)c4c31",
+    "n_references": 1,
+    "validation": "validated_single_reference"
+  }
+}

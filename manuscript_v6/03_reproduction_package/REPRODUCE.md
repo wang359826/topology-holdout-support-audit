@@ -6,6 +6,51 @@ every claim, table and figure to its input and producer is below. Rebuilding the
 from archived outputs does not train a model. Table S7 also has a standalone raw-data
 generator that uses training-target means only; its seed-level outputs are archived.
 
+## Three reproduction levels (2026-10-24)
+
+The package is organised as three levels, each with an executable entry point and an explicit
+statement of what it does **not** cover. `config/config.json` records the input records,
+checksums and the environment used.
+
+| Level | Entry point | What it does | What it does not do |
+|---|---|---|---|
+| 1 — numeric | `level1_verify/run_level1.ps1` (or `.sh`) | Rebuilds every main-text/SI table number, the figure files, numbering, cross-references and citations from `outputs/`; verifies the archive checksums | No model is fitted; no raw data are read |
+| 2 — predictions | `level2_predictions/verify_predictions.py` | Recomputes arm MAE and screening top-k overlap from the archived row-level predictions (`predictions_arms_seed*.csv`, `predictions_screening_seed*.csv`) and compares them with the archived summaries | No model; the experiment-12 `.npz` predictions and the fixed-pool full score vectors are not in this slim archive |
+| 3 — rerun | `level3_rerun/run_subset.py --csv PATH` | Rebuilds the seed-42, 25,000-row, random-split RF G/B/I comparison from the public hMOF CSV and compares it with the archive | One representative subset; not a full-paper retrain |
+
+Verification status of each level in this revision:
+
+| Level | Status | Evidence |
+|---|---|---|
+| 1 | PASS | `scripts/check_v6_consistency.py` (604 checks with PDFs, 600 with `--no-pdf`), `scripts/verify_followup_tables.py`, `scripts/singleton_audit.py verify`, `scripts/make_md5sums.py --check` |
+| 2 | PASS | 50 arm MAE comparisons and 30 screening-overlap comparisons recomputed from predictions, all within 1e-6 (`level2_predictions/level2_report/summary.json`) |
+| 3 | PASS | G/B/I rebuilt from the 324,426-row CSV in 165 s; MAE and R² match the archive to < 1e-15 (`level3_rerun/rerun_out/summary.json`) |
+
+**Do not describe levels 1–2 as "reproducing the paper"**: they verify archived numbers and
+archived predictions. Only level 3 fits a model, and only on one subset.
+
+### Where each result lives
+
+| Provenance | Directory | In v1.4 (the version of record)? |
+|---|---|---|
+| Original analyses (support audit, protocols, arms, ARC-MOF, screening) | `outputs/` | Yes |
+| Six follow-ups (representation, novelty, CoRE, diagnostics, replacement, fixed pool) | `outputs/followup_20261023/` | Yes — added in v1.4 |
+| Finish analyses (tie audit, candidate bootstrap, per-topology representation deltas) | `outputs/finish_20261023/` | Yes |
+| `max_features=1.0` representation sensitivity | `outputs/sensitivity_mf1/` (produced by `scripts/analyze_mf_sensitivity.py` from the experiment-12 sensitivity runs) | Yes |
+| Paired-seed tests quoted in 3.3/3.4 (screening gap, nbo percentage interval) | `outputs/paired_tests_20261024.csv` (produced by `scripts/screening_paired_tests.py`) | Yes |
+
+### Fixed-pool and representation limits of this archive
+
+The slim archive stores the summary metrics for these experiments, not the full prediction
+vectors. Consequently:
+
+* Table S24 (fixed candidate pool) is verifiable at level 1 (arithmetic on archived metrics)
+  but not at level 2;
+* Table S19/S20 and the per-topology deltas are verifiable at level 1; the `.npz` predictions
+  stay in the experiment-12 working directory and are listed in
+  `outputs/followup_20261023/archive_provenance.json`.
+
+
 ## Dependency on the source package
 
 Most analysis scripts, `DATA.md`, dependency pins and `run_all.py` are **not duplicated**
@@ -52,8 +97,10 @@ What `check_v6_consistency.py` checks, stated narrowly so it is not over-read: i
 re-derives (i) every cell of Tables 1–3, (ii) every cell of SI Tables S1–S9, S12, S15–S18,
 (iii) a named list of headline claims (74.7%, 61.3%, 82.0%, 18.0%, 0.860, 69,224, 21.3%,
 408, 21.1%, 21.5%, 0.3603, −0.0065, +70.0%, −1.2%, the (e)/(f) arm means, 50.4%, 19.3%,
-31.1 pp, 46.3%, 99.3/97.3/99.7/98.2, 98.57/98.96, 3,554, 0.4629, the model-family gaps),
-and (iv) numbering, cross-reference and figure-file existence. It does **not** validate
+31.1 pp, the two paired intervals and their t/p values, 46.3%, 99.3/97.3/99.7/98.2,
+98.57/98.96, 3,554, 0.4629, the model-family gaps), (v) the six-follow-up enumeration in the
+abstract, Methods 2.7, conclusion and cover letter, and (vi) numbering, cross-reference and
+figure-file existence. It does **not** validate
 that a number is attached to the right claim in every sentence: the headline checks search
 the text for the expected value, so a value repeated elsewhere can satisfy a check whose
 own sentence is wrong. It is not a scientific-interpretation review. SI Tables S10, S11,
@@ -85,7 +132,7 @@ only, so passing it is not a visual or layout acceptance of the PDFs.
 | Source-removal 98.57–99.84% | `outputs/confound_arcmof_excl_derived.csv`, `outputs/arcmof_overlap.csv` | `arcmof_overlap.py` |
 | Within-source null (+2.6…+37.3 pp) | `outputs/common_support/null_topology_cardinality.csv` | `null_model_controls.py` |
 | Between-source spread (3,554× fine, ~2,000× coarse) | `outputs/source_spread_test.csv`, `outputs/source_confound_granularity.csv` | `source_spread_test.py` |
-| Screening (50.4% → 19.3%, k=1/5/10%) | `outputs/screening_utility_seed{42,143,244,345,446}.csv`, `outputs/screening_utility.csv` | `screening_utility.py` |
+| Screening (50.4% → 19.3%, k=1/5/10%; paired gap interval) | `outputs/screening_utility_seed{42,143,244,345,446}.csv`, `outputs/screening_utility.csv`; paired test in `outputs/paired_tests_20261024.csv` | `screening_utility.py`; `scripts/screening_paired_tests.py` |
 | Five-seed cleaning sensitivity summary | `outputs/sensitivity_five_seeds_summary.csv` | `scripts/summarize_sensitivity.py` (reads the five `sensitivity_{screening,arms}_seed*.csv`) |
 | Elite subset null (21.4% row-level) | `outputs/null_elite_permutation_row.csv` | `null_model_controls.py` |
 | Ten-target panel | `outputs/multitarget_confound.csv` | `multitarget_confound.py`, `derive_multitarget_stats.py` |
@@ -94,12 +141,29 @@ only, so passing it is not a visual or layout acceptance of the PDFs.
 | Within/cross-topology R² | `outputs/within_vs_cross_final.csv` | `omitted_variable.py --within-vs-cross` |
 | Distance-bin diagnostic (SI Table S12) | `outputs/fig7_nn_curve_final.csv` (`bin`, `bin_mid`, `scheme`, `n`, `R2`) | `leakage_mechanism.py` |
 | Input-validity audit (SI-A, SI-E) | `outputs/input_validity_audit.csv` | `scripts/input_validity_audit.py` (v6-local) |
-| ARC-MOF non-singleton counts (Figure 4a, Table 3, SI-H) | `outputs/arcmof_non_singleton_summary.csv` | `scripts/singleton_audit.py recompute` (v6-local) |
+| ARC-MOF non-singleton counts (Figure S8a, Table 3, SI-H) | `outputs/arcmof_non_singleton_summary.csv` | `scripts/singleton_audit.py recompute` (v6-local) |
 | Table S9 (25k multi-seed LOTO, 100 trees) | `outputs/loto_aggregates_25k.csv` (all four rules incl. weighted), `outputs/multi_seed_uptake25k_fix.csv` (archived pooled/macro/median) | `scripts/loto_full_metrics.py recompute25k` |
 | Table S8 (100k LOTO, per-fold metrics) | `outputs/loto_per_topology_metrics_100k.csv` (MAE, RMSE, R², SSE, SST, valid flag), `outputs/loto_aggregates_100k.csv` (four rules) | `scripts/loto_full_metrics.py recompute` |
 | LOTO cleaned sensitivity (100k) | `outputs/loto_cleaned_per_topology_100k.csv`, `outputs/loto_cleaned_aggregates_100k.csv` | `scripts/loto_cleaned_sensitivity.py` (v6-local; paired historical-all gate + cleaned-legal) |
 | LOTO cleaned sensitivity (25k, five seeds) | `outputs/loto_cleaned_per_topology_25k.csv`, `outputs/loto_cleaned_aggregates_25k.csv` | `scripts/loto_cleaned_25k.py` (v6-local; gate against Table S9) |
 | Figure S2 (PDP) | `outputs/pdp_geometry_curves.csv`, `pdp_geometry_meta.csv` (offset 0.519784 = `baseline_mean_of_tree_means`, with python/numpy/pandas/sklearn versions, input MD5 and the script SHA256), `pdp_geometry_grids.csv` (valid grid range and per-field invalid counts) | `prepare_figS2_pdp_data.py --outdir <v6>/outputs` (data; image built by the v6-local `scripts/pubfig/build_si_S1_S7.py S2`) |
+
+## Feature-subsampling sensitivity (SI-I.7 / Table S25)
+
+Prespecified `max_features=1.0` re-run of the two representation contrasts, with every other
+setting fixed and the archived `split.npz` reused row for row.
+
+| Item | Archive | Producer |
+|---|---|---|
+| Mapped I/T, 520 fits (2 reps × 2 learners × 2 targets × 5 seeds × 13 folds) | `outputs/sensitivity_mf1/mapped/{mf1_pooled,mf1_paired,mf1_per_topology}.csv` | `scripts/run_mf_setting.py` (driven by `scripts/run_matrix.py`), analysed by `scripts/analyze_mf_sensitivity.py` |
+| Full-sample B/I, 220 fits (RF only; 2 reps × 2 targets × 5 seeds × 11 LOTO folds) | `outputs/sensitivity_mf1/full/{mf1_pooled,mf1_paired,mf1_per_topology}.csv` | same |
+| Per-topology MAE under both settings | `outputs/sensitivity_mf1/mapped/per_topology_setting_metrics.csv` | analysis helper in the sensitivity run (see SI-I.7 note) |
+| Frozen settings | `outputs/sensitivity_mf1/{mapped,full}/frozen_config.json` | written before any fit; asserts scope/reps/models/max_features |
+
+Level-2 note: these rows are recomputed by `analyze_mf_sensitivity.py` from the experiment-12
+`.npz` predictions (not shipped in this slim archive), so the archived CSVs are level-1
+evidence; the script is included so a reader holding the experiment directories can redo the
+arithmetic.
 
 ## Former gaps, now closed
 
@@ -162,9 +226,10 @@ number ↔ filename only. All commands run from `03_reproduction_package/`; fina
 | ID | Figure | Input data (`outputs/`) | Final plotting command | Output |
 |---|---|---|---|---|
 | F1 | Fig. 1 | `chemistry_seen_by_topology.csv`, `topology_pair_overlap.csv` | `scripts/build_main_v6.py` (`figure1`) | `Fig1_support_structure.png/.pdf` |
-| F2 | Fig. 2 | `isoreticular_control_seeds.csv`, `composition_matched_control.csv`, `arm_e_partner_coverage.csv` | `scripts/build_main_v6.py` (`figure2`) | `Fig2_intervention.png/.pdf` |
-| F3 | Fig. 3 | `screening_utility_seed{42,143,244,345,446}.csv` | `scripts/build_main_v6.py` (`figure3`) | `Fig3_screening.png/.pdf` |
-| F4 | Fig. 4 | panel (a): `singleton_audit.csv` + `arcmof_non_singleton_summary.csv` (read at plot time, no hard-coded values); panels (b)/(c): `confound_arcmof_excl_derived.csv`, `common_support/null_topology_cardinality.csv` | `scripts/build_main_v6.py` (`figure4`) | `Fig4_arcmof.png/.pdf` |
+| F2 | Fig. 2 | panel (a): `leakage_results_final.csv`, `leakage_results_chemistry.csv`, `leakage_results_notopo100k.csv`; panel (b): `loto_aggregates_100k.csv`, `loto_per_topology_metrics_100k.csv`; panels (c)/(d): `finish_20261023/per_topology_paired_deltas.csv` | `scripts/build_main_v6.py` (`figure2`) | `Fig2_protocol_support.png/.pdf` |
+| F3 | Fig. 3 | panels (a)/(b): `isoreticular_control_seeds.csv`, `composition_matched_control.csv`, `arm_e_partner_coverage.csv`; panel (c): `followup_20261023/experiment5/paired_endpoints.csv`, `cleaned_endpoint_summary.csv` | `scripts/build_main_v6.py` (`figure3`) | `Fig3_intervention.png/.pdf` |
+| F4 | Fig. 4 | panels (a)/(b): `screening_utility_seed{42,143,244,345,446}.csv`; panel (c): `followup_20261023/experiment6/screening_summary.csv` | `scripts/build_main_v6.py` (`figure4`) | `Fig4_screening.png/.pdf` |
+| FS8 | Fig. S8 | panel (a): `singleton_audit.csv` + `arcmof_non_singleton_summary.csv` (read at plot time, no hard-coded values); panels (b)/(c): `confound_arcmof_excl_derived.csv`, `common_support/null_topology_cardinality.csv` | `scripts/build_main_v6.py` (`figureS8`) | `figS8_arcmof.png/.pdf` |
 | FS1 | Fig. S1 | `fig5_shap_family_final.csv` | v6-local `scripts/pubfig/build_si_S1_S7.py S1` | `figS1_shap_family.png/.pdf/.svg/.tiff` |
 | FS2 | Fig. S2 | `pdp_geometry_curves.csv`, `pdp_geometry_meta.csv`, `pdp_geometry_grids.csv` | v6-local `scripts/pubfig/build_si_S1_S7.py S2`, after `prepare_figS2_pdp_data.py --outdir <v6>/outputs` | `figS2_pdp_geometry.png/.pdf/.svg/.tiff` |
 | FS3 | Fig. S3 | `within_vs_cross_final.csv` | `scripts/build_main_v6.py` (`figureS3`) | `figS3_within_vs_cross.png/.pdf` |
@@ -402,13 +467,14 @@ Single-threaded fitting is about 7–10 min per 100k fold (roughly 1–2 min per
 
 ## Archive manifest
 
-`outputs/MD5SUMS.txt` was regenerated from the archive on 2026-10-21 with
+`outputs/MD5SUMS.txt` was regenerated from the archive on 2026-10-24 with
 `python scripts/make_md5sums.py`; it now covers every file under `outputs/`
 (including `component_breakdown.csv`, `arcmof_cluster_span.csv`,
 `sensitivity_*_seed*.csv`, `sensitivity_five_seeds_summary.csv`, `singleton_audit.csv`,
-`loto_*` and `baseline_rerun/`) and `--check` passes for 161 files. The earlier copy had
-been carried over from v5 and did not describe this archive. Table S7's own SHA256
-manifest under `outputs/baseline/` is separate and unchanged.
+`loto_*`, `baseline_rerun/`, `followup_20261023/`, `finish_20261023/`,
+`sensitivity_mf1/` and `paired_tests_20261024.csv`) and `--check` passes for 271 files.
+The earlier copy had been carried over from v5 and did not describe this archive.
+Table S7's own SHA256 manifest under `outputs/baseline/` is separate and unchanged.
 
 ## Verification status (four states)
 - **Checked:** comparisons to archived CSVs are local checks, not a blanket claim that
@@ -420,17 +486,13 @@ manifest under `outputs/baseline/` is separate and unchanged.
   (levels 1–5). These do not automatically cover the new aggregations or the new figures.
 - **Archive-only:** values reported from a run log with no archived output file (the
   withdrawn deep-learning arm, SI-E.2).
-- **Not verified here:** the remote GitHub/Zenodo release contents as of the current
-  revision, and any end-to-end re-run of the analysis pipeline. The release cited in the
-  main text (`v1.2`, DOI 10.5281/zenodo.23433981) does not contain the scripts added on
-  2026-10-19/20 (`singleton_audit.py`, `input_validity_audit.py`, `check_v6_consistency.py`,
-  `build_main_v6.py`, `build_toc_v6.py`, `loto_full_metrics.py`, `verify_regression.py`,
-  `training_mean_baseline.py`, `component_breakdown.py`, `arcmof_cluster_span.py`,
-  `summarize_sensitivity.py`, `loto_cleaned_sensitivity.py`,
-  `loto_cleaned_25k.py`) or the
-  current `Manuscript_v6.md`; a new tag and version DOI
-  must be published before the Code availability statement is accurate. This package does
-  not claim the public archive reproduces the present revision.
+- **Not verified here:** a fresh end-to-end rerun of the complete analysis pipeline, and
+  the live contents of the remote release (the archive's own checksums are verified, not
+  Zenodo's copy). The manuscript cites the concept DOI 10.5281/zenodo.23415179, which is
+  the version of record for every analysis here (v1.4: original analyses plus the six
+  follow-ups, the finish analyses and the feature-subsampling sensitivity). The earlier
+  v1.3 version DOI 10.5281/zenodo.23434268 covers the original analyses only. Their
+  evidence and verification boundary are described below.
 
 ## Table S7: training-mean baseline (standalone, no model training)
 
@@ -511,3 +573,101 @@ python scripts/training_mean_baseline.py verify --outdir outputs/baseline_rerun
 
 `verify` checks archived integrity and arithmetic only; it does not re-read the raw uptake.
 A raw-data recomputation uses the `recompute` subcommand with the original CSV.
+
+
+## Six follow-up experiments integrated on 2026-10-23
+
+The local archive `outputs/followup_20261023/` is the source of SI-I and Tables
+S19–S24. `archive_provenance.json` records each copied source path, byte size and
+SHA256. These additions are part of the v1.4 deposit (the version of record); the
+earlier v1.3 release does not contain them. This step edits the manuscript and
+archives evidence; it does not rerun model training.
+
+Run the following read-only checks from this reproduction-package directory:
+
+```text
+python scripts/verify_followup_tables.py
+python scripts/check_v6_consistency.py
+python scripts/make_md5sums.py --check
+```
+
+The standalone follow-up check uses only the Python standard library. It recomputes
+paired representation differences from pooled seed metrics, verifies their derived
+summary tables, checks novelty counts against retained populations, recomputes pilot
+return counts and completed-check counts, recomputes Spearman correlations with ties,
+recomputes paired endpoint t intervals, and checks all 480 screening-metric records
+against 96 summaries. It also compares every printed S19–S24 cell with those
+calculations. This is an archived-metric arithmetic check, not independent recovery
+of raw-data preprocessing, expert validation or a model refit.
+
+Before integration, the working-directory experiment outputs were additionally
+checked against saved predictions: experiment 1/2 derived summaries (648 pooled arms,
+6,048 topology arms and 3,888 C3-subtype arms), experiment 5's ten prediction archives
+and experiment 6's 120 score archives / 480 budget records. The large prediction
+archives remain in the working experiment directories and are not redistributed
+in this compact follow-up snapshot. These prior checks are distinct from the
+portable acceptance command above.
+
+`experiment12/` contains both full and common-mapped metrics, mapping evidence
+and frozen configurations. The 100k stage completed all 756 expected prediction
+files in the working directory: 696 nonempty and 60 expected-empty mapped folds.
+It is one larger sample from the same hMOF database. The initial 25k stage uses five
+sample redraws. I/B comparisons add role-specific linker identifiers; T/I comparisons
+use the restricted parent-linker mapping. They do not establish causal information
+effects or population-wide fingerprint superiority.
+
+`experiment3/` contains a 40-CIF CoRE technical pilot and its pending validation
+sheet (an experimental annotation file). Its source is CoRE MOF 2019 ASR v1.1.0,
+DOI 10.5281/zenodo.3370144. No full-library support result or external adsorption
+prediction is available. `experiment4/` contains descriptive fold diagnostics;
+its 66 records reuse eleven topology groups and must not be pooled as 66 independent
+validation groups. Numerical distance and linker-vocabulary definitions differ
+between experiments 2 and 4 (SI-I).
+
+`experiment5/` contains fixed-pool replacement designs, row-index mapping,
+matching diagnostics and paired endpoints. Five seeds vary model randomness and
+replacement order, not test sampling; only the two endpoints were refitted after
+negative-descriptor cleaning. `experiment6/` contains all metric arms, frozen
+candidate identities, training-membership records, vocabularies and selected IDs.
+Its five seeds vary the learner only. Both are retrospective analyses conditional
+on fixed pools.
+
+The `source_scripts/` folders are original execution snapshots for traceability.
+They retain original workspace-relative dependencies and are not standalone
+entry points after moving this snapshot. Full retraining requires the original
+hMOF data, source analysis modules, experiment directory layout and packages recorded
+by those scripts. Do not execute them as if they were the portable table-verification
+command. In particular, the screening producer writes its configuration and refits
+models; it is not a read-only verifier. Experiments 1/2 use 120 trees with
+`max_features='sqrt'`; experiments 5/6 use the default 1.0. This difference is
+explicit in SI-I and precludes attributing cross-experiment absolute changes solely
+to representation.
+
+The archive MD5 manifest is regenerated after adding these files. Historical
+manifest dates/counts earlier in this document refer to the preceding snapshot;
+the current file count is given by `make_md5sums.py --check`.
+
+## Paired-seed tests added 2026-10-24 (main-text 3.3 and 3.4)
+
+`screening_paired_tests.py` recomputes, from the archived per-seed outputs, the two
+paired tests now quoted in the results:
+
+* the screening gap — random minus topology top-1% overlap, five paired seeds:
+  31.12 ± 5.26 percentage points, 95% paired t interval 24.59–37.65, t(4) = 13.24,
+  p = 1.9 × 10⁻⁴ (source: `outputs/screening_utility_seed*.csv`);
+* the nbo-side arm (a) → (b) MAE change: +0.0746 mmol/g, 95% interval
+  +0.0591 to +0.0900, t(4) = 13.41, p = 1.8 × 10⁻⁴, i.e. +70.0% with a 95%
+  interval of +55.5% to +84.5% when the same bounds are divided by the fixed
+  arm-(a) mean 0.1065 mmol/g (source: `outputs/isoreticular_control_seeds.csv`).
+
+The script is standard-library only; it evaluates the t(4) tail from the closed-form
+CDF, uses the same 2.776445 multiplier as `verify_followup_tables.py`, and writes
+`outputs/paired_tests_20261024.csv`. `check_v6_consistency.py` reads that CSV and
+asserts each quoted value against the manuscript, so the interval strings cannot
+drift from the archived computation. Both intervals are on five redraws of one
+database and inherit the scope statement of main-text 2.5.
+
+The earlier manuscript quoted the nbo interval lower bound as +0.0592; recomputation
+from the archived rows gives +0.059147, i.e. +0.0591 at four decimals. The value was
+corrected in the manuscript, the cover letter and the claim–evidence list rather than
+kept for continuity.

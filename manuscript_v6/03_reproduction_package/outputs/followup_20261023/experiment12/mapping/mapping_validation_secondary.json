@@ -1,0 +1,242 @@
+{
+  "1": {
+    "filename": "str_m3_o1_o1_nbo_sym.1.cif",
+    "raw_row_id": 311757,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "2": {
+    "filename": "str_m3_o2_o2_nbo_sym.1.cif",
+    "raw_row_id": 172588,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "3": {
+    "filename": "str_m2_o3_o3_nbo_sym.4.cif",
+    "raw_row_id": 222654,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "4": {
+    "filename": "str_m2_o4_o4_nbo_sym.27.cif",
+    "raw_row_id": 296902,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "5": {
+    "filename": "str_m1_o5_o5_pcu_sym.1.cif",
+    "raw_row_id": 319338,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "6": {
+    "filename": "str_m2_o6_o6_nbo_sym.1.cif",
+    "raw_row_id": 246567,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "7": {
+    "filename": "str_m1_o7_o7_pcu_sym.1.cif",
+    "raw_row_id": 255794,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "8": {
+    "filename": "str_m5_o8_o8_sra_sym.1.cif",
+    "raw_row_id": 157372,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "9": {
+    "filename": "str_m2_o9_o9_nbo_sym.20.cif",
+    "raw_row_id": 94033,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "10": {
+    "filename": "str_m5_o10_o10_sra_sym.1.cif",
+    "raw_row_id": 135576,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "11": {
+    "filename": "str_m1_o11_o11_pcu_sym.1.cif",
+    "raw_row_id": 300411,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "12": {
+    "filename": "str_m5_o12_o12_sra_sym.1.cif",
+    "raw_row_id": 171180,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "13": {
+    "filename": "str_m5_o13_o13_sra_sym.1.cif",
+    "raw_row_id": 85390,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "14": {
+    "filename": "str_m2_o14_o14_nbo_sym.9.cif",
+    "raw_row_id": 244189,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "15": {
+    "filename": "str_m1_o15_o15_pcu_sym.1.cif",
+    "raw_row_id": 75508,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "16": {
+    "filename": "str_m1_o16_o16_pcu_sym.35.cif",
+    "raw_row_id": 108207,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "17": {
+    "filename": "str_m1_o17_o17_pcu_sym.1.cif",
+    "raw_row_id": 193492,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "18": {
+    "filename": "str_m1_o18_o18_pcu_sym.9.cif",
+    "raw_row_id": 155067,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "19": {
+    "filename": "str_m1_o19_o19_pcu_sym.1.cif",
+    "raw_row_id": 304060,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "20": {
+    "filename": "str_m1_o20_o20_pcu_sym.1.cif",
+    "raw_row_id": 308502,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "21": {
+    "filename": "str_m5_o21_o21_sra_sym.1.cif",
+    "raw_row_id": 291034,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "22": {
+    "filename": "str_m1_o22_o22_pcu_sym.1.cif",
+    "raw_row_id": 288435,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "23": {
+    "filename": "str_m2_o23_o23_pcu_sym.6.cif",
+    "raw_row_id": 221855,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "24": {
+    "filename": "str_m3_o24_o24_nbo_sym.1.cif",
+    "raw_row_id": 309496,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "25": {
+    "filename": "str_m1_o25_o25_pcu_sym.24.cif",
+    "raw_row_id": 298881,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "26": {
+    "filename": "str_m1_o26_o26_pcu_sym.15.cif",
+    "raw_row_id": 259222,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "27": {
+    "filename": "str_m2_o27_o27_nbo_sym.3.cif",
+    "raw_row_id": 244937,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "28": {
+    "filename": "str_m2_o28_o28_nbo_sym.3.cif",
+    "raw_row_id": 201338,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "29": {
+    "filename": "str_m2_o29_o29_nbo_sym.1.cif",
+    "raw_row_id": 200375,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "30": {
+    "filename": "str_m2_o30_o30_tbo_sym.2.cif",
+    "raw_row_id": 65249,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "31": {
+    "filename": "str_m2_o31_o31_tbo_sym.5.cif",
+    "raw_row_id": 302305,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "33": {
+    "filename": "str_m3_o33_o33_tbo_sym.1.cif",
+    "raw_row_id": 254319,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "34": {
+    "filename": "str_m2_o34_o34_pts_sym.4.cif",
+    "raw_row_id": 246349,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "35": {
+    "filename": "str_m2_o35_o35_pts_sym.2.cif",
+    "raw_row_id": 208152,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "36": {
+    "filename": "str_m3_o36_o36_pts_sym.1.cif",
+    "raw_row_id": 57120,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "37": {
+    "filename": "str_m2_o37_o37_pts_sym.1.cif",
+    "raw_row_id": 228644,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "38": {
+    "filename": "str_m2_o38_o38_fof_sym.1.cif",
+    "raw_row_id": 79754,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "40": {
+    "filename": "str_m2_o40_o40_fof_sym.2.cif",
+    "raw_row_id": 15862,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "41": {
+    "filename": "str_m2_o41_o41_fof_sym.1.cif",
+    "raw_row_id": 4164,
+    "functional_groups": null,
+    "same_linker_pair": true
+  },
+  "58": {
+    "filename": "str_m2_o58_o58_tbo_sym.1.cif",
+    "raw_row_id": 272158,
+    "functional_groups": null,
+    "same_linker_pair": true
+  }
+}

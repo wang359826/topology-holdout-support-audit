@@ -4,14 +4,19 @@
 
 Reproduction package for the manuscript
 
-> **Version pointer (2026-10-21).** The current manuscript is the **v6 compressed
-> submission package** (4 main figures, 18 SI tables), *"What topology hold-out
+> **Version pointer (2026-10-24, v1.4).** The current manuscript is the **v6 compressed
+> submission package** (4 main figures, 25 SI tables), *"What topology hold-out
 > removes — and what it does not"*. In the working tree it is the sibling package
-> `03_投稿专用包_v6压缩/`; in the v1.3 release it ships inside this archive as
-> `manuscript_v6/` (manuscript, SI, figures, cover letter and its own reproduction
-> supplement). The analysis record in this file is the v5 full-pipeline record.
-> Where the two differ — five-seed headline values replace seed-42 values, and the
-> ARC-MOF headline is the coarse 99.3% — **the v6 manuscript is authoritative**.
+> `03_投稿专用包_v6压缩/`; in the v1.4 release it ships inside this archive as
+> `manuscript_v6/` (manuscript, SI, figures and its own reproduction supplement).
+> The analysis record in this file is the v5 full-pipeline record. Where the two
+> differ — five-seed headline values replace seed-42 values, and the ARC-MOF
+> headline is the coarse 99.3% — **the v6 manuscript is authoritative**. The v1.4
+> release is the version of record for every analysis in the manuscript: it adds
+> the six follow-up experiments (SI-I), the finish analyses and the
+> `max_features=1.0` sensitivity to the v1.3 contents. The concept DOI
+> (10.5281/zenodo.23415179) resolves to the latest version; the v1.3 version DOI
+> (10.5281/zenodo.23434268) covers the original analyses only.
 
 > **Topology hold-out in the two enumerated MOF databases studied here is largely
 > chemistry hold-out: the two variables are structurally entangled, and the field's
@@ -171,9 +176,9 @@ after any re-run; `run_all.py` now does it automatically.
 └── outputs/               ← every CSV and figure quoted in the manuscript
 ```
 
-### v1.3 archive layout
+### v1.4 archive layout
 
-The v1.3 release (GitHub tag `v1.3`, Zenodo archive) merges this reproduction
+The v1.4 release (GitHub tag `v1.4`, Zenodo archive) merges this reproduction
 package with the v6 submission package: this tree stays at the **archive root**
 and the v6 package — manuscript, SI, figures, cover letter and its own
 reproduction supplement — is added as **`manuscript_v6/`**. Every path in
