@@ -3,14 +3,14 @@
   "upload_type": "software",
   "license": "mit",
   "access_right": "open",
-  "version": "v1.4",
+  "version": "v1.5",
   "creators": [
     {
       "name": "Wang, Tao",
       "affiliation": "College of Chemical Engineering, Nanjing Tech University, Nanjing 211816, China"
     }
   ],
-  "description": "Support-audit toolkit and full analysis pipeline for \"What topology hold-out removes — and what it does not\".\n\nContents: the v6 manuscript and supplementary information (manuscript_v6/01_manuscript, 02_supplementary), the complete analysis pipeline (scripts/), derived result tables (outputs/), and publication figures (figures_pub/). The repository root also retains the original (v5) reproduction package, so that every path cited in the preceding Zenodo release remains valid in this archive.\n\nCentral results: 74.7% of coarse-grained chemical compositions in hMOF occur in a single topology (61.3% of structures); a chemistry-key hold-out produces only 21.1% of the topology hold-out's R2 decrease; on the one usable chemistry-matched pair (pcu <-> nbo) removing the partner topology raised nbo-side MAE by 70.0% while a size-matched control did not; across five independently redrawn 25,000-sample support sets the top-1% hit rate fell from 50.4% to 19.3% under topology-grouped validation (paired difference 31.1 percentage points, 95% interval 24.6-37.6).\n\nThe v1.4 deposit adds the six follow-up experiments (outputs/followup_20261023/), the finish analyses (outputs/finish_20261023/), the max_features=1.0 sensitivity (outputs/sensitivity_mf1/) and the paired-seed tests (outputs/paired_tests_20261024.csv); it is the version of record for every analysis in the manuscript. The earlier v1.3 release (10.5281/zenodo.23434268) covers the original analyses only.\n\nThe repository was created under an earlier working title that read the topology penalty as \"largely\" a chemistry penalty. That wording predates the findings reported here and is not the claim of the manuscript, which reports the support loss and a descriptive protocol ratio and does not attribute the topology penalty to chemistry.\n\nInput data are not redistributed: hMOF is available at https://archive.materialscloud.org/records/nsp7v-2dk91 and ARC-MOF v6 at https://doi.org/10.5281/zenodo.13891643. See DATA.md for the retrieval commands and checksums. See REPRODUCE.md for the verification commands (scripts/make_md5sums.py --check, scripts/singleton_audit.py verify).",
+  "description": "Corrected submission revision for What topology hold-out removes—and what it does not. Based on published v1.4 (10.5281/zenodo.23618746), which remains unchanged. Corrects support diagnostics, reproduction input validation, manuscript wording and figure/PDF presentation. Scientific source outputs are retained. Corrected code was published at GitHub commit 80bd0bc1046cedd3f8eb7069c1bc1acc8b0a5dc7. Manuscript and SI: manuscript_v6/. Verification distinguishes archived-number checks, prediction recomputation and representative reruns; it does not claim full-paper retraining. Input databases are not redistributed; see DATA.md.",
   "keywords": [
     "metal-organic frameworks",
     "MOF",

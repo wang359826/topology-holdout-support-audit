@@ -315,9 +315,13 @@ def check_enumeration():
     v13_scope = r"v1\.3.{0,90}(?:contain(?:s|ing)?|cover(?:s|ing)?).{0,20}original analyses only"
     ok("v1.3 labelled original-analyses-only in main and SI",
        bool(re.search(v13_scope, md_s, re.I)) and bool(re.search(v13_scope, si_s, re.I)))
-    pending = r"not yet (?:published|archived|deposited|synchroni[sz]ed)|pending (?:publication|deposit|synchroni[sz]ation)|unpublished revision|not (?:been )?(?:published|archived)"
-    ok("current local revision is not represented as publicly deposited",
-       bool(re.search(pending, md_s, re.I)) and bool(re.search(pending, si_s, re.I)))
+    # Public accessibility of this exact commit was checked independently.
+    # This assertion checks citation consistency, not live network reachability.
+    public_commit = "https://github.com/wang359826/topology-holdout-support-audit/tree/80bd0bc1046cedd3f8eb7069c1bc1acc8b0a5dc7"
+    ok("main and SI identify the verified public correction commit",
+       public_commit in md_s and public_commit in si_s and
+       "not yet archived as a new public release" not in md_s and
+       "not yet archived as a new public release" not in si_s)
 
 
 def check_figures():

@@ -38,7 +38,7 @@ against the files. Table S7 has a separate SHA256 manifest under `outputs/baseli
 Final figure files are stored under `../01_manuscript/figures/`. The manuscript and SI
 PDFs are built from their Markdown sources and the designated final figures.
 
-The reported analyses are archived in release v1.4 at the fixed version DOI `10.5281/zenodo.23618746`, which includes the original pipeline, the six follow-ups and the sensitivity runs. The submitted files are a revision built upon v1.4 and include text and diagnostic-tool corrections that are not yet archived as a new public release. The concept DOI `10.5281/zenodo.23415179` links the version series; `10.5281/zenodo.23434268` identifies the earlier v1.3 release containing the original analyses only.
+The reported analyses are archived in release v1.4 at the fixed version DOI `10.5281/zenodo.23618746`, which includes the original pipeline, the six follow-ups and the sensitivity runs. The corrected submission code and diagnostic tools are publicly available at GitHub commit 80bd0bc: <https://github.com/wang359826/topology-holdout-support-audit/tree/80bd0bc1046cedd3f8eb7069c1bc1acc8b0a5dc7>. This version retains the archived scientific results and corrects the diagnostic implementation and verification workflow. The concept DOI `10.5281/zenodo.23415179` links the version series; `10.5281/zenodo.23434268` identifies the earlier v1.3 release containing the original analyses only.
 
 ### SI-A.2b Model and experiment parameters
 

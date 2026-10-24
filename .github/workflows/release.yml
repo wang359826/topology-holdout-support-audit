@@ -1,0 +1,36 @@
+name: Publish verified v1.5 release
+on:
+  push:
+    tags:
+      - v1.5
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: release-v1.5
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the published tag
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: v1.5
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Package immutable tagged files
+        run: python3 scripts/package_release.py --tag v1.5 --ref refs/tags/v1.5 --output-dir dist
+      - name: Publish release and assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v1.5 >/dev/null 2>&1; then
+            echo 'Release v1.5 already exists; refusing to overwrite it.'
+            exit 1
+          fi
+          gh release create v1.5 dist/topology-holdout-support-audit-v1.5.zip dist/topology-holdout-support-audit-v1.5.zip.sha256 --verify-tag --title 'v1.5 — submission revision: diagnostic, verification and manuscript corrections' --notes-file RELEASE_NOTES_v1.5.md

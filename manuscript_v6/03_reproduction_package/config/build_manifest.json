@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "recorded_at_utc": "2026-10-24T16:15:25.066065+00:00",
+  "recorded_at_utc": "2026-10-24T16:41:23.469397+00:00",
   "scope": "Byte identity after an explicitly recorded build; not proof of rendering or visual correctness.",
   "files": [
     {
       "path": "01_manuscript/Manuscript_v6.md",
-      "bytes": 103141,
-      "sha256": "cf3da9bb5c341f8ae620c501f92ccd23d41de579d42b1816b8bf4d8ed93f3876"
+      "bytes": 103281,
+      "sha256": "8c4f2a7e6ec1bba8b251e98dfe982d63511b74b98fd908ac1f4f3a4e44d7ab48"
     },
     {
       "path": "01_manuscript/Manuscript_v6.pdf",
-      "bytes": 2202201,
-      "sha256": "8cb3dae59cc4b0c2b5db95abc585a6f83a35c52c1641e18e1c38d68b349414fd"
+      "bytes": 2202269,
+      "sha256": "17f3f942a6adbd53faf6c4920f01c26d9ea6d86378e50651df150fc9d1dd82eb"
     },
     {
       "path": "01_manuscript/figures/Fig1_support_structure.png",
@@ -80,13 +80,13 @@
     },
     {
       "path": "02_supplementary/SI_v6.md",
-      "bytes": 89809,
-      "sha256": "dc202b233e5232d866b84b403ad910b05e130c4d9ace02ff4a4d6224cfa173a1"
+      "bytes": 89991,
+      "sha256": "ce369932c953dda96049dc1c5a5f03dd3b412943d05b780201a8ec2f7563a311"
     },
     {
       "path": "02_supplementary/SI_v6.pdf",
-      "bytes": 3058065,
-      "sha256": "7ef6330e2d4b89e0f0e2cdd7e1017fa54f4448f0eaef80b9dafce7ad2808d041"
+      "bytes": 3058314,
+      "sha256": "76d40e3d8ebcf48442608b092c9146c41e2128f0e212004f943afb0864d799df"
     },
     {
       "path": "03_reproduction_package/scripts/build_pdf_v6.py",
