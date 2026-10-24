@@ -4,9 +4,13 @@
 > 设了 `export-ignore`，所以 `git archive` 生成的 zip 里没有它——它就是"怎么生产这个 zip"
 > 的说明书，放进 zip 会让其中的文件数与 MD5 自指。
 >
-> **2026-10-24 状态：zip 已于 20:55 按 v4 三审修订重新生成并自检，等待推送 tag 与发 GitHub Release。**
+> **2026-10-24 状态：master 与 tag `v1.4` 已推送 GitHub（commit `c30b382`），仅剩“Publish release”一步。**
 > v1.3（`10.5281/zenodo.23434268`）只含原始分析；v1.4 是本文所有分析的 version-of-record。
 > concept DOI `10.5281/zenodo.23415179` 不变，因此**发布后无需回填任何 DOI 数字**。
+>
+> **发布入口**：<https://github.com/wang359826/topology-holdout-support-audit/releases/new?tag=v1.4>
+> 标题与正文见 `_release/v1.4_release_notes.md`（可直接粘贴）。**必须先 Publish release**，
+> 只推 tag 不会触发 Zenodo。
 >
 > **重发说明（tag 已移动，尚未公开发布，故仍记作 v1.4）**：本轮按 `peer_review_package_v4.md`
 > 改了摘要、§3.2/§3.3 的 R² 与训练规模上下文、§3.1 的 rht 措辞、§4.4 限制、§9 复现措辞以及
