@@ -286,9 +286,11 @@ def check_enumeration():
     ok("2.7 enumerates the canonical six", six in md_s)
     ok("2.7 says ARC-MOF is not one of the six",
        "The ARC-MOF audit is not one of the six" in md_s)
-    ok("abstract enumerates six follow-ups", "Six follow-ups (SI-I)" in md_s)
-    ok("abstract says ARC-MOF is not a seventh follow-up",
-       "not a seventh follow-up" in md_s)
+    abstract_match = re.search(r"##\s*Abstract(.*?)\*\*Keywords", md, re.S)
+    abstract = abstract_match.group(1).strip() if abstract_match else ""
+    sentences = [x for x in re.split(r"(?<=[.!?])\s+(?=[A-Z])", abstract) if x.strip()]
+    ok("abstract has 3-4 sentences", 3 <= len(sentences) <= 4, str(len(sentences)))
+    ok("abstract does not call ARC-MOF independent", not re.search(r"independent\s+(?:ARC-MOF|replication)", abstract, re.I))
     ok("conclusion names the same six",
        "representation, constituent novelty, CoRE feasibility, fold-level diagnostics, "
        "matched replacement and fixed-pool screening (SI-I)" in md_s)
@@ -297,19 +299,25 @@ def check_enumeration():
                     "diagnostics, matched replacement and fixed-pool screening" in cl_s),
        "cover letter not shipped in this distribution" if not cl
        else "cover letter missing the canonical list")
-    ok("SI-I keeps ARC-MOF outside the six", "not one of the six" in si_s)
+    si_intro = re.search(r"## SI-I\..*?(?=### SI-I\.1)", si_s)
+    si_intro = si_intro.group(0) if si_intro else ""
+    ok("SI-I keeps ARC-MOF outside the six",
+       bool(re.search(r"Six follow-up experiments", si_intro, re.I)) and
+       bool(re.search(r"ARC-MOF.{0,90}(?:separate|not one of the six).{0,50}SI-H", si_intro, re.I)))
     ok("2.4 defines post hoc arm (g)", "A seventh arm, **(g)**, is post hoc" in md_s)
     ok("SI-C.1 mentions the post hoc arm (g)", "post hoc arm (g)" in si_s)
     ok("Fig. 3 panel (c) labelled a separate design",
        "not an arm of the a–g contrast" in md_s)
     ok("single-pair/single-library limit sits in 3.3",
        "Two boundaries belong to this result" in md_s)
-    ok("Data availability names a version of record",
-       "version of record for every analysis" in md_s)
-    ok("v1.3 labelled original-analyses-only",
-       "contains the original analyses only" in md_s)
-    ok("stale 'added in this local revision' wording removed",
-       "added in this local revision" not in md_s)
+    ok("main and SI name the fixed v1.4 DOI",
+       "10.5281/zenodo.23618746" in md_s and "10.5281/zenodo.23618746" in si_s)
+    v13_scope = r"v1\.3.{0,90}(?:contain(?:s|ing)?|cover(?:s|ing)?).{0,20}original analyses only"
+    ok("v1.3 labelled original-analyses-only in main and SI",
+       bool(re.search(v13_scope, md_s, re.I)) and bool(re.search(v13_scope, si_s, re.I)))
+    pending = r"not yet (?:published|archived|deposited|synchroni[sz]ed)|pending (?:publication|deposit|synchroni[sz]ation)|unpublished revision|not (?:been )?(?:published|archived)"
+    ok("current local revision is not represented as publicly deposited",
+       bool(re.search(pending, md_s, re.I)) and bool(re.search(pending, si_s, re.I)))
 
 
 def check_figures():
@@ -1060,6 +1068,53 @@ def check_lengths():
     _out(f"  characters             : {len(md):,}")
 
 
+def check_si_s25():
+    """Rebuild every numeric cell of S25/S25b from the five paired seed metrics."""
+    from statistics import mean
+    text = read(SI)
+    expected_seeds = {'42','143','244','345','446'}
+    for scope, table_number, reps, models in (
+        ('mapped','25',('I','T'),('RF','ET')),
+        ('full','25b',('B','I'),('RF',))):
+        rows = [r for r in load_csv(f'sensitivity_mf1/{scope}/mf1_pooled.csv')
+                if r['protocol']=='LOTO']
+        expected = {(t,m,rep,seed) for t in ('uptake','selectivity') for m in models
+                    for rep in reps for seed in expected_seeds}
+        keys = [(r['target'],r['model'],r['representation'],r['seed']) for r in rows]
+        if not ok(f'S{table_number} complete five-seed design',
+                  len(keys)==len(expected) and len(set(keys))==len(keys) and set(keys)==expected):
+            continue
+        blocks = []
+        for target in ('uptake','selectivity'):
+            for model in models:
+                means = {rep:[] for rep in reps}
+                gaps, signs = [], []
+                for setting in ('MAE_sqrt','MAE_mf1'):
+                    values = {(r['representation'],r['seed']):float(r[setting]) for r in rows
+                              if r['target']==target and r['model']==model}
+                    for rep in reps:
+                        means[rep].append(mean(values[rep,seed] for seed in expected_seeds))
+                    d = [values[reps[1],seed]-values[reps[0],seed] for seed in expected_seeds]
+                    gaps.append(mean(d))
+                    signs.append(sum(x>0 if scope=='mapped' else x<0 for x in d))
+                cells = ['Uptake' if target=='uptake' else 'Log-selectivity']
+                if scope=='mapped':cells.append(model)
+                cells.extend(f'{means[rep][0]:.4f} → {means[rep][1]:.4f}' for rep in reps)
+                cells.append(f'{gaps[0]:+.4f} → **{gaps[1]:+.4f}**'.replace('-', '−'))
+                cells.append(f'{signs[0]}/5 / {signs[1]}/5')
+                blocks.append('| '+' | '.join(cells)+' |')
+        marker = f'**Table S{table_number}.**'
+        if not ok(f'S{table_number} caption exists', marker in text):continue
+        tail = text.split(marker,1)[1].splitlines()
+        first = next((i for i,line in enumerate(tail) if line.startswith('|')),None)
+        if not ok(f'S{table_number} table exists', first is not None):continue
+        actual = []
+        for line in tail[first+2:]:
+            if not line.startswith('|'):break
+            actual.append(line.rstrip())
+        ok(f'S{table_number} every numeric cell matches paired CSVs', actual==blocks)
+
+
 def main() -> int:
     global VERBOSE
     ap = argparse.ArgumentParser()
@@ -1074,11 +1129,19 @@ def main() -> int:
             return 2
 
     check_layout(args.no_pdf)
+    if not args.no_pdf:
+        from verify_build_manifest import verify as verify_build
+        try:
+            count = verify_build()
+            ok("PDF build manifest matches 18 input/output byte hashes", count == 18)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            ok("PDF build manifest matches 18 input/output byte hashes", False, str(exc))
     check_text()
     check_enumeration()
     check_figures()
     check_main_tables()
     check_si_tables()
+    check_si_s25()
     from verify_followup_tables import verify as verify_followup
     try:
         verify_followup()
@@ -1088,7 +1151,7 @@ def main() -> int:
     check_headline()
     check_lengths()
 
-    _out("\n  Coverage note: tables 1-3, SI S1-S9/S12/S15-S24, the named headline")
+    _out("\n  Coverage note: tables 1-3, SI S1-S9/S12/S15-S25b, the named headline")
     _out("  claims and all numbering/citation/file checks are automated. SI Tables")
     _out("  S10/S11/S13/S14, the prose outside the named claims, and the PDF layout")
     _out("  are NOT verified here; they need a human read before submission.")

@@ -1,10 +1,6 @@
 # Reproduction manual
 
-Everything in this repository exists to let a reader regenerate the results assigned
-to each pipeline level, in one command per level. All five levels have been run end to
-end — level 5 on 2026-10-14, with its seven per-step logs archived in `outputs/logs/`.
-Nothing here depends on a GPU, on a private data source, or on a specific
-editor.
+This manual describes the **historical v5 analysis pipeline** and its five levels, which may train models. Current v6 verification uses three different levels and entry points documented in `manuscript_v6/03_reproduction_package/REPRODUCE.md`. Historical logs record earlier runs; the present revision does not claim a new full-paper retrain. The corrected portable diagnostic is described in the current README.
 
 Companion documents: `README.md` (claims → sections → scripts, English overview),
 `REPORTING_CHECKLIST.md` (portable reporting rules, and why each one exists),

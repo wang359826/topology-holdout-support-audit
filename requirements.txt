@@ -1,7 +1,7 @@
 # Reproduction environment for the manuscript.
 #
-# Exactly FIVE packages are required for every result reported in the paper.
-# Verified on Python 3.13 (Windows 11, laptop CPU, no GPU).
+# Base packages for the historical analysis pipeline and current numeric checks.
+# Historical runs used Python 3.13; current verification environment is recorded in the v6 validation report.
 #
 # pip install -r requirements.txt
 #
@@ -32,3 +32,8 @@ matplotlib>=3.7
 # compatibility bound.
 # shap
 
+
+# Optional file/figure verification: pip install Pillow
+# PDF generation additionally requires an installed Edge/Chromium executable.
+# Later archived source snapshots can need separate dependencies and non-portable
+# input mappings; these base packages do not imply every follow-up can be retrained.

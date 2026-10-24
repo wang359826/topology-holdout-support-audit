@@ -38,12 +38,7 @@ against the files. Table S7 has a separate SHA256 manifest under `outputs/baseli
 Final figure files are stored under `../01_manuscript/figures/`. The manuscript and SI
 PDFs are built from their Markdown sources and the designated final figures.
 
-The code deposit is described in main-text §9: the concept DOI
-`10.5281/zenodo.23415179` resolves to the latest deposited version, which is the version of
-record for every analysis in this manuscript (original pipeline plus the six follow-ups of
-SI-I and the sensitivity runs); the version DOI `10.5281/zenodo.23434268` refers to v1.3,
-which contains the original analyses only. Both this SI and the manuscript quote the same
-two identifiers, so the reader can tell which archived bytes support which claim.
+The reported analyses are archived in release v1.4 at the fixed version DOI `10.5281/zenodo.23618746`, which includes the original pipeline, the six follow-ups and the sensitivity runs. The submitted files are a revision built upon v1.4 and include text and diagnostic-tool corrections that are not yet archived as a new public release. The concept DOI `10.5281/zenodo.23415179` links the version series; `10.5281/zenodo.23434268` identifies the earlier v1.3 release containing the original analyses only.
 
 ### SI-A.2b Model and experiment parameters
 
@@ -154,7 +149,7 @@ slightly lower one; the sample rates are not uniformly inflated, and none of the
 large enough for a rate comparison to be informative on its own. Three consequences are
 recorded rather than assumed away.
 
-1. **Figure S2 is refitted on valid rows.** The PDP model of the previous revision was
+1. **Figure S2 is refitted on valid rows.** The all-row PDP sensitivity model was
    fitted on all 25,000 sampled rows and its quantile grid was computed over the same rows,
    so the void-fraction grid reached −0.468 and the surface-area grid −0.5. The grid is now
    computed only over rows with no negative descriptor, every grid point is asserted to lie
@@ -609,11 +604,7 @@ values (−0.541 and −0.531) are close by coincidence, not identity.
 
 ### SI-D.2 Model families and the second target
 
-The three families are instantiated as `RandomForestRegressor(n_estimators=120, random_state=42)`, `HistGradientBoostingRegressor(random_state=42)` with scikit-learn defaults, and `StandardScaler` followed by `RidgeCV(alphas=(0.1, 1.0, 10.0, 100.0))`; the 100,000-row subsample is drawn with `random_state=42` and no seed is varied, so each family contributes one fit per protocol. The random-to-topology gap was refit under gradient boosting and ridge (single fits, no
-tuning), confirming it is not specific to random forests; the per-family rows are in
-`outputs/leakage_results_gb100k.csv` and `outputs/leakage_results_ridge100k.csv`. The
-second target (log-selectivity) is in `outputs/leakage_results_logsel100k.csv`; the main
-text states the target dependence in one sentence.
+The three families are instantiated as `RandomForestRegressor(n_estimators=120, random_state=42)`, `HistGradientBoostingRegressor(random_state=42)` with scikit-learn defaults, and `StandardScaler` followed by `RidgeCV(alphas=(0.1, 1.0, 10.0, 100.0))`. The 100,000-row subsample uses seed 42. Each family is evaluated in one cross-validation run per protocol, with a separate model fitted within each fold. RF and gradient-boosting settings are fixed; ridge selects alpha internally within the training data. No outer hyperparameter search or seed averaging is performed. The within-family random-to-topology comparisons are archived in `outputs/leakage_results_gb100k.csv` and `outputs/leakage_results_ridge100k.csv`; the log-selectivity comparison is in `outputs/leakage_results_logsel100k.csv`.
 
 ### SI-D.3 The 415-feature matched check
 
@@ -674,24 +665,15 @@ none is an orthogonal intervention, so they are descriptive rather than decisive
 
 ### SI-E.2 The withdrawn deep-learning comparison
 
-**Table S13.** Why the deep-learning comparison is not interpretable: two test sets 7.7×
-apart in target variance.
+**Table S13.** Archived target variance and R² from an exploratory crystal-graph comparison with different evaluation populations.
 
 | | Random split | Topology hold-out (test set all pcu) |
 | --- | ---: | ---: |
 | n | 500 | 317 |
-| **Test-set target variance Var(y)** | **0.5460** | **0.0706** |
-| R² | +0.205 | **−0.448** |
-| **MAE** | **0.3958** | **0.2617** |
-| **RMSE** | **0.6587** | **0.3199** |
+| Test-set target variance Var(y) | 0.5460 | 0.0706 |
+| R² | +0.205 | −0.448 |
 
-The variances differ 7.7× (standard deviations 2.78×); R² is normalised by the test-set
-variance, and the hold-out side's MAE and RMSE are **smaller** on its own test population.
-Lower absolute error on a different test population does not establish model superiority,
-so these six numbers are reported only to show why the comparison is not interpretable. The R² and test-variance values are in `outputs/metrics_audit.csv` (the CGCNN rows; for these rows the `macro` column stores the test-set variance); the MAE and RMSE values are reported from the run log of the withdrawn arm, which is not archived. No claim elsewhere in the paper rests on these numbers. A crystal-graph arm would be interpretable only if (i) the two
-test sets are matched on topology composition and target variance, (ii) MAE/RMSE, not R²,
-are the primary metrics, and (iii) both arms are trained to convergence; none of the three
-holds.
+The target variances differ by a factor of 7.7. Because R² uses each test population's own target sum of squares, this contrast cannot isolate an effect of the validation protocol. These archived values illustrate the denominator problem and do not support a comparison of model quality or a conclusion about crystal-graph methods. MAE and RMSE from this exploratory run are omitted because their source log is not archived. A new comparison would require explicitly defined evaluation populations, training and convergence checks, and archived row-level predictions. *Source data:* `outputs/metrics_audit.csv` (CGCNN rows; the `pooled_as_reported` column stores R² and the `macro` column stores target variance for these rows).
 
 ### SI-E.3 Mitigation and omitted-variable analyses
 
@@ -925,23 +907,7 @@ of a database-construction mechanism.
 
 ## SI-I. Follow-up and sensitivity experiments: representation, support and screening limits
 
-These follow-up analyses were integrated on 23 October 2026 and comprise exactly six
-experiments, in the order used in the abstract, main-text 2.7 and the cover letter:
-(1) representation (SI-I.1), (2) constituent novelty and numerical support (SI-I.2),
-(3) the CoRE structural-feasibility pilot (SI-I.3), (4) descriptive fold-level diagnostics
-(SI-I.4), (5) fixed-size partner replacement (SI-I.5) and (6) fixed-candidate-pool
-screening (SI-I.6). The ARC-MOF audit is not one of the six: it is the second-database
-support audit of main-text 3.5, with its controls in SI-H, and it adds no new performance
-or representation experiment. They complement the original analyses; they do not share a
-single replication unit, preprocessing rule or feature-encoding implementation. The new
-evidence is archived under `outputs/followup_20261023/` and belongs to the version-of-record
-deposit described in main-text 9 (v1.4), not to the earlier v1.3 release, which covers the
-original analyses only. No model was refitted during this manuscript-integration step.
-Tables S19–S24 can be recomputed from the archived metrics with
-`scripts/verify_followup_tables.py`. SI-I.7 adds a prespecified feature-subsampling
-sensitivity (Table S25) that *was* refitted on 24 October 2026 and is counted outside the
-six; its archive is `outputs/sensitivity_mf1/mapped/` and `outputs/sensitivity_mf1/full/`.
-That check establishes arithmetic consistency, not a fresh raw-data rerun.
+Six follow-up experiments examine representation (SI-I.1), constituent novelty and numerical support (SI-I.2), CoRE structural feasibility (SI-I.3), descriptive fold-level diagnostics (SI-I.4), fixed-size partner replacement (SI-I.5) and fixed-candidate-pool screening (SI-I.6). The ARC-MOF metadata audit is reported separately in SI-H. The follow-ups use different replication units, preprocessing rules and feature-encoding implementations, as specified below. Results are archived under `outputs/followup_20261023/` in release v1.4; `scripts/verify_followup_tables.py` recomputes Tables S19–S24 from the archived metrics and checks arithmetic consistency without refitting models. SI-I.7 reports an additional feature-subsampling sensitivity, archived under `outputs/sensitivity_mf1/mapped/` and `outputs/sensitivity_mf1/full/`.
 
 ### SI-I.1 Representation comparisons (experiment 1)
 
@@ -1211,7 +1177,7 @@ performance or a validated synthesis budget.
 
 ---
 
-## SI-I.7 Feature-subsampling sensitivity (`max_features=1.0`)
+### SI-I.7 Feature-subsampling sensitivity (`max_features=1.0`)
 
 The representation comparisons above use `max_features='sqrt'`. Feature dimension changes how
 many descriptors a tree can sample at each split, so the same contrast was re-run with
@@ -1257,16 +1223,18 @@ and nbo (−0.023) still favouring T, and pts changing sign from +0.010 to −0.
 
 For the full-sample B/I contrast the direction is preserved in all five redraws for both
 targets: I remains better than B under the full-feature setting, by a smaller margin for
-uptake (−0.0034 against −0.0089) and by the same margin for log-selectivity (−0.0061 against
+uptake (−0.0034 against −0.0089) and by a similar margin for log-selectivity (−0.0061 against
 −0.0055). The representation statements in the main text therefore hold under both settings,
 with the uptake magnitude explicitly configuration-dependent.
 
 The two settings support different strengths of statement. "T did not improve pooled
 leave-one-topology-out MAE" holds for uptake and is the sentence used in the main text; for
-log-selectivity the correct statement is that the difference becomes negligible under the
-full-feature setting, not that fingerprints are neutral or harmful there. Random-split results
-are unchanged in direction (both representations improve slightly under 1.0), so the
-sensitivity bears on the topology-held-out contrast, not on the random-split level.
+log-selectivity, the pooled gap is substantially reduced, to +0.0011 for RF and +0.0114 for
+ET under the full-feature setting; this does not establish equivalence or a general effect
+of fingerprints. For uptake under random splitting, both representations improve slightly under 1.0.
+For log-selectivity, T improves while I has a slightly higher mean MAE (RF +0.00034;
+ET +0.00032). These small random-split changes differ from the larger, configuration-dependent
+changes in the topology-held-out contrast.
 
 **Limits.** The full-feature tier covers the full 25,000-row samples for the B/I contrast with
 RF only: ExtraTrees requires about 150 s per fit at this setting, which exceeded the available
@@ -1350,8 +1318,7 @@ p = 0.44). (b) Target variation within held-out topologies (sd(y) from 0.11 to 0
 the pcu fold accounts for 63.4% of the scored test rows. *Source data:*
 `outputs/s_g_curve.csv`.
 
-**Figure S8.** Bounded support audit in ARC-MOF (moved here from the main figures; the
-compact summary remains Table 3). **(a)** Single-topology composition fraction at four
+**Figure S8.** Bounded support audit in ARC-MOF (the compact summary is Table 3). **(a)** Single-topology composition fraction at four
 combinations (coarse/fine × all/non-singleton): 99.3, 97.3, 99.7 and 98.2.
 **(b)** Leave-one-source-out sensitivity: removing DB0 moves the fraction to 98.57–98.96,
 any other single source to 99.22–99.84. **(c)** Observed versus within-source

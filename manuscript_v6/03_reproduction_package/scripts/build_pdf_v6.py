@@ -96,7 +96,9 @@ FIG_MAP_SI = {
 }
 
 CSS = """
-@page { size: A4; margin: 20mm 18mm 18mm 18mm; }
+@page { size: A4; margin: 20mm 18mm 18mm 18mm;
+  @bottom-center { content: counter(page); font: 9pt "Times New Roman"; color: #555; }
+}
 * { box-sizing: border-box; }
 body {
   font-family: "Times New Roman", "Georgia", "SimSun", "Microsoft YaHei", serif;
@@ -109,6 +111,9 @@ h2 { font-size: 13pt; margin: 7mm 0 2mm; border-bottom: 1px solid #ccc;
 h3 { font-size: 11.5pt; margin: 5mm 0 1.5mm; page-break-after: avoid; }
 h4 { font-size: 10.5pt; margin: 4mm 0 1mm; font-style: italic; page-break-after: avoid; }
 p  { margin: 0 0 2.2mm; text-align: justify; page-break-inside: avoid; }
+p.keep-next { page-break-after: avoid; break-after: avoid-page; }
+.table-group { break-inside: avoid-page; page-break-inside: avoid; }
+figcaption { break-before: avoid; }
 ul, ol { margin: 1mm 0 2.5mm; padding-left: 6mm; }
 li { margin-bottom: 0.8mm; text-align: justify; }
 hr { border: none; border-top: 1px solid #bbb; margin: 5mm 0; }
@@ -153,14 +158,15 @@ def esc(s: str) -> str:
 
 
 def inline(text: str) -> str:
-    """行内标记（兼容历史转义层；v5 源文件已无转义残留，此层仅作保险）。"""
-    text = text.replace("\\*\\*", "**").replace("\\*", "*")
-    text = text.replace("\\|", "|").replace("\\_", "_")
+    # A Markdown escaped star is a literal corresponding-author marker.
+    text = text.replace(chr(92) + '*', '\uE000')
+    text = text.replace('¹,*', '¹,' + chr(0xE000))  # literal corresponding-author star
+    text = text.replace(chr(92) + '|', '|').replace(chr(92) + '_', '_')
     text = esc(text)
-    text = re.sub(r"`([^`]+)`", lambda m: "<code>" + m.group(1) + "</code>", text)
-    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
-    text = re.sub(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", r"<em>\1</em>", text)
-    return text
+    text = re.sub(r'\x60([^\x60]+)\x60', lambda m: '<code>' + m.group(1) + '</code>', text)
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+    text = re.sub(r'(?<!\*)\*([^*\n]+?)\*(?!\*)', r'<em>\1</em>', text)
+    return text.replace('\uE000', '*')
 
 
 def split_row(line: str):
@@ -266,7 +272,12 @@ def md_to_html(md: str) -> str:
                 r = (r + [""] * len(header))[: len(header)]
                 t.append("<tr>" + "".join("<td>" + inline(c) + "</td>" for c in r) + "</tr>")
             t.append("</tbody></table>")
-            out.append("".join(t))
+            table_html = "".join(t)
+            if len(rows) <= 12 and out and out[-1].startswith('<p class="keep-next">'):
+                table_caption = out.pop()
+                out.append('<div class="table-group">' + table_caption + table_html + '</div>')
+            else:
+                out.append(table_html)
             continue
 
         if s.startswith(">"):
@@ -333,7 +344,7 @@ def md_to_html(md: str) -> str:
             continue
 
         close_lists()
-        buf = [s]
+        buf = [(s, raw.endswith("  "))]
         i += 1
         while i < n:
             nxt = lines[i]
@@ -341,10 +352,12 @@ def md_to_html(md: str) -> str:
             if (not ns or ns.startswith(("#", "|", ">", "```", "---"))
                     or re.match(r"^[-*]\s+", ns) or re.match(r"^\d+\.\s+", ns)):
                 break
-            buf.append(ns)
+            buf.append((ns, nxt.endswith("  ")))
             i += 1
-        joined = " ".join(buf)
-        out.append("<p>" + inline(joined) + "</p>")
+        joined = "".join(text + ("\uE001" if hard else " ") for text, hard in buf).rstrip()
+        visible = inline(joined).replace("\uE001", "<br>")
+        keep = bool(re.match(r"^(?:\*\*)?(?:Table\s+S?\d+\.|Panel\s+[A-Z]\b)", joined))
+        out.append(('<p class="keep-next">' if keep else "<p>") + visible + "</p>")
 
     close_lists()
     return "\n".join(out)
@@ -354,7 +367,9 @@ def extract_captions(md: str):
     caps = {}
     for m in re.finditer(r"\*\*Figure (\d+)\.\*\*(.*?)(?=\*\*Figure \d+\.\*\*|##\s*\d|\Z)",
                          md, re.S):
-        caps[int(m.group(1))] = re.sub(r"\s+", " ", m.group(2)).strip()
+        # Markdown horizontal rules delimit caption sections, not caption text.
+        caption = re.sub(r"(?m)^[ \t]*-{3,}[ \t]*$", "", m.group(2))
+        caps[int(m.group(1))] = re.sub(r"\s+", " ", caption).strip()
     return caps
 
 
@@ -495,6 +510,17 @@ def main():
                 html_body = insert_figures_inline(html_body, captions, IMG_DIR)
         tag = "zh" if args.zh else "en"
         out_pdf = os.path.abspath(args.out or _default_pdf(src_md))
+
+    # ACS requires a labeled TOC graphic on the last manuscript page.
+    if not args.si and not args.no_figures:
+        toc_path = os.path.join(IMG_DIR, "TOC_graphic.png")
+        if not os.path.exists(toc_path):
+            sys.exit("Missing final TOC graphic: " + toc_path)
+        toc_src = "file:///" + toc_path.replace(chr(92), "/").lstrip("/")
+        html_body += ('<section style="break-before:page; page-break-before:always; text-align:center;">'
+                      '<p style="text-align:center; font-weight:bold; margin:0 0 6mm;">For Table of Contents Only</p>'
+                      '<img src="' + toc_src + '" alt="Table of Contents graphic" '
+                      'style="width:3.25in; height:1.75in; max-width:none;"></section>')
 
     m_title = re.search(r"^#\s+(.+)$", md, re.M)
     doc_title = html.escape(m_title.group(1).strip()) if m_title else "Manuscript"

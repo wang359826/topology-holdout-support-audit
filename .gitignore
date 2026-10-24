@@ -73,3 +73,14 @@ _scratch_diag/
 _piptmp/
 
 _backup_figures_20261015_figure_rebuild/
+
+# Local submission administration and review notes; not release content.
+manuscript_v6/00_提交前必读.md
+manuscript_v6/05_下一步清单.md
+manuscript_v6/07_收尾_20261023/
+manuscript_v6/08_独立终审修订_20261024/
+manuscript_v6/RELEASE_v1.4_清单.md
+manuscript_v6/rebuild_pdfs.ps1
+*.bak
+*.bak_*
+dist/

@@ -37,15 +37,15 @@
   "levels": {
     "1_numeric": {
       "entry": "level1_verify/run_level1.ps1",
-      "does": "Rebuild every main-text and SI table number, the figure files and the cross-reference/citation map from the archived outputs.",
+      "does": "Verify explicitly covered table cells, named headline values, numbering/citations and figure-file existence from archived outputs. Does not rebuild figures or assess PDF layout.",
       "does_not": "No model is fitted and no raw data are read.",
-      "claims": "All table cells and the named headline values."
+      "claims": "Main Tables 1-3; SI Tables S1-S9, S12 and S15-S25b; named headline values. SI S10/S11/S13/S14 and unlisted prose are not numerically verified."
     },
     "2_predictions": {
       "entry": "level2_predictions/verify_predictions.py",
-      "does": "Recompute MAE/R2/overlap from the archived row-level predictions (arms and screening) and compare with the archived summaries.",
+      "does": "Recompute 50 declared arm MAE comparisons and 30 random/topology screening overlaps from predictions, requiring all five seeds and every declared prediction group.",
       "does_not": "No model is fitted; the experiment-12 prediction files (npz) and the fixed-pool full score vectors are NOT in this slim archive, so those cannot be recomputed here.",
-      "claims": "Table 2 arms, SI-C seed rows, Figure 4a-b screening overlaps, SI-F.1."
+      "claims": "Declared a/b/e groups (50 summary comparisons; pcu:b has no summary reference column) and random/topology endpoints; not all Table 2 arms or all strategies."
     },
     "3_rerun": {
       "entry": "level3_rerun/run_subset.py --csv PATH",
@@ -57,7 +57,13 @@
   "result_provenance": {
     "historical": "outputs/ (original analyses; included in the public v1.3 archive)",
     "followup_20261023": "outputs/followup_20261023/ (six follow-ups; NOT in the cited v1.3 release)",
-    "finish_20261023": "outputs/finish_20261023/ (tie audit, candidate bootstrap, per-topology deltas; new in this revision)",
+    "finish_20261023": "outputs/finish_20261023/ (tie audit, candidate bootstrap, per-topology deltas; included in published v1.4)",
     "sensitivity_mf1": "reported in SI-I.7; archived with the follow-up material, not in v1.3"
+  },
+  "release_status": {
+    "published_version": "v1.4",
+    "fixed_doi": "10.5281/zenodo.23618746",
+    "local_revision": "submission-revision-20261024",
+    "new_public_deposit": false
   }
 }

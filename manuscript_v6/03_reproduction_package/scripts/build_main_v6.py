@@ -28,16 +28,35 @@ OUT = os.path.join(PKG, "outputs")
 DEST = os.path.abspath(os.path.join(PKG, os.pardir, "01_manuscript", "figures"))
 os.makedirs(DEST, exist_ok=True)
 
-plt.rcParams.update({"font.size": 9, "axes.spines.top": False,
-                     "axes.spines.right": False, "figure.dpi": 150})
+plt.rcParams.update({
+    'font.size': 7, 'axes.labelsize': 7, 'axes.titlesize': 8,
+    'xtick.labelsize': 6.5, 'ytick.labelsize': 6.5,
+    'axes.spines.top': False, 'axes.spines.right': False,
+    'figure.dpi': 150, 'pdf.fonttype': 42, 'ps.fonttype': 42,
+    'svg.fonttype': 'none',
+})
 
 
 def save(fig, stem):
+    from matplotlib.text import Text
+    # Keep text legible at the manuscript's actual 492-point printed width.
+    for item in fig.findobj(Text):
+        if item.get_text().strip():
+            item.set_fontsize(max(6.2, min(item.get_fontsize(), 8.0)))
+    target = 492 / 72
+    for _ in range(18):
+        fig.tight_layout(pad=0.7, w_pad=1.1, h_pad=1.6)
+        fig.canvas.draw()
+        width = fig.get_tightbbox(fig.canvas.get_renderer()).width + 0.02
+        if abs(width - target) < 0.005:
+            break
+        w, h = fig.get_size_inches()
+        fig.set_size_inches(w * (1 + 0.65 * (target / width - 1)), h)
     p = os.path.join(DEST, stem)
-    fig.savefig(p + ".png", bbox_inches="tight", dpi=150)
-    fig.savefig(p + ".pdf", bbox_inches="tight")
+    fig.savefig(p + '.png', bbox_inches='tight', pad_inches=0.01, dpi=600)
+    fig.savefig(p + '.pdf', bbox_inches='tight', pad_inches=0.01)
     plt.close(fig)
-    print("wrote", p + ".png")
+    print('wrote', p + '.png')
 
 
 # ---------------- Figure 1: support structure ----------------
@@ -61,18 +80,19 @@ def figure1():
     Mm = M.copy()
     np.fill_diagonal(Mm, np.nan)  # diagonal is self-overlap, not zero
 
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 4.4))
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(6.85, 3.5), gridspec_kw={"width_ratios": [1, 1.18]})
     x = np.arange(len(order))
     colors = ["#d62728" if v >= 99.9 else "#1f77b4" for v in vals]
     ax.bar(x, vals, color=colors, edgecolor="white", linewidth=0.5)
     for xi, v, t in zip(x, vals, order):
         n = int(frac_n.get(t, 0))
         nlab = f"{n/1000:.0f}k" if n >= 1000 else str(n)
-        ax.text(xi, v + 1.5, f"{v:.0f}\nn={nlab}", ha="center", fontsize=6)
+        ax.text(xi, v + 1.5, f"{v:.0f}", ha="center", fontsize=6.5)
+        ax.text(xi, v + 8, f"n={nlab}", ha="center", va="bottom", rotation=90, fontsize=6.2)
     ax.set_xticks(x); ax.set_xticklabels(order, rotation=45, ha="right")
     ax.set_ylabel("structures unseen after hold-out  [%]")
     ax.set_title("(a) per-topology chemical-support loss", loc="left", fontsize=10)
-    ax.set_ylim(0, 125)
+    ax.set_ylim(0, 140)
     ax.grid(axis="y", alpha=0.3)
 
     im = ax2.imshow(Mm, cmap="Blues", vmin=0, vmax=offmax)
@@ -110,19 +130,16 @@ def figure2():
     for _, f426, f415 in schemes:
         src = chem if "化学组成" in f426 else fin
         vals.append(100 * r2(src, f426))
-        vals415.append(100 * r2(notopo, f415))
+        vals415.append(100 * r2(notopo, f426))
 
-    fig, axes = plt.subplots(1, 4, figsize=(15.5, 4.3))
-    ax, ax2, ax3, ax4 = axes
+    fig, axes = plt.subplots(2, 2, figsize=(6.85, 5.8))
+    ax, ax2, ax3, ax4 = axes.ravel()
     x = np.arange(len(schemes))
     ax.bar(x, vals, color=["#1f77b4"] * 4 + ["#d62728"], edgecolor="white", linewidth=0.5)
     ax.scatter(x, vals415, marker="D", s=20, facecolors="white", edgecolors="#222222",
-               linewidths=0.8, zorder=6, label="415 features (topology block removed)")
+               linewidths=0.8, zorder=6, label="415 features\n(topology block removed)")
     for xi, v, v415 in zip(x, vals, vals415):
         ax.text(xi, v + 1.2, f"{v:.1f}", ha="center", fontsize=7)
-        if np.isfinite(v415):
-            ax.text(xi + 0.30, v415, f"{v415:.1f}", ha="left", va="center", fontsize=6,
-                    color="#222222")
     ax.set_xticks(x); ax.set_xticklabels([s[0] for s in schemes], rotation=20, ha="right", fontsize=7)
     ax.set_ylabel("pooled R²  [%]")
     ax.set_ylim(0, 85)
@@ -143,15 +160,21 @@ def figure2():
         ax2.scatter(i + rng.uniform(-0.18, 0.18, len(per)), 100 * per.R2.to_numpy(),
                     s=9, color="#333333", zorder=5, alpha=0.8)
     for xi, r in zip(xb, rules):
-        ha = "left" if xi == 0 else "center"
-        xt = xi + 0.08 if xi == 0 else xi
-        ax2.text(xt, 100 * r[1] + (7 if r[1] >= 0 else -12), f"{100*r[1]:+.1f}", ha=ha,
-                 fontsize=7, bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.85))
+        ax2.annotate(f"{100*r[1]:+.1f}", xy=(xi, 100 * r[1]),
+                     xytext=(0, 5 if r[1] >= 0 else -5), textcoords="offset points",
+                     ha="center", va="bottom" if r[1] >= 0 else "top",
+                     fontsize=7, bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.85))
     ax2.axhline(0, color="gray", lw=0.7, ls="--")
     ax2.set_xticks(xb); ax2.set_xticklabels([r[0] for r in rules], fontsize=7)
     ax2.set_ylabel("leave-one-topology-out R²  [%]")
-    ax2.set_ylim(-70, 55)
-    ax2.set_title("(b) one LOTO run, four aggregation rules", loc="left", fontsize=9)
+    fold_values = 100 * per.R2.to_numpy()
+    aggregate_values = np.array([100 * r[1] for r in rules])
+    plotted_values = np.r_[fold_values, aggregate_values]
+    value_min = min(0.0, float(np.min(plotted_values)))
+    value_max = max(0.0, float(np.max(plotted_values)))
+    value_pad = 0.08 * max(value_max - value_min, 1.0)
+    ax2.set_ylim(value_min - value_pad, value_max + value_pad)
+    ax2.set_title("(b) one LOTO run:\nfour aggregation rules", loc="left", fontsize=9)
     ax2.grid(axis="y", alpha=0.3)
 
     pt = pd.read_csv(os.path.join(OUT, "finish_20261023", "per_topology_paired_deltas.csv"))
@@ -193,9 +216,9 @@ def figure3():
     nbo_c = (0.1071, 0.0048)
     pcu_c = (0.2364, 0.0031)
 
-    fig, axes = plt.subplots(1, 3, figsize=(14.5, 4.3))
-    fig.subplots_adjust(wspace=0.55)
-    ax, ax2, ax3 = axes
+    fig = plt.figure(figsize=(6.85, 5.2))
+    gs = fig.add_gridspec(2, 2)
+    ax, ax2, ax3 = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])
     arms = ["a", "b", "c", "e", "f"]
     nbo_m = [nbo_a[0], nbo_b[0], nbo_c[0], nbo_e[0], nbo_f[0]]
     nbo_s = [nbo_a[1], nbo_b[1], nbo_c[1], nbo_e[1], nbo_f[1]]
@@ -238,10 +261,6 @@ def figure3():
     ax3.set_xlabel("ΔMAE, 100% − 0% shared partner rows  [10⁻³ mmol/g]")
     ax3.set_title("(c) separate follow-up: replacement", loc="left", fontsize=9)
     ax3.grid(axis="x", alpha=0.3)
-    fig.text(0.01, 0.01, "Panels (a,b): arms a–f, five outer seeds, test set fixed within each seed; "
-             "arm (c) is the nested 5 × 5 draw. Panel (c) is not an arm of that design: a separate "
-             "follow-up on its own test population with five learner seeds (SI-I.5).", fontsize=6,
-             color="#555555")
     save(fig, "Fig3_intervention")
 
 
@@ -263,8 +282,9 @@ def figure4():
     oracle_vals = allf.groupby("seed")["oracle_topk_mean"].first()
     oracle_mean, oracle_sd = float(oracle_vals.mean()), float(oracle_vals.std())
 
-    fig, axes = plt.subplots(1, 3, figsize=(14.5, 4.3))
-    ax, ax2, ax3 = axes
+    fig = plt.figure(figsize=(6.85, 5.2))
+    gs = fig.add_gridspec(2, 2)
+    ax, ax2, ax3 = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])
     x = np.arange(len(order))
     m = [ov[k][0] * 100 for k in order]
     sd = [ov[k][1] * 100 for k in order]
@@ -293,7 +313,7 @@ def figure4():
     for xi, v in zip(x, [up[k] for k in order]):
         ax2.text(xi, v + up_sd[order[xi]] + 0.03, f"{v:.2f}", ha="center", fontsize=7)
     ax2.set_xticks(x); ax2.set_xticklabels(order, rotation=20, ha="right")
-    ax2.set_ylabel("mean uptake of selected top-1%  [mmol/g]")
+    ax2.set_ylabel("selected top-1% uptake\n[mmol/g]")
     ax2.set_title("(b) selected vs oracle uptake", loc="left", fontsize=10)
     ax2.grid(axis="y", alpha=0.3)
 
@@ -313,8 +333,8 @@ def figure4():
     xb = np.arange(len(labels))
     ax3.bar(xb, vals, yerr=errs, capsize=2, color="#9467bd", edgecolor="white", linewidth=0.4)
     for xi, v in zip(xb, vals):
-        ax3.text(xi, v + 1.2, f"{v:.1f}", ha="center", fontsize=5, rotation=90)
-    ax3.set_xticks(xb); ax3.set_xticklabels(labels, fontsize=5.5, rotation=45, ha="right")
+        ax3.text(xi, v + 1.2, f"{v:.1f}", ha="center", fontsize=6.5, rotation=0)
+    ax3.set_xticks(xb); ax3.set_xticklabels(labels, fontsize=6.5, rotation=0, ha="center")
     ax3.set_ylabel("recovery at 5%  [%]")
     ax3.set_ylim(0, 72)
     ax3.set_title("(c) fixed pool, 5% budget, RF", loc="left", fontsize=10)
@@ -328,8 +348,9 @@ def figureS8():
     # exclude the degenerate single-topology source (DB6)
     null = null[null["n_topologies"] > 1]
 
-    fig, axes = plt.subplots(1, 3, figsize=(12, 4.2))
-    ax, ax2, ax3 = axes
+    fig = plt.figure(figsize=(6.85, 5.0))
+    gs = fig.add_gridspec(2, 2)
+    ax, ax2, ax3 = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])
 
     audit = pd.read_csv(os.path.join(OUT, "singleton_audit.csv"))
     nss = pd.read_csv(os.path.join(OUT, "arcmof_non_singleton_summary.csv"))
@@ -398,7 +419,7 @@ def figureS7():
     sg = pd.read_csv(os.path.join(OUT, "s_g_curve.csv"))
     a = sg[sg.n_test >= 100].copy()
 
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10, 4.2))
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(6.85, 3.4))
     ax.scatter(a.S_miss_unseen, a.R2_pooled, s=28, color="#1f77b4", zorder=3)
     saturated = a[a.S_miss_unseen >= 0.999]
     upper = saturated[saturated.R2_pooled >= 0].sort_values("R2_pooled")
@@ -419,7 +440,7 @@ def figureS7():
                     textcoords="offset points", xytext=(5, 4), fontsize=6.5)
     ax.set_xlabel("S_miss (unseen-chemistry fraction)")
     ax.set_ylabel("held-out R²")
-    ax.set_title("(a) S_g curve (n_test ≥ 100, 10 topologies)", loc="left", fontsize=9)
+    ax.set_title("(a) S_g curve\n(n_test ≥ 100, 10 topologies)", loc="left", fontsize=9)
     ax.grid(alpha=0.3)
 
     b = sg.sort_values("n_test", ascending=False).reset_index(drop=True)
@@ -428,7 +449,7 @@ def figureS7():
     ax2.set_xticks(xb)
     ax2.set_xticklabels(b.held_out_topology, rotation=45, ha="right", fontsize=6.5)
     ax2.set_ylabel("sd(y) in fold  [mmol/g]")
-    ax2.set_title("(b) target variation within held-out topologies", loc="left", fontsize=9)
+    ax2.set_title("(b) target variation\nwithin held-out topologies", loc="left", fontsize=9)
     ax2.grid(axis="y", alpha=0.3)
     save(fig, "figS7_sg_curve")
 
@@ -436,7 +457,7 @@ def figureS7():
 # ---------------- Figure S4: across-seed dispersion (SI) ----------------
 def figureS4():
     d = pd.read_csv(os.path.join(OUT, "multi_seed_uptake25k_fix.csv"))
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10, 4.2))
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(6.85, 3.4))
     x = np.arange(len(d))
     w = 0.26
     rules = [("loto_pooled", "pooled (all folds merged)", "#1f77b4"),
@@ -467,7 +488,7 @@ def figureS4():
     ax2.set_yticklabels(["pooled", "median\nover folds", "macro"], fontsize=6.5)
     ax2.set_xlim(0, 118)
     ax2.set_xlabel("across-seed dispersion  (sd / |mean|, %)")
-    ax2.set_title("(b) across-seed dispersion by aggregation rule", loc="left", fontsize=9)
+    ax2.set_title("(b) across-seed dispersion\nby aggregation rule", loc="left", fontsize=9)
     ax2.grid(axis="x", alpha=0.3)
     fig.text(0.01, 0.01, "Five seeds, 25,000 samples each.", fontsize=6.5,
              color="#555555")
@@ -478,7 +499,7 @@ def figureS4():
 def figureS3():
     d = pd.read_csv(os.path.join(OUT, "within_vs_cross_final.csv"))
     d = d.sort_values("n", ascending=False).reset_index(drop=True)
-    fig, ax = plt.subplots(figsize=(7.6, 4.0))
+    fig, ax = plt.subplots(figsize=(6.85, 3.8))
     y = np.arange(len(d))[::-1]
     for yi, r in zip(y, d.itertuples()):
         ax.plot([r.R2_cross, r.R2_within], [yi, yi], color="#cfcfcf", lw=1.8, zorder=1)
@@ -504,3 +525,5 @@ if __name__ == "__main__":
     figure4()
     figureS8()
     figureS3()
+    figureS4()
+    figureS7()

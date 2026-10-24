@@ -18,7 +18,7 @@ python level3_rerun/run_subset.py --csv /path/to/all_MOFs_screening_data.csv
 ```
 
 The input is not redistributed. Fetch it from the record in `../config/config.json` and
-check the SHA256 first. The run takes about three minutes on one CPU core.
+the runner checks its SHA256, byte size and row count before training. The latest local verification completed in 81.0 s; runtime depends on hardware and thread settings.
 
 ## What level 3 does not do
 

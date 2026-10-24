@@ -59,8 +59,9 @@ python scripts/confound_diagnostic.py --csv your_data.csv \
     --pair-report
 ```
 
-Takes seconds to minutes, needs no model, and tells you whether the rest of this
-checklist is mandatory or merely good practice.
+This counts metadata without fitting models; runtime depends on dataset size and group count. All groups are included by default. Pair counts are computed at each granularity even without `--pair-report`; that flag exports detailed pairs. Explicit `--top-n-groups` marks a partial pair view.
+
+Report per-group unseen rates, composition/structure-weighted summaries and both entropy directions. Plugin and Miller–Madow estimates are separate. Missing grouping labels and wholly missing chemistry keys are excluded and counted; partial missing tuples and literal NA text are retained. These counts do not establish independence, causality or a calibrated support-to-error relation.
 
 ---
 

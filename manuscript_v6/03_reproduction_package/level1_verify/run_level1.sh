@@ -23,4 +23,4 @@ if [ "$fail" -gt 0 ]; then
   echo "LEVEL 1 FAILED ($fail checker(s))"
   exit 1
 fi
-echo "LEVEL 1 PASSED: tables rebuilt from archived metrics; no model was fitted."
+echo "LEVEL 1 PASSED: declared table checks passed on archived metrics; no model was fitted."

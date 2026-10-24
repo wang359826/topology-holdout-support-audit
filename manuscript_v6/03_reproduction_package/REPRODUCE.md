@@ -6,6 +6,10 @@ every claim, table and figure to its input and producer is below. Rebuilding the
 from archived outputs does not train a model. Table S7 also has a standalone raw-data
 generator that uses training-target means only; its seed-level outputs are archived.
 
+## Release status
+
+Published v1.4 has fixed DOI **10.5281/zenodo.23618746**. This local submission revision adds corrections and is **not yet archived as a new public version**. Those changes cannot be attributed retroactively to the fixed deposit. The concept DOI identifies the latest public version, not this working tree.
+
 ## Three reproduction levels (2026-10-24)
 
 The package is organised as three levels, each with an executable entry point and an explicit
@@ -14,7 +18,7 @@ checksums and the environment used.
 
 | Level | Entry point | What it does | What it does not do |
 |---|---|---|---|
-| 1 — numeric | `level1_verify/run_level1.ps1` (or `.sh`) | Rebuilds every main-text/SI table number, the figure files, numbering, cross-references and citations from `outputs/`; verifies the archive checksums | No model is fitted; no raw data are read |
+| 1 — numeric | `level1_verify/run_level1.ps1` (or `.sh`) | Verifies explicitly covered table cells and headline values, numbering, cross-references, citations and figure-file existence from outputs/; verifies archive checksums; does not rebuild figures or inspect PDF layout | No model is fitted; no raw data are read |
 | 2 — predictions | `level2_predictions/verify_predictions.py` | Recomputes arm MAE and screening top-k overlap from the archived row-level predictions (`predictions_arms_seed*.csv`, `predictions_screening_seed*.csv`) and compares them with the archived summaries | No model; the experiment-12 `.npz` predictions and the fixed-pool full score vectors are not in this slim archive |
 | 3 — rerun | `level3_rerun/run_subset.py --csv PATH` | Rebuilds the seed-42, 25,000-row, random-split RF G/B/I comparison from the public hMOF CSV and compares it with the archive | One representative subset; not a full-paper retrain |
 
@@ -22,16 +26,16 @@ Verification status of each level in this revision:
 
 | Level | Status | Evidence |
 |---|---|---|
-| 1 | PASS | `scripts/check_v6_consistency.py` (604 checks with PDFs, 600 with `--no-pdf`), `scripts/verify_followup_tables.py`, `scripts/singleton_audit.py verify`, `scripts/make_md5sums.py --check` |
+| 1 | PASS | `scripts/check_v6_consistency.py` (assertion count printed by the checker; PDF freshness is a separate check), `scripts/verify_followup_tables.py`, `scripts/singleton_audit.py verify`, `scripts/make_md5sums.py --check` |
 | 2 | PASS | 50 arm MAE comparisons and 30 screening-overlap comparisons recomputed from predictions, all within 1e-6 (`level2_predictions/level2_report/summary.json`) |
-| 3 | PASS | G/B/I rebuilt from the 324,426-row CSV in 165 s; MAE and R² match the archive to < 1e-15 (`level3_rerun/rerun_out/summary.json`) |
+| 3 | PASS | G/B/I rebuilt from the 324,426-row CSV in 81.0 s during the 2026-10-24 recheck; MAE and R² match the archive to < 1e-15 (`level3_rerun/rerun_out/summary.json`) |
 
 **Do not describe levels 1–2 as "reproducing the paper"**: they verify archived numbers and
 archived predictions. Only level 3 fits a model, and only on one subset.
 
 ### Where each result lives
 
-| Provenance | Directory | In v1.4 (the version of record)? |
+| Provenance | Directory | In published v1.4? |
 |---|---|---|
 | Original analyses (support audit, protocols, arms, ARC-MOF, screening) | `outputs/` | Yes |
 | Six follow-ups (representation, novelty, CoRE, diagnostics, replacement, fixed pool) | `outputs/followup_20261023/` | Yes — added in v1.4 |
@@ -54,10 +58,10 @@ vectors. Consequently:
 ## Dependency on the source package
 
 Most analysis scripts, `DATA.md`, dependency pins and `run_all.py` are **not duplicated**
-here; in the v1.3 release they live at the **root of this archive**, beside the
+here; in the combined public release they live at the **root of this archive**, beside the
 `manuscript_v6/` subtree that holds this package (in the pre-release working tree they
 are the sibling package `03_投稿专用包/03_reproduction_package/`, v5). This
-v6 package contains only the CSVs needed to rebuild the main text, SI and four figures, plus
+v6 package contains archived outputs and local verification/build helpers, including
 `scripts/build_main_v6.py` (figures), `scripts/build_toc_v6.py` (TOC graphic),
 `scripts/build_pdf_v6.py` (submission PDF), the four
 `pubfig` helpers, the standalone `scripts/training_mean_baseline.py` generator,
@@ -72,11 +76,10 @@ SI-A.4), `scripts/partner_random_g.py` (the post hoc random-partner control in S
 `scripts/component_breakdown.py` (the metal / linker / conjunction
 support breakdown in SI-B.1), `scripts/arcmof_cluster_span.py` (the cluster-ID span check in
 SI-H.1), `scripts/check_v6_consistency.py` (pre-submission
-invariant check, below) and `scripts/make_md5sums.py` (archive manifest). A reader
-who wants to re-run the analyses from raw data should use the source package's `run_all.py`.
+invariant check, below) and `scripts/make_md5sums.py` (archive manifest). The root `run_all.py` covers the historical pipeline, not every later follow-up. Consult the per-result mapping and source-snapshot requirements for additional raw-data reruns.
 
 Path convention for the commands below: `../../scripts` and `../../data/` refer to the
-archive root under the **v1.3 merged layout** (this package at
+archive root under the **merged archive layout used by v1.3/v1.4** (this package at
 `manuscript_v6/03_reproduction_package/`). In the pre-release working tree — the two
 packages as siblings under `MOF_topholdout_投稿包_v5修订/` — the same paths are
 `../../03_投稿专用包/03_reproduction_package/{scripts,data}`. The `data/` tree is
@@ -94,7 +97,7 @@ python scripts/make_md5sums.py --check     # outputs/MD5SUMS.txt covers the arch
 ```
 
 What `check_v6_consistency.py` checks, stated narrowly so it is not over-read: it
-re-derives (i) every cell of Tables 1–3, (ii) every cell of SI Tables S1–S9, S12, S15–S18,
+re-derives (i) every cell of Tables 1–3, (ii) every cell of SI Tables S1–S9, S12, S15–S25b,
 (iii) a named list of headline claims (74.7%, 61.3%, 82.0%, 18.0%, 0.860, 69,224, 21.3%,
 408, 21.1%, 21.5%, 0.3603, −0.0065, +70.0%, −1.2%, the (e)/(f) arm means, 50.4%, 19.3%,
 31.1 pp, the two paired intervals and their t/p values, 46.3%, 99.3/97.3/99.7/98.2,
@@ -671,3 +674,9 @@ The earlier manuscript quoted the nbo interval lower bound as +0.0592; recomputa
 from the archived rows gives +0.059147, i.e. +0.0591 at four decimals. The value was
 corrected in the manuscript, the cover letter and the claim–evidence list rather than
 kept for continuity.
+
+## Corrected portable diagnostic
+
+`python scripts/confound_diagnostic.py --csv DATA.csv --group-col topology --coarse-cols metal_linker,organic_linker1,organic_linker2 --pair-report` produces global and per-group summaries plus detailed pairs. Pair counts use all groups unless a subset is explicitly requested and labelled. Each granularity is computed separately; plugin and Miller–Madow estimates are distinct. No causal or performance verdict is emitted. See the root README for missing-value policy. `singleton_audit.py verify` is the fixed-dataset archived-table check, not the arbitrary-CSV tool.
+
+After building both PDFs from finalized sources, explicitly run `python scripts/verify_build_manifest.py --record`. Routine checking uses `--check`; do not refresh the record merely to silence a failure. This content-hash check supplements visual layout inspection.

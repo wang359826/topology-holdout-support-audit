@@ -1,9 +1,9 @@
 {
-  "csv": "..\\..\\03_\u6295\u7a3f\u4e13\u7528\u5305\\03_reproduction_package\\data\\all_MOFs_screening_data.csv",
+  "csv": "C:\\Users\\\u6c6a\u661f\u4eba\\Desktop\\MOF_topholdout_\u6295\u7a3f\u5305_v5\u4fee\u8ba2\\03_\u6295\u7a3f\u4e13\u7528\u5305\\03_reproduction_package\\data\\all_MOFs_screening_data.csv",
   "sha256": "19bd04e5839bb77d6e93e50064c0724c11752da9ef8dcb6930cf8773f887bf1a",
   "n_rows": 24985,
   "seed": 42,
-  "elapsed_seconds": 162.6,
+  "elapsed_seconds": 81.0,
   "metrics": [
     {
       "representation": "G",

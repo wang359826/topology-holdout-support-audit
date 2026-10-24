@@ -1,6 +1,6 @@
 # Level 1 - numeric verification (no model, no raw data)
 #
-# Rebuilds every table number and the numbering/citation/figure map from ../outputs.
+# Verifies explicitly covered table cells and numbering/citation/figure-file map; does not rebuild figures.
 # Run from the reproduction-package root:
 #   powershell -ExecutionPolicy Bypass -File level1_verify/run_level1.ps1
 # Exit code 0 only if every checker passes.
@@ -31,4 +31,4 @@ if ($failed -gt 0) {
   Write-Host "LEVEL 1 FAILED ($failed checker(s))"
   exit 1
 }
-Write-Host 'LEVEL 1 PASSED: tables rebuilt from archived metrics; no model was fitted.'
+Write-Host 'LEVEL 1 PASSED: declared table checks passed on archived metrics; no model was fitted.'

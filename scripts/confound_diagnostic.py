@@ -1,353 +1,250 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""Model-free support audit for grouped validation; no causal or performance verdict.
+
+The CLI accepts the historical options. Pair counts are always computed separately
+for each chemistry definition, over all groups unless --top-n-groups explicitly
+limits the comparison. --pair-report controls only the detailed pair CSV.
+Missing grouping values and entirely missing chemistry keys are excluded and
+counted. Partial chemistry missingness is encoded explicitly; literal NA-like
+strings remain values. Entropies use bits. Plugin and Miller-Madow estimates are
+reported separately, without clipping corrected ratios or threshold verdicts.
 """
-confound_diagnostic.py -- a drop-in diagnostic for grouped splits in MOF-ML
-===========================================================================
-
-WHAT THIS IS FOR
-----------------
-If you are about to report a *grouped* (topology / scaffold / metal-cluster)
-cross-validation result, this script tells you how much of that grouping is
-already implied by chemical composition. If the split variable and "chemistry"
-are largely the same variable, a topology hold-out is not a test of topological
-transferability -- it is (mostly) a test of transfer to unseen chemistry.
-
-You run it on *your* dataset, before training anything. It takes seconds to
-minutes and needs no model.
-
-THE THREE NUMBERS, AND WHAT EACH ONE ANSWERS
---------------------------------------------
-1. `frac_single_topology` -- share of distinct chemical compositions that occur
-   in exactly one group. Answers: "how much of my chemistry is private to one
-   group?" High means the group label is largely a relabelling of chemistry.
-
-2. `cond_frac` = H(group | chemistry) / H(group) -- entropy of the group label
-   remaining after conditioning on chemistry, normalised. Answers: "if I knew
-   the chemistry, how much would I still not know about the group?" 0 means the
-   group is fully determined by chemistry; 1 means chemistry tells you nothing.
-
-   This is more informative than (1): (1) is a count of private compositions,
-   (2) is an information-theoretic residual. A dataset can have a low (1) but a
-   still-informative group label, or vice versa.
-
-3. `n_shared_pairs` / max Jaccard -- how many group *pairs* share any chemistry
-   at all. Answers: "does any group retain an independent handle?" If exactly
-   one pair shares chemistry, that pair is your only option for a controlled
-   contrast (see `--pair-report`).
-
-ALWAYS REPORT n NEXT TO (1) AND (2). Both are sample-size dependent: sampling
-fewer rows mechanically raises exclusivity, because a composition needs two
-samples to appear in two groups. On the companion hMOF dataset the same
-statistic reads 98.9% at n = 25,000 and 93.2% at n = 324,426. A number without
-n is not comparable to anything, including a rerun of itself.
-
-USAGE
------
-  # generic: tell it your columns
-  python confound_diagnostic.py --csv my_data.csv \
-      --group-col topology --chem-cols metal_linker,linker1,linker2,func_groups
-
-  # two granularities in one pass (required whenever your chemistry definition
-  # is a choice rather than a given -- see NOTE below)
-  python confound_diagnostic.py --csv my_data.csv --group-col topology \
-      --coarse-cols metal_linker,linker1,linker2 \
-      --fine-cols   metal_linker,linker1,linker2,func_groups
-
-  # hMOF preset (columns are known)
-  python confound_diagnostic.py --preset hmof --max-rows 50000
-
-  # also print which group pair, if any, could support a controlled contrast
-  python confound_diagnostic.py --preset hmof --max-rows 50000 --pair-report
-
-NOTE ON GRANULARITY
--------------------
-"Chemical composition" is not one thing. The same database gives 74.7% and
-93.2% depending on whether functional groups are included. Report the definition
-you used; better, report both. Do NOT align two datasets by randomly compressing
-chemistry to a common granularity -- random compression can only make a
-definition coarser, never finer, so it distorts large libraries more than small
-ones and manufactures a difference instead of removing one.
-
-OUTPUT
-------
-  <outdir>/confound_diagnostic.csv    one row per (grouping, granularity)
-  <outdir>/confound_diagnostic_pairs.csv   top group pairs by shared chemistry
-"""
-
 from __future__ import annotations
-
 import argparse
-import itertools
-import os
+from collections import Counter, defaultdict
+from itertools import combinations
+import math
+from pathlib import Path
 import sys
-
-import numpy as np
 import pandas as pd
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
-except Exception:  # noqa: BLE001
-    pass
-
-HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "..", "outputs")
-DATA = os.path.join(HERE, "..", "data")
-
-# Placeholder for a missing chemistry value; see composition_key().
-NO_VALUE = "<NA>"
-
-# hMOF column names (see DATA.md)
-PRESETS = {
-    "hmof": {
-        "csv": os.path.join(DATA, "all_MOFs_screening_data.csv"),
-        "group_col": "topology",
-        "coarse": ["metal_linker", "organic_linker1", "organic_linker2"],
-        "fine": ["metal_linker", "organic_linker1", "organic_linker2",
-                 "functional_groups"],
-    },
-}
+HERE = Path(__file__).resolve().parent
+OUT = HERE.parent / 'outputs'
+DATA = HERE.parent / 'data'
+PRESETS = {'hmof': dict(csv=str(DATA / 'all_MOFs_screening_data.csv'),
+    group_col='topology', coarse=['metal_linker', 'organic_linker1', 'organic_linker2'],
+    fine=['metal_linker', 'organic_linker1', 'organic_linker2', 'functional_groups'])}
+PAIR_COLUMNS = ['group_a', 'group_b', 'shared_chemistries', 'union_chemistries', 'jaccard']
+GROUP_COLUMNS = ['group', 'n_test', 'n_train', 'n_test_chemistries',
+    'n_unseen_chemistries', 'composition_unseen_rate', 'n_unseen_structures',
+    'structure_unseen_rate']
+NAN = float('nan')
 
 
-def _entropy(p) -> float:
-    """Shannon entropy in bits of a probability vector."""
-    p = np.asarray(p, dtype=float)
-    p = p[p > 0]
-    return float(-(p * np.log2(p)).sum())
+def _missing(v):
+    return bool(pd.isna(v)) or (isinstance(v, str) and not v.strip())
 
 
-def composition_key(df: pd.DataFrame, cols: list[str]) -> pd.Series:
-    """Join the chemistry columns into one hashable key per row.
-
-    Fails loudly if any column is missing -- a silent `linker_pair_`-style
-    prefix mismatch once produced an empty frame here and the whole check was
-    skipped without an error.
-
-    Missing values are filled with a placeholder BEFORE the type cast. hMOF's
-    `functional_groups` column contains NaN, and `astype(str)` leaves those as
-    floats, which makes `"|".join` raise `TypeError: expected str instance,
-    float found`. Two rows that both have "no functional group" are the same
-    chemistry, so an explicit placeholder is the correct treatment -- dropping
-    them would silently change the answer.
-    """
-    missing = [c for c in cols if c not in df.columns]
-    if missing:
-        raise KeyError(
-            f"chemistry columns not found: {missing}. "
-            f"Available: {list(df.columns)[:40]}"
-        )
-    sub = df[cols].astype(object).where(pd.notna(df[cols]), NO_VALUE)
-    sub = sub.astype(str)
-
-    keys = sub.agg("|".join, axis=1)
-    # A key made entirely of placeholders is not a chemistry, it is missing data.
-    all_blank = (sub == NO_VALUE).all(axis=1)
-    if all_blank.any():
-        frac = float(all_blank.mean())
-        print(f"  WARNING: {int(all_blank.sum()):,} rows ({frac:.3%}) have no "
-              "chemistry value in any column; they are grouped under a single "
-              "'missing' key. Check whether that is intended.")
-    return keys
+def composition_key(df, cols):
+    """Return collision-safe tuples; all-missing rows have no chemistry key."""
+    if not cols or len(cols) != len(set(cols)):
+        raise ValueError('chemistry columns must be a nonempty, unique list')
+    absent = [c for c in cols if c not in df.columns]
+    if absent:
+        raise KeyError(f'chemistry columns not found: {absent}')
+    values = []
+    partial = []
+    for row in df[cols].itertuples(index=False, name=None):
+        missing = [_missing(v) for v in row]
+        values.append(None if all(missing) else tuple(
+            ('missing',) if m else ('value', str(v)) for v, m in zip(row, missing)))
+        partial.append(any(missing) and not all(missing))
+    result = pd.Series(values, index=df.index, dtype=object)
+    result.attrs['partial_missing'] = partial
+    return result
 
 
-def diagnose(chem: pd.Series, group: pd.Series, label: str,
-             granularity: str) -> dict:
-    """Compute the three diagnostics for one (key, group) pair."""
-    if len(chem) == 0:
-        raise ValueError(f"[{label}/{granularity}] empty input -- refusing to "
-                         "report a statistic computed on zero rows")
-
-    d = pd.DataFrame({"ck": np.asarray(chem, dtype=object),
-                      "grp": np.asarray(group, dtype=object)})
-    d = d.dropna()
-    n = len(d)
-    if n == 0:
-        raise ValueError(f"[{label}/{granularity}] all rows dropped as NA")
-
-    pair = d.groupby(["ck", "grp"], observed=True).size().reset_index(name="n_ct")
-    n_groups_per_chem = pair.groupby("ck", observed=True)["grp"].nunique()
-
-    # (1) share of compositions living in a single group
-    frac_single = float((n_groups_per_chem == 1).mean())
-
-    # (2) conditional entropy ratio
-    p_grp = d["grp"].value_counts(normalize=True).to_numpy()
-    H_grp = _entropy(p_grp)
-    n_c = pair.groupby("ck", observed=True)["n_ct"].transform("sum")
-    H_grp_given_chem = float(
-        (pair["n_ct"] / n * (-np.log2(pair["n_ct"] / n_c))).sum())
-    cond_frac = float(H_grp_given_chem / H_grp) if H_grp > 0 else np.nan
-
-    return {
-        "label": label,
-        "granularity": granularity,
-        "n_samples": n,
-        "n_groups": int(d["grp"].nunique()),
-        "n_chemistries": int(d["ck"].nunique()),
-        "samples_per_chemistry": round(n / max(1, d["ck"].nunique()), 3),
-        "frac_single_topology": round(frac_single, 6),
-        "H_group": round(H_grp, 4),
-        "H_group_given_chem": round(H_grp_given_chem, 4),
-        "cond_frac": round(cond_frac, 6),
-    }
+def _entropy_counts(counts):
+    total = sum(counts)
+    return -sum((n / total) * math.log2(n / total) for n in counts if n) if total else NAN
 
 
-def group_pairs(chem: pd.Series, group: pd.Series, top_n: int = 20) -> pd.DataFrame:
-    """Jaccard overlap of the chemistry sets of the largest groups."""
-    d = pd.DataFrame({"ck": np.asarray(chem, dtype=object),
-                      "grp": np.asarray(group, dtype=object)}).dropna()
-    big = d["grp"].value_counts().head(top_n).index.tolist()
-    sets = {g: set(d.loc[d["grp"] == g, "ck"]) for g in big}
-    rows = []
-    for a, b in itertools.combinations(big, 2):
-        inter = len(sets[a] & sets[b])
-        union = len(sets[a] | sets[b])
-        rows.append({"group_a": a, "group_b": b, "shared_chemistries": inter,
-                     "jaccard": round(inter / union, 6) if union else 0.0})
-    out = pd.DataFrame(rows)
-    return out.sort_values("shared_chemistries", ascending=False).reset_index(drop=True)
+def _ratio(a, b):
+    return a / b if math.isfinite(b) and b > 0 else NAN
 
 
-def verdict(row: dict, n_shared_pairs: int, total_pairs: int) -> str:
-    """One-line plain-language reading of the numbers."""
-    f, c = row["frac_single_topology"], row["cond_frac"]
-    if c >= 0.5:
-        base = ("grouping is largely independent of chemistry -- a grouped "
-                "split is plausibly testing what its name says")
-    elif c >= 0.2:
-        base = ("grouping is substantially confounded with chemistry -- report "
-                "both the split effect and this diagnostic together")
-    else:
-        base = ("grouping is largely a relabelling of chemistry -- a grouped "
-                "split here does NOT isolate group transferability")
-    if n_shared_pairs == 0:
-        tail = ("; no pair of groups shares any chemistry, so no controlled "
-                "contrast is possible on this dataset")
-    elif n_shared_pairs == 1:
-        tail = (f"; exactly 1 of {total_pairs} group pairs shares chemistry -- "
-                "that pair is the only place a controlled contrast can be run")
-    else:
-        tail = f"; {n_shared_pairs} of {total_pairs} group pairs share chemistry"
-    return base + tail
+def _prepare(chem, group):
+    if len(chem) != len(group):
+        raise ValueError('chemistry and group vectors have different lengths')
+    counts = Counter()
+    missing_chem = missing_group = partial_kept = 0
+    partial = getattr(chem, 'attrs', {}).get('partial_missing', [False] * len(chem))
+    for i, (c, g) in enumerate(zip(chem, group)):
+        cm = c is None or (not isinstance(c, tuple) and _missing(c))
+        gm = _missing(g)
+        missing_chem += cm
+        missing_group += gm
+        if cm or gm:
+            continue
+        counts[c, str(g)] += 1
+        partial_kept += bool(partial[i])
+    return counts, dict(n_input_rows=len(chem), n_missing_chemistry_rows=missing_chem,
+        n_missing_group_rows=missing_group, n_partial_chemistry_rows_retained=partial_kept,
+        n_rows_excluded=len(chem) - sum(counts.values()))
 
 
-def main():
-    ap = argparse.ArgumentParser(
-        description="Diagnose how much a grouped split is implied by chemistry.")
-    ap.add_argument("--csv", help="input CSV")
-    ap.add_argument("--preset", choices=sorted(PRESETS),
-                    help="use a known column layout instead of --csv")
-    ap.add_argument("--group-col", help="column holding the grouping variable")
-    ap.add_argument("--chem-cols", help="comma-separated chemistry columns")
-    ap.add_argument("--coarse-cols", help="comma-separated, coarser definition")
-    ap.add_argument("--fine-cols", help="comma-separated, finer definition")
-    ap.add_argument("--label", default=None, help="name shown in the output")
-    ap.add_argument("--max-rows", type=int, default=None,
-                    help="random subsample (seeded); omit for the full file")
-    ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--pair-report", action="store_true",
-                    help="also list group pairs by shared chemistry")
-    ap.add_argument("--top-n-groups", type=int, default=20,
-                    help="how many of the largest groups to compare pairwise")
-    ap.add_argument("--outdir", default=OUT)
-    args = ap.parse_args()
+def analyze(chem, group, label='dataset', granularity='coarse', top_n_groups=None):
+    """Return summary, per-held-out-group metrics and pair details, without I/O."""
+    if top_n_groups is not None and top_n_groups < 1:
+        raise ValueError('top_n_groups must be positive or None (all groups)')
+    counts, audit = _prepare(chem, group)
+    n = sum(counts.values())
+    nc, ng = Counter(), Counter()
+    cg, gc = defaultdict(set), defaultdict(set)
+    for (c, g), k in counts.items():
+        nc[c] += k
+        ng[g] += k
+        cg[c].add(g)
+        gc[g].add(c)
+    single = {c for c in nc if len(cg[c]) == 1}
+    single_rows = sum(nc[c] for c in single)
+    memberships = sum(map(len, cg.values()))
+    groups = sorted(ng, key=lambda g: (-ng[g], g))
+    selected = groups if top_n_groups is None else groups[:top_n_groups]
+    pair_rows = []
+    for a, b in combinations(selected, 2):
+        shared = len(gc[a] & gc[b])
+        union = len(gc[a] | gc[b])
+        pair_rows.append(dict(group_a=a, group_b=b, shared_chemistries=shared,
+            union_chemistries=union, jaccard=shared / union))
+    pair_rows.sort(key=lambda x: (-x['shared_chemistries'], x['group_a'], x['group_b']))
+    group_rows = []
+    for g in groups:
+        unseen = gc[g] & single
+        unseen_rows = sum(counts[c, g] for c in unseen)
+        group_rows.append(dict(group=g, n_test=ng[g], n_train=n-ng[g],
+            n_test_chemistries=len(gc[g]), n_unseen_chemistries=len(unseen),
+            composition_unseen_rate=len(unseen) / len(gc[g]),
+            n_unseen_structures=unseen_rows, structure_unseen_rate=unseen_rows / ng[g]))
+    hg = _entropy_counts(ng.values())
+    hc = _entropy_counts(nc.values())
+    hj = _entropy_counts(counts.values())
+    hg_c, hc_g = hj - hc, hj - hg
+    correction = 1 / (2 * n * math.log(2)) if n else NAN
+    hg_mm = hg + (len(ng) - 1) * correction
+    hc_mm = hc + (len(nc) - 1) * correction
+    hj_mm = hj + (len(counts) - 1) * correction
+    hg_c_mm, hc_g_mm = hj_mm - hc_mm, hj_mm - hg_mm
+    summary = dict(label=label, granularity=granularity,
+        status='no_usable_rows' if not n else ('single_group' if len(ng)==1 else 'ok'),
+        **audit, n_samples=n, n_groups=len(ng), n_chemistries=len(nc),
+        n_chemistry_group_memberships=memberships,
+        samples_per_chemistry=n / len(nc) if nc else NAN,
+        n_single_group_chemistries=len(single), n_single_group_structures=single_rows,
+        composition_weighted_unseen_rate=len(single) / len(nc) if nc else NAN,
+        structure_weighted_unseen_rate=single_rows / n if n else NAN,
+        membership_weighted_unseen_rate=len(single) / memberships if memberships else NAN,
+        frac_single_topology=len(single) / len(nc) if nc else NAN,
+        H_group=hg, H_group_given_chem=hg_c, cond_frac=_ratio(hg_c,hg),
+        H_group_plugin=hg, H_chem_plugin=hc, H_joint_plugin=hj,
+        H_group_given_chem_plugin=hg_c, H_chem_given_group_plugin=hc_g,
+        group_residual_ratio_plugin=_ratio(hg_c,hg),
+        chemistry_residual_ratio_plugin=_ratio(hc_g,hc),
+        H_group_mm=hg_mm, H_chem_mm=hc_mm, H_joint_mm=hj_mm,
+        H_group_given_chem_mm=hg_c_mm, H_chem_given_group_mm=hc_g_mm,
+        group_residual_ratio_mm=_ratio(hg_c_mm,hg_mm),
+        chemistry_residual_ratio_mm=_ratio(hc_g_mm,hc_mm),
+        pair_scope='all_groups' if len(selected)==len(groups) else 'largest_groups_subset',
+        pair_comparison_complete=len(selected)==len(groups),
+        n_groups_compared=len(selected), n_pairs_total=len(groups)*(len(groups)-1)//2,
+        n_pairs_compared=len(pair_rows),
+        n_shared_pairs=sum(x['shared_chemistries']>0 for x in pair_rows),
+        max_jaccard=max((x['jaccard'] for x in pair_rows), default=NAN))
+    return (summary, pd.DataFrame(group_rows, columns=GROUP_COLUMNS),
+            pd.DataFrame(pair_rows, columns=PAIR_COLUMNS))
 
-    # ---- resolve inputs -------------------------------------------------
-    if args.preset:
-        p = PRESETS[args.preset]
-        csv = args.csv or p["csv"]
-        group_col = args.group_col or p["group_col"]
-        coarse = args.coarse_cols.split(",") if args.coarse_cols else p.get("coarse")
-        fine = args.fine_cols.split(",") if args.fine_cols else p.get("fine")
-        label = args.label or args.preset
-    else:
-        if not args.csv or not args.group_col:
-            ap.error("--csv and --group-col are required unless --preset is used")
-        csv = args.csv
-        group_col = args.group_col
-        coarse = args.coarse_cols.split(",") if args.coarse_cols else None
-        fine = args.fine_cols.split(",") if args.fine_cols else None
-        if args.chem_cols and not (coarse or fine):
-            coarse = args.chem_cols.split(",")
-        label = args.label or os.path.splitext(os.path.basename(csv))[0]
 
-    if not os.path.exists(csv):
-        raise SystemExit(
-            f"input not found: {csv}\n"
-            "Download the dataset first (see DATA.md) or pass --csv.")
+def diagnose(chem, group, label, granularity):
+    return analyze(chem, group, label, granularity)[0]
 
-    # ---- load -----------------------------------------------------------
-    print(f"reading {csv}")
-    df = pd.read_csv(csv, low_memory=False)
-    print(f"  {len(df):,} rows, {len(df.columns)} columns")
-    if args.max_rows and args.max_rows < len(df):
-        # NEVER use head(): these files are sorted by group, so the first rows
-        # contain only a handful of groups and every statistic is wrong.
+
+def group_pairs(chem, group, top_n=None):
+    return analyze(chem, group, top_n_groups=top_n)[2]
+
+
+def verdict(row, n_shared_pairs=None, total_pairs=None):
+    """Describe observed support; do not classify independence or transferability."""
+    if row['status']=='no_usable_rows':
+        return 'No usable rows; support and entropy statistics are undefined.'
+    if row['status']=='single_group':
+        return 'Only one observed group; leave-one-group-out has no training group and H(group)=0.'
+    return (f"{row['n_shared_pairs']} of {row['n_pairs_compared']} compared pairs share "
+        f"chemistry ({row['pair_scope']}). These sample statistics do not establish "
+        'causality, independence, model performance or a feasible controlled contrast.')
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description='Audit observed support for grouped validation.')
+    ap.add_argument('--csv')
+    ap.add_argument('--preset', choices=sorted(PRESETS))
+    ap.add_argument('--group-col')
+    ap.add_argument('--chem-cols')
+    ap.add_argument('--coarse-cols')
+    ap.add_argument('--fine-cols')
+    ap.add_argument('--label')
+    ap.add_argument('--max-rows', type=int)
+    ap.add_argument('--seed', type=int, default=42)
+    ap.add_argument('--pair-report', action='store_true', help='also write pair detail CSV')
+    ap.add_argument('--top-n-groups', type=int, default=None,
+        help='explicitly restrict pair comparison to largest N groups; default: all groups')
+    ap.add_argument('--outdir', default=str(OUT))
+    args = ap.parse_args(argv)
+    preset = PRESETS.get(args.preset, {})
+    csv_path = args.csv or preset.get('csv')
+    group_col = args.group_col or preset.get('group_col')
+    if not csv_path or not group_col:
+        ap.error('--csv and --group-col are required unless --preset supplies them')
+    if args.max_rows is not None and args.max_rows < 1:
+        ap.error('--max-rows must be positive')
+    if args.top_n_groups is not None and args.top_n_groups < 1:
+        ap.error('--top-n-groups must be positive')
+    parse = lambda s: [x.strip() for x in s.split(',') if x.strip()] if s else None
+    coarse = parse(args.coarse_cols) or preset.get('coarse')
+    fine = parse(args.fine_cols) or preset.get('fine')
+    if args.chem_cols:
+        if args.coarse_cols or args.fine_cols:
+            ap.error('--chem-cols cannot be combined with --coarse-cols/--fine-cols')
+        coarse, fine = parse(args.chem_cols), None
+    definitions = [(g,c) for g,c in [('coarse',coarse),('fine',fine)] if c]
+    if not definitions:
+        ap.error('provide --chem-cols or --coarse-cols/--fine-cols')
+    df = pd.read_csv(csv_path, dtype=str, keep_default_na=False, low_memory=False)
+    if group_col not in df:
+        ap.error(f'grouping column not found: {group_col}')
+    if args.max_rows is not None and args.max_rows < len(df):
         df = df.sample(n=args.max_rows, random_state=args.seed)
-        print(f"  sampled {len(df):,} rows (random_state={args.seed})")
-
-    if group_col not in df.columns:
-        raise SystemExit(f"grouping column '{group_col}' not in the file")
-
-    # ---- run ------------------------------------------------------------
-    granularities = []
-    if coarse:
-        granularities.append(("coarse", coarse))
-    if fine:
-        granularities.append(("fine", fine))
-    if not granularities:
-        raise SystemExit("no chemistry columns given (--chem-cols / "
-                         "--coarse-cols / --fine-cols)")
-
-    group = df[group_col]
-    rows, pair_frames = [], []
-    for gran, cols in granularities:
-        chem = composition_key(df, cols)
-        row = diagnose(chem, group, label, gran)
+    label = args.label or args.preset or Path(csv_path).stem
+    rows, per_groups, pairs = [], [], []
+    for gran, cols in definitions:
+        row, pg, pf = analyze(composition_key(df,cols), df[group_col], label, gran,
+                             args.top_n_groups)
+        row['chemistry_columns'] = ','.join(cols)
+        row['grouping_column'] = group_col
         rows.append(row)
-        print(f"\n[{gran}] " + ", ".join(cols))
-        print(f"  n = {row['n_samples']:,}   groups = {row['n_groups']}   "
-              f"chemistries = {row['n_chemistries']:,}   "
-              f"n/M = {row['samples_per_chemistry']}")
-        print(f"  single-group chemistry : {row['frac_single_topology']:.4f}")
-        print(f"  H(group|chem)/H(group) : {row['cond_frac']:.4f}")
-
-        if args.pair_report:
-            pf = group_pairs(chem, group, args.top_n_groups)
-            pf.insert(0, "granularity", gran)
-            pair_frames.append(pf)
-
-    # ---- pair summary + verdict ----------------------------------------
-    n_shared = 0
-    total_pairs = 0
-    if pair_frames:
-        allp = pd.concat(pair_frames, ignore_index=True)
-        coarse_pairs = allp[allp["granularity"] == "coarse"]
-        if len(coarse_pairs):
-            top = coarse_pairs.iloc[0]
-            print(f"\n  most-overlapping pair ({top['group_a']} vs "
-                  f"{top['group_b']}): {int(top['shared_chemistries'])} shared "
-                  f"compositions, Jaccard {top['jaccard']:.3f}")
-        first = pair_frames[0]
-        total_pairs = len(first)
-        n_shared = int((first["shared_chemistries"] > 0).sum())
-
-    print()
-    for row in rows:
-        print(f"[{row['granularity']}] {verdict(row, n_shared, total_pairs)}")
-
-    # ---- write ----------------------------------------------------------
-    os.makedirs(args.outdir, exist_ok=True)
-    out = pd.DataFrame(rows)
-    out["n_shared_pairs"] = n_shared
-    out["n_pairs_compared"] = total_pairs
-    p1 = os.path.join(args.outdir, "confound_diagnostic.csv")
-    out.to_csv(p1, index=False)
-    print(f"\nsaved: {p1}")
-    if pair_frames:
-        p2 = os.path.join(args.outdir, "confound_diagnostic_pairs.csv")
-        pd.concat(pair_frames, ignore_index=True).to_csv(p2, index=False)
-        print(f"saved: {p2}")
+        for frame in (pg,pf):
+            frame.insert(0,'granularity',gran)
+            frame.insert(0,'label',label)
+        per_groups.append(pg)
+        pairs.append(pf)
+        print(f'[{gran}] n={row["n_samples"]}; excluded={row["n_rows_excluded"]}; '
+              f'groups={row["n_groups"]}; chemistries={row["n_chemistries"]}')
+        print(f'  unseen composition/structure fractions: '
+              f'{row["composition_weighted_unseen_rate"]:.6g} / '
+              f'{row["structure_weighted_unseen_rate"]:.6g}')
+        print(f'  plugin H(G|C)/H(G)={row["group_residual_ratio_plugin"]:.6g}; '
+              f'H(C|G)/H(C)={row["chemistry_residual_ratio_plugin"]:.6g}')
+        print('  '+verdict(row))
+    out = Path(args.outdir)
+    out.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(rows).to_csv(out/'confound_diagnostic.csv',index=False)
+    pd.concat(per_groups,ignore_index=True).to_csv(out/'confound_diagnostic_groups.csv',index=False)
+    if args.pair_report:
+        pd.concat(pairs,ignore_index=True).to_csv(out/'confound_diagnostic_pairs.csv',index=False)
+    print('Plugin and Miller-Madow estimates are separate. Undefined ratios are blank/NaN; '
+          'partial missing chemistry is retained and counted. All estimates depend on '
+          'sample size and the supplied chemistry definition; no threshold verdict is applied.')
+    return 2 if any(r['status']=='no_usable_rows' for r in rows) else 0
 
 
-if __name__ == "__main__":
-    main()
+if __name__=='__main__':
+    raise SystemExit(main())
